@@ -18,5 +18,7 @@ export function clearUserSession() {
 }
 
 export function getDashboardPath(role) {
-  return role === "admin" ? "/dashboard/admin" : "/dashboard/doctor";
+  if (role === "admin") return "/dashboard/admin";
+  if (role === "doctor") return "/dashboard/doctor";
+  return "/";
 }
