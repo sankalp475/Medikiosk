@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "moduleResolution": "bundler",
+    "resolvePackageJsonImports": true
+  },
+  "include": ["src/**/*", "public/**/*", "*.js", "*.jsx", "*.ts", "*.tsx"],
+  "exclude": ["node_modules", "dist", "build"],
+}
