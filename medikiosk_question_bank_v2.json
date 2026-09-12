@@ -1,0 +1,1611 @@
+{
+  "schema_version": "2.0",
+  "notes": [
+    "Backend is authoritative: holds all node_id/field_id, types, options, and branching rules (next/next_rules).",
+    "Frontend holds a parallel copy keyed by the SAME node_id/field_id/option_id, containing only display text per language (en/hi/ml). It never needs the branching rules.",
+    "Recommended: author ONE master file (this one). Backend uses it as-is. Frontend's translation dictionary is a separate file keyed by the same ids, generated/maintained alongside this one, so ids never drift out of sync.",
+    "Every field except RED_FLAG supports a free-text/voice escape option (see 'other' options below) per prior agreement.",
+    "Demographics (name/age/sex/language) are NOT re-asked here - already captured in the earlier Identify + Language steps and read from the Patient record when needed (e.g. LMP trigger).",
+    "v2.1: sex/gender is NOT a question in this bank - it comes from Patient.sex, populated from the (mocked) ABHA fetch for ABHA patients, or from an explicit sex-selection field asked once during Guest registration in the Identify step (outside this bank), since routing (e.g. the LMP overlay) depends on it either way."
+  ],
+  "nodes": {
+    "RED_FLAG": {
+      "step_type": "gate",
+      "title_en": "Safety Check",
+      "applies_to": "both",
+      "fields": [
+        {
+          "field_id": "red_flag_items",
+          "type": "multi_select",
+          "label_en": "Are you currently experiencing any of the following?",
+          "allows_free_text": false,
+          "options": [
+            {
+              "id": "chest_pain",
+              "label_en": "Chest pain or pressure",
+              "red_flag": true
+            },
+            {
+              "id": "breathing_difficulty",
+              "label_en": "Difficulty breathing right now",
+              "red_flag": true
+            },
+            {
+              "id": "high_fever",
+              "label_en": "Fever above 103°F (39.4°C)",
+              "red_flag": true
+            },
+            {
+              "id": "active_bleeding",
+              "label_en": "Active or severe bleeding",
+              "red_flag": true
+            },
+            {
+              "id": "altered_consciousness",
+              "label_en": "Fainting, confusion, or altered consciousness today",
+              "red_flag": true
+            },
+            {
+              "id": "seizure_24h",
+              "label_en": "A seizure in the last 24 hours",
+              "red_flag": true
+            },
+            {
+              "id": "one_sided_weakness",
+              "label_en": "Sudden weakness or numbness on one side of the body",
+              "red_flag": true
+            },
+            {
+              "id": "pregnancy_warning",
+              "label_en": "Pregnant with severe bleeding or severe abdominal pain",
+              "red_flag": true
+            },
+            {
+              "id": "none",
+              "label_en": "None of the above"
+            }
+          ]
+        }
+      ],
+      "on_complete": {
+        "rules": [
+          {
+            "condition": {
+              "any_selected_with_flag": "red_flag",
+              "field": "red_flag_items"
+            },
+            "action": "set_concern_flag_true",
+            "note": "CONFIRM: continue flow + flag for doctor queue (per Implementation Plan / official PS), NOT abort - conflicts with org-system doc's 'auto-terminate' note."
+          }
+        ],
+        "default_next": "CHIEF_COMPLAINT"
+      }
+    },
+    "CHIEF_COMPLAINT": {
+      "step_type": "composite",
+      "title_en": "Your Main Complaint",
+      "applies_to": "both",
+      "fields": [
+        {
+          "field_id": "cc_description",
+          "type": "free_text_or_voice",
+          "label_en": "What is bothering you the most today, in your own words?"
+        },
+        {
+          "field_id": "cc_location",
+          "type": "free_text_or_voice",
+          "label_en": "Where is it located?"
+        },
+        {
+          "field_id": "cc_onset",
+          "type": "single_select",
+          "label_en": "Did it start suddenly or gradually?",
+          "options": [
+            {
+              "id": "sudden",
+              "label_en": "Suddenly"
+            },
+            {
+              "id": "gradual",
+              "label_en": "Gradually"
+            },
+            {
+              "id": "cc_onset_other",
+              "label_en": "Other / describe in your own words",
+              "triggers_free_text_or_voice": true
+            }
+          ]
+        },
+        {
+          "field_id": "cc_duration",
+          "type": "free_text_or_voice",
+          "label_en": "How long have you had this problem?"
+        },
+        {
+          "field_id": "cc_sensation",
+          "type": "single_select",
+          "label_en": "How would you describe the sensation?",
+          "options": [
+            {
+              "id": "burning",
+              "label_en": "Burning"
+            },
+            {
+              "id": "throbbing",
+              "label_en": "Throbbing"
+            },
+            {
+              "id": "dull",
+              "label_en": "Dull"
+            },
+            {
+              "id": "sharp",
+              "label_en": "Sharp"
+            },
+            {
+              "id": "heaviness",
+              "label_en": "Heaviness"
+            },
+            {
+              "id": "tingling",
+              "label_en": "Tingling"
+            },
+            {
+              "id": "cc_sensation_other",
+              "label_en": "Other / describe in your own words",
+              "triggers_free_text_or_voice": true
+            }
+          ]
+        },
+        {
+          "field_id": "cc_timing",
+          "type": "multi_select",
+          "label_en": "Is it worse at a particular time or season?",
+          "options": [
+            {
+              "id": "morning",
+              "label_en": "Morning"
+            },
+            {
+              "id": "night",
+              "label_en": "Night"
+            },
+            {
+              "id": "summer",
+              "label_en": "Summer"
+            },
+            {
+              "id": "winter",
+              "label_en": "Winter"
+            },
+            {
+              "id": "monsoon",
+              "label_en": "Monsoon"
+            },
+            {
+              "id": "no_pattern",
+              "label_en": "No particular pattern"
+            },
+            {
+              "id": "cc_timing_other",
+              "label_en": "Other / describe in your own words",
+              "triggers_free_text_or_voice": true
+            }
+          ]
+        },
+        {
+          "field_id": "cc_aggravating",
+          "type": "multi_select",
+          "label_en": "What makes it worse?",
+          "options": [
+            {
+              "id": "food",
+              "label_en": "Certain food"
+            },
+            {
+              "id": "activity",
+              "label_en": "Physical activity"
+            },
+            {
+              "id": "cold",
+              "label_en": "Cold weather/breeze"
+            },
+            {
+              "id": "stress",
+              "label_en": "Mental stress"
+            },
+            {
+              "id": "none_agg",
+              "label_en": "Nothing in particular"
+            },
+            {
+              "id": "cc_aggravating_other",
+              "label_en": "Other / describe in your own words",
+              "triggers_free_text_or_voice": true
+            }
+          ]
+        },
+        {
+          "field_id": "cc_relieving",
+          "type": "multi_select",
+          "label_en": "What makes it feel better?",
+          "options": [
+            {
+              "id": "rest",
+              "label_en": "Rest"
+            },
+            {
+              "id": "warmth",
+              "label_en": "Warm application"
+            },
+            {
+              "id": "medication",
+              "label_en": "Medication"
+            },
+            {
+              "id": "none_rel",
+              "label_en": "Nothing helps so far"
+            },
+            {
+              "id": "cc_relieving_other",
+              "label_en": "Other / describe in your own words",
+              "triggers_free_text_or_voice": true
+            }
+          ]
+        },
+        {
+          "field_id": "cc_severity",
+          "type": "scale_1_10",
+          "label_en": "On a scale of 1-10, how severe is it?"
+        },
+        {
+          "field_id": "cc_recurrence",
+          "type": "yes_no_with_followup",
+          "label_en": "Has this ever happened before?",
+          "followup_if_yes": {
+            "field_id": "cc_recurrence_detail",
+            "type": "free_text_or_voice",
+            "label_en": "When, and how was it then?"
+          }
+        }
+      ],
+      "on_complete": {
+        "default_next": "HISTORY_OF_PRESENT_ILLNESS"
+      }
+    },
+    "HISTORY_OF_PRESENT_ILLNESS": {
+      "step_type": "composite",
+      "title_en": "How Things Have Progressed",
+      "applies_to": "both",
+      "fields": [
+        {
+          "field_id": "hpi_progression",
+          "type": "free_text_or_voice",
+          "label_en": "How did the symptoms progress from start to now?"
+        },
+        {
+          "field_id": "hpi_treatment_tried",
+          "type": "yes_no_with_followup",
+          "label_en": "Have you taken any treatment for this episode already?",
+          "followup_if_yes": {
+            "field_id": "hpi_treatment_helped",
+            "type": "single_select",
+            "label_en": "Did it help?",
+            "options": [
+              {
+                "id": "yes_helped",
+                "label_en": "Yes, it helped"
+              },
+              {
+                "id": "no_help",
+                "label_en": "No, it did not help"
+              },
+              {
+                "id": "partial",
+                "label_en": "Helped a little"
+              }
+            ]
+          }
+        },
+        {
+          "field_id": "hpi_associated_symptoms",
+          "type": "free_text_or_voice",
+          "label_en": "Any other symptoms occurring alongside the main complaint?"
+        },
+        {
+          "field_id": "hpi_appetite_change",
+          "type": "yes_no",
+          "label_en": "Has your appetite changed since this started?"
+        },
+        {
+          "field_id": "hpi_sleep_change",
+          "type": "yes_no",
+          "label_en": "Has your sleep changed since this started?"
+        },
+        {
+          "field_id": "hpi_energy_change",
+          "type": "yes_no",
+          "label_en": "Has your energy level changed since this started?"
+        },
+        {
+          "field_id": "hpi_weight_change",
+          "type": "yes_no",
+          "label_en": "Has your weight changed recently?"
+        }
+      ],
+      "on_complete": {
+        "default_next": "DEPARTMENT_MODULE"
+      }
+    },
+    "DEPARTMENT_MODULE": {
+      "step_type": "dynamic_injection",
+      "title_en": "About Your [Department]",
+      "applies_to": "both",
+      "note": "Loads exactly ONE of the sub-modules below, selected by the department already chosen upstream (Step 0). Each option that gets selected can trigger a nested follow-up - this is the 'branches on the specific answer' behavior the PS asks for, not just a flat checklist.",
+      "modules": {
+        "EYES": {
+          "fields": [
+            {
+              "field_id": "eyes_symptoms",
+              "type": "multi_select",
+              "label_en": "Do you have any of the following eye problems?",
+              "options": [
+                {
+                  "id": "eye_pain",
+                  "label_en": "Pain in or around the eyes"
+                },
+                {
+                  "id": "eye_dry",
+                  "label_en": "Dry or gritty feeling"
+                },
+                {
+                  "id": "eye_watering",
+                  "label_en": "Excessive watering"
+                },
+                {
+                  "id": "eye_redness",
+                  "label_en": "Redness"
+                },
+                {
+                  "id": "eye_discharge",
+                  "label_en": "Discharge from the eyes"
+                },
+                {
+                  "id": "eye_blurred",
+                  "label_en": "Blurred or reduced vision"
+                },
+                {
+                  "id": "eye_jaundice",
+                  "label_en": "Yellowish discoloration of the white of the eye"
+                },
+                {
+                  "id": "eye_halos",
+                  "label_en": "Halos around lights"
+                },
+                {
+                  "id": "eye_ptosis",
+                  "label_en": "Drooping of an eyelid"
+                },
+                {
+                  "id": "eye_night",
+                  "label_en": "Difficulty seeing at night"
+                },
+                {
+                  "id": "none_eyes",
+                  "label_en": "None of these"
+                },
+                {
+                  "id": "eyes_symptoms_other",
+                  "label_en": "Other / describe in your own words",
+                  "triggers_free_text_or_voice": true
+                }
+              ],
+              "conditional_followups": [
+                {
+                  "trigger_option": "eye_discharge",
+                  "followup": {
+                    "field_id": "eye_discharge_type",
+                    "type": "single_select",
+                    "label_en": "What kind of discharge?",
+                    "options": [
+                      {
+                        "id": "watery",
+                        "label_en": "Watery"
+                      },
+                      {
+                        "id": "sticky",
+                        "label_en": "Sticky"
+                      },
+                      {
+                        "id": "pus",
+                        "label_en": "Pus-like"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "trigger_option": "eye_redness",
+                  "followup": {
+                    "field_id": "eye_redness_trigger",
+                    "type": "single_select",
+                    "label_en": "Does it happen more with anger, alcohol, or sunlight?",
+                    "options": [
+                      {
+                        "id": "anger",
+                        "label_en": "Anger"
+                      },
+                      {
+                        "id": "alcohol",
+                        "label_en": "Alcohol"
+                      },
+                      {
+                        "id": "sunlight",
+                        "label_en": "Sunlight"
+                      },
+                      {
+                        "id": "no_trigger",
+                        "label_en": "No particular trigger"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "EARS": {
+          "fields": [
+            {
+              "field_id": "ears_symptoms",
+              "type": "multi_select",
+              "label_en": "Do you have any of the following ear problems?",
+              "options": [
+                {
+                  "id": "ear_pain",
+                  "label_en": "Pain in either ear"
+                },
+                {
+                  "id": "ear_discharge",
+                  "label_en": "Discharge from the ear"
+                },
+                {
+                  "id": "tinnitus",
+                  "label_en": "Ringing or buzzing (tinnitus)"
+                },
+                {
+                  "id": "hearing_loss",
+                  "label_en": "Reduced hearing"
+                },
+                {
+                  "id": "ear_fullness",
+                  "label_en": "Fullness or blockage"
+                },
+                {
+                  "id": "ear_itching",
+                  "label_en": "Itching inside the ear canal"
+                },
+                {
+                  "id": "ear_recent_infection",
+                  "label_en": "Recent ear infection"
+                },
+                {
+                  "id": "vertigo",
+                  "label_en": "Dizziness or spinning sensation"
+                },
+                {
+                  "id": "none_ears",
+                  "label_en": "None of these"
+                },
+                {
+                  "id": "ears_symptoms_other",
+                  "label_en": "Other / describe in your own words",
+                  "triggers_free_text_or_voice": true
+                }
+              ],
+              "conditional_followups": [
+                {
+                  "trigger_option": "vertigo",
+                  "followup": {
+                    "field_id": "vertigo_frequency",
+                    "type": "single_select",
+                    "label_en": "How often does the spinning sensation happen?",
+                    "options": [
+                      {
+                        "id": "rarely",
+                        "label_en": "Rarely"
+                      },
+                      {
+                        "id": "sometimes",
+                        "label_en": "Sometimes"
+                      },
+                      {
+                        "id": "often",
+                        "label_en": "Often"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "NOSE": {
+          "fields": [
+            {
+              "field_id": "nose_symptoms",
+              "type": "multi_select",
+              "label_en": "Do you have any of the following nose problems?",
+              "options": [
+                {
+                  "id": "congestion",
+                  "label_en": "Nasal congestion or blockage"
+                },
+                {
+                  "id": "sneezing",
+                  "label_en": "Frequent sneezing"
+                },
+                {
+                  "id": "runny_nose",
+                  "label_en": "Runny nose"
+                },
+                {
+                  "id": "reduced_smell",
+                  "label_en": "Reduced sense of smell"
+                },
+                {
+                  "id": "nosebleeds",
+                  "label_en": "Nosebleeds"
+                },
+                {
+                  "id": "nose_polyps_septum",
+                  "label_en": "Known nasal polyps or deviated septum"
+                },
+                {
+                  "id": "nose_dust_trigger",
+                  "label_en": "Worse with dust, pollen, or specific seasons"
+                },
+                {
+                  "id": "facial_pressure",
+                  "label_en": "Facial pain or pressure around sinuses"
+                },
+                {
+                  "id": "none_nose",
+                  "label_en": "None of these"
+                },
+                {
+                  "id": "nose_symptoms_other",
+                  "label_en": "Other / describe in your own words",
+                  "triggers_free_text_or_voice": true
+                }
+              ],
+              "conditional_followups": [
+                {
+                  "trigger_option": "runny_nose",
+                  "followup": {
+                    "field_id": "discharge_character",
+                    "type": "single_select",
+                    "label_en": "Is the discharge watery, thick, or blood-tinged?",
+                    "options": [
+                      {
+                        "id": "watery_d",
+                        "label_en": "Watery"
+                      },
+                      {
+                        "id": "thick_d",
+                        "label_en": "Thick"
+                      },
+                      {
+                        "id": "blood_d",
+                        "label_en": "Blood-tinged"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "SKIN": {
+          "fields": [
+            {
+              "field_id": "skin_symptoms",
+              "type": "multi_select",
+              "label_en": "Do you have any of the following skin problems?",
+              "options": [
+                {
+                  "id": "rash",
+                  "label_en": "Rashes currently"
+                },
+                {
+                  "id": "itching",
+                  "label_en": "Excessive itching"
+                },
+                {
+                  "id": "easy_bruising",
+                  "label_en": "Easy bruising"
+                },
+                {
+                  "id": "non_healing",
+                  "label_en": "Non-healing wounds or ulcers"
+                },
+                {
+                  "id": "abnormal_sweat",
+                  "label_en": "Excessive or very little sweating"
+                },
+                {
+                  "id": "skin_discoloration",
+                  "label_en": "Patches lighter or darker than surrounding skin"
+                },
+                {
+                  "id": "skin_temp_abnormal",
+                  "label_en": "Skin feels unusually cold or warm to touch"
+                },
+                {
+                  "id": "skin_infection",
+                  "label_en": "Acne, boils, or frequent infections"
+                },
+                {
+                  "id": "none_skin",
+                  "label_en": "None of these"
+                },
+                {
+                  "id": "skin_symptoms_other",
+                  "label_en": "Other / describe in your own words",
+                  "triggers_free_text_or_voice": true
+                }
+              ],
+              "conditional_followups": [
+                {
+                  "trigger_option": "non_healing",
+                  "followup": {
+                    "field_id": "non_healing_duration",
+                    "type": "free_text_or_voice",
+                    "label_en": "How long has the wound/ulcer been present?"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "HEART": {
+          "fields": [
+            {
+              "field_id": "heart_symptoms",
+              "type": "multi_select",
+              "label_en": "Do you have any of the following heart-related problems?",
+              "options": [
+                {
+                  "id": "tightness",
+                  "label_en": "Chest pain or tightness"
+                },
+                {
+                  "id": "palpitations",
+                  "label_en": "Palpitations (racing/fluttering heartbeat)"
+                },
+                {
+                  "id": "breathless_flat",
+                  "label_en": "Breathless while lying flat"
+                },
+                {
+                  "id": "breathless_exertion",
+                  "label_en": "Breathless on exertion or climbing stairs"
+                },
+                {
+                  "id": "swelling_legs",
+                  "label_en": "Swelling in feet, ankles, or legs"
+                },
+                {
+                  "id": "dizzy_standing",
+                  "label_en": "Dizzy or light-headed on standing"
+                },
+                {
+                  "id": "none_heart",
+                  "label_en": "None of these"
+                },
+                {
+                  "id": "heart_symptoms_other",
+                  "label_en": "Other / describe in your own words",
+                  "triggers_free_text_or_voice": true
+                }
+              ],
+              "conditional_followups": [
+                {
+                  "trigger_option": "tightness",
+                  "followup": {
+                    "field_id": "heart_tightness_radiation",
+                    "type": "single_select",
+                    "label_en": "Does the pain spread anywhere (arm, jaw, back)?",
+                    "options": [
+                      {
+                        "id": "arm",
+                        "label_en": "Arm"
+                      },
+                      {
+                        "id": "jaw",
+                        "label_en": "Jaw"
+                      },
+                      {
+                        "id": "back",
+                        "label_en": "Back"
+                      },
+                      {
+                        "id": "no_radiation",
+                        "label_en": "Stays in one place"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "field_id": "heart_bp_history",
+              "type": "single_select",
+              "label_en": "Have you ever been told you have high or low blood pressure?",
+              "options": [
+                {
+                  "id": "bp_high",
+                  "label_en": "High"
+                },
+                {
+                  "id": "bp_low",
+                  "label_en": "Low"
+                },
+                {
+                  "id": "bp_never",
+                  "label_en": "Never told"
+                }
+              ]
+            },
+            {
+              "field_id": "heart_cold_extremities",
+              "type": "yes_no",
+              "label_en": "Do you experience cold hands and feet frequently?"
+            },
+            {
+              "field_id": "heart_easily_tired",
+              "type": "yes_no",
+              "label_en": "Do you tire easily with minor physical activity?"
+            }
+          ]
+        },
+        "LUNGS": {
+          "fields": [
+            {
+              "field_id": "lungs_symptoms",
+              "type": "multi_select",
+              "label_en": "Do you have any of the following breathing/lung problems?",
+              "options": [
+                {
+                  "id": "cough",
+                  "label_en": "Persistent cough"
+                },
+                {
+                  "id": "wheezing",
+                  "label_en": "Wheezing or whistling sound"
+                },
+                {
+                  "id": "breathless_mild",
+                  "label_en": "Breathless with mild exertion"
+                },
+                {
+                  "id": "chest_tightness_lung",
+                  "label_en": "Chest tightness or heaviness"
+                },
+                {
+                  "id": "snoring",
+                  "label_en": "Loud snoring or breathing pauses in sleep"
+                },
+                {
+                  "id": "none_lungs",
+                  "label_en": "None of these"
+                },
+                {
+                  "id": "lungs_symptoms_other",
+                  "label_en": "Other / describe in your own words",
+                  "triggers_free_text_or_voice": true
+                }
+              ],
+              "conditional_followups": [
+                {
+                  "trigger_option": "cough",
+                  "followup": {
+                    "field_id": "cough_type",
+                    "type": "single_select",
+                    "label_en": "Is the cough dry or with phlegm?",
+                    "options": [
+                      {
+                        "id": "dry_cough",
+                        "label_en": "Dry"
+                      },
+                      {
+                        "id": "productive_cough",
+                        "label_en": "With phlegm"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "trigger_option": "productive_cough",
+                  "followup": {
+                    "field_id": "phlegm_color",
+                    "type": "single_select",
+                    "label_en": "What color is the phlegm?",
+                    "options": [
+                      {
+                        "id": "clear_ph",
+                        "label_en": "Clear"
+                      },
+                      {
+                        "id": "white_ph",
+                        "label_en": "White"
+                      },
+                      {
+                        "id": "yellow_ph",
+                        "label_en": "Yellow"
+                      },
+                      {
+                        "id": "green_ph",
+                        "label_en": "Green"
+                      },
+                      {
+                        "id": "blood_ph",
+                        "label_en": "Blood-tinged"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "field_id": "lungs_chronic_history",
+              "type": "multi_select",
+              "label_en": "Do you have a history of any of these?",
+              "options": [
+                {
+                  "id": "asthma_l",
+                  "label_en": "Asthma"
+                },
+                {
+                  "id": "bronchitis_l",
+                  "label_en": "Bronchitis"
+                },
+                {
+                  "id": "tb_l",
+                  "label_en": "Tuberculosis"
+                },
+                {
+                  "id": "none_l_hist",
+                  "label_en": "None of these"
+                }
+              ]
+            },
+            {
+              "field_id": "lungs_smoking",
+              "type": "single_select",
+              "label_en": "Do you smoke, or have you smoked in the past?",
+              "options": [
+                {
+                  "id": "smoke_current",
+                  "label_en": "Currently smoke"
+                },
+                {
+                  "id": "smoke_past",
+                  "label_en": "Smoked in the past"
+                },
+                {
+                  "id": "smoke_never",
+                  "label_en": "Never smoked"
+                }
+              ]
+            }
+          ]
+        },
+        "KIDNEY": {
+          "fields": [
+            {
+              "field_id": "kidney_symptoms",
+              "type": "multi_select",
+              "label_en": "Do you have any of the following urinary problems?",
+              "options": [
+                {
+                  "id": "burning_urination",
+                  "label_en": "Burning or pain while urinating"
+                },
+                {
+                  "id": "blood_urine",
+                  "label_en": "Blood in the urine"
+                },
+                {
+                  "id": "weak_stream",
+                  "label_en": "Weak or difficult urine stream"
+                },
+                {
+                  "id": "incomplete_emptying",
+                  "label_en": "Bladder feels not fully empty"
+                },
+                {
+                  "id": "urgency",
+                  "label_en": "Sudden urgent need to urinate"
+                },
+                {
+                  "id": "swelling_general",
+                  "label_en": "Swelling around eyes, face, or legs"
+                },
+                {
+                  "id": "none_kidney",
+                  "label_en": "None of these"
+                },
+                {
+                  "id": "kidney_symptoms_other",
+                  "label_en": "Other / describe in your own words",
+                  "triggers_free_text_or_voice": true
+                }
+              ],
+              "conditional_followups": [
+                {
+                  "trigger_option": "blood_urine",
+                  "followup": {
+                    "field_id": "blood_urine_duration",
+                    "type": "free_text_or_voice",
+                    "label_en": "Since when have you noticed this?"
+                  }
+                }
+              ]
+            },
+            {
+              "field_id": "kidney_day_frequency",
+              "type": "free_text_or_voice",
+              "label_en": "How many times do you urinate during the day?"
+            },
+            {
+              "field_id": "kidney_night_frequency",
+              "type": "free_text_or_voice",
+              "label_en": "How many times do you wake up at night to urinate?"
+            },
+            {
+              "field_id": "kidney_stone_history",
+              "type": "yes_no",
+              "label_en": "Have you ever had kidney stones?"
+            }
+          ]
+        },
+        "DIGESTION": {
+          "fields": [
+            {
+              "field_id": "digestion_symptoms",
+              "type": "multi_select",
+              "label_en": "Do you have any of the following digestion-related problems?",
+              "options": [
+                {
+                  "id": "bloating",
+                  "label_en": "Bloating after meals"
+                },
+                {
+                  "id": "heartburn",
+                  "label_en": "Acidity or heartburn"
+                },
+                {
+                  "id": "nausea",
+                  "label_en": "Nausea or vomiting"
+                },
+                {
+                  "id": "abdominal_heaviness",
+                  "label_en": "Heaviness in the abdomen after eating"
+                },
+                {
+                  "id": "food_intolerance",
+                  "label_en": "Certain foods consistently disagree with you"
+                },
+                {
+                  "id": "none_digestion",
+                  "label_en": "None of these"
+                },
+                {
+                  "id": "digestion_symptoms_other",
+                  "label_en": "Other / describe in your own words",
+                  "triggers_free_text_or_voice": true
+                }
+              ],
+              "conditional_followups": [
+                {
+                  "trigger_option": "nausea",
+                  "followup": {
+                    "field_id": "nausea_vomiting_frequency",
+                    "type": "single_select",
+                    "label_en": "How often does this happen?",
+                    "options": [
+                      {
+                        "id": "rare_n",
+                        "label_en": "Rarely"
+                      },
+                      {
+                        "id": "frequent_n",
+                        "label_en": "Frequently"
+                      },
+                      {
+                        "id": "daily_n",
+                        "label_en": "Daily"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "field_id": "digestion_appetite",
+              "type": "single_select",
+              "label_en": "How would you describe your appetite?",
+              "options": [
+                {
+                  "id": "strong_app",
+                  "label_en": "Strong"
+                },
+                {
+                  "id": "irregular_app",
+                  "label_en": "Irregular"
+                },
+                {
+                  "id": "poor_app",
+                  "label_en": "Poor"
+                }
+              ]
+            },
+            {
+              "field_id": "digestion_bowel_pattern",
+              "type": "single_select",
+              "label_en": "How would you describe your bowel movements?",
+              "options": [
+                {
+                  "id": "soft_bp",
+                  "label_en": "Soft"
+                },
+                {
+                  "id": "hard_bp",
+                  "label_en": "Hard"
+                },
+                {
+                  "id": "loose_bp",
+                  "label_en": "Loose"
+                },
+                {
+                  "id": "alternating_bp",
+                  "label_en": "Alternating"
+                }
+              ]
+            },
+            {
+              "field_id": "digestion_bowel_frequency",
+              "type": "free_text_or_voice",
+              "label_en": "How many times a day do you pass stool?"
+            }
+          ]
+        }
+      },
+      "on_complete": {
+        "default_next": "TRACK_SPLIT"
+      }
+    },
+    "TRACK_SPLIT": {
+      "step_type": "fork",
+      "note": "Not a patient-facing question - routes based on the Allopathy/Ayurveda track already chosen upstream (Step 0).",
+      "routes": {
+        "allopathy": "ALLOPATHY_SEVERITY",
+        "ayurveda": "AYURVEDA_AGNI"
+      }
+    },
+    "ALLOPATHY_SEVERITY": {
+      "step_type": "composite",
+      "title_en": "Severity & General Symptoms",
+      "applies_to": "allopathy",
+      "fields": [
+        {
+          "field_id": "allo_systemic_symptoms",
+          "type": "multi_select",
+          "label_en": "Any of these general symptoms right now?",
+          "options": [
+            {
+              "id": "fever_sys",
+              "label_en": "Fever"
+            },
+            {
+              "id": "chills_sys",
+              "label_en": "Chills"
+            },
+            {
+              "id": "weight_loss_sys",
+              "label_en": "Unexpected weight loss"
+            },
+            {
+              "id": "fatigue_sys",
+              "label_en": "Fatigue"
+            },
+            {
+              "id": "none_sys",
+              "label_en": "None of these"
+            },
+            {
+              "id": "allo_systemic_symptoms_other",
+              "label_en": "Other / describe in your own words",
+              "triggers_free_text_or_voice": true
+            }
+          ]
+        }
+      ],
+      "on_complete": {
+        "default_next": "ALLOPATHY_TREATMENT_HISTORY"
+      }
+    },
+    "ALLOPATHY_TREATMENT_HISTORY": {
+      "step_type": "composite",
+      "title_en": "Care So Far",
+      "applies_to": "allopathy",
+      "fields": [
+        {
+          "field_id": "allo_prior_consult",
+          "type": "yes_no",
+          "label_en": "Have you consulted a doctor for this before?"
+        },
+        {
+          "field_id": "allo_diagnostic_tests",
+          "type": "yes_no_with_followup",
+          "label_en": "Have you had any diagnostic tests done for this?",
+          "followup_if_yes": {
+            "field_id": "allo_diagnostic_tests_detail",
+            "type": "free_text_or_voice",
+            "label_en": "What tests, and do you have the reports? (You can upload them in the next step.)"
+          }
+        }
+      ],
+      "on_complete": {
+        "default_next": "ALLOPATHY_LIFESTYLE"
+      }
+    },
+    "AYURVEDA_AGNI": {
+      "step_type": "composite",
+      "title_en": "Agni (Digestive Capacity)",
+      "applies_to": "ayurveda",
+      "fields": [
+        {
+          "field_id": "agni_appetite",
+          "type": "single_select",
+          "label_en": "When you are otherwise well, is your appetite usually irregular, strong/quick, or steady/moderate?",
+          "options": [
+            {
+              "id": "irregular_a",
+              "label_en": "Irregular"
+            },
+            {
+              "id": "strong_a",
+              "label_en": "Strong/quick"
+            },
+            {
+              "id": "steady_a",
+              "label_en": "Steady/moderate"
+            }
+          ]
+        },
+        {
+          "field_id": "agni_meal_interval",
+          "type": "free_text_or_voice",
+          "label_en": "How long does it typically take you to feel hungry again after a meal?"
+        },
+        {
+          "field_id": "agni_heartburn_level",
+          "type": "single_select",
+          "label_en": "How often do you get acidity or heartburn?",
+          "options": [
+            {
+              "id": "rare_hb",
+              "label_en": "Rarely"
+            },
+            {
+              "id": "sometimes_hb",
+              "label_en": "Sometimes"
+            },
+            {
+              "id": "often_hb",
+              "label_en": "Often"
+            }
+          ]
+        }
+      ],
+      "on_complete": {
+        "default_next": "AYURVEDA_KOSHTHA"
+      }
+    },
+    "AYURVEDA_KOSHTHA": {
+      "step_type": "composite",
+      "title_en": "Koshtha (Bowel Nature)",
+      "applies_to": "ayurveda",
+      "fields": [
+        {
+          "field_id": "koshtha_consistency",
+          "type": "single_select",
+          "label_en": "How would you describe your bowel movements?",
+          "options": [
+            {
+              "id": "soft_k",
+              "label_en": "Soft"
+            },
+            {
+              "id": "hard_k",
+              "label_en": "Hard"
+            },
+            {
+              "id": "loose_k",
+              "label_en": "Loose"
+            },
+            {
+              "id": "alternating_k",
+              "label_en": "Alternating"
+            }
+          ]
+        },
+        {
+          "field_id": "koshtha_straining",
+          "type": "yes_no",
+          "label_en": "Do you strain during bowel movements?"
+        },
+        {
+          "field_id": "koshtha_gas",
+          "type": "yes_no",
+          "label_en": "Do you experience gas or excessive flatulence?"
+        }
+      ],
+      "on_complete": {
+        "default_next": "AYURVEDA_ASHTAVIDHA"
+      }
+    },
+    "AYURVEDA_ASHTAVIDHA": {
+      "step_type": "composite",
+      "title_en": "A Few Physical Signs",
+      "applies_to": "ayurveda",
+      "classical_mapping_note": "Doctor-dashboard-only: map these to Ashtavidha Pariksha proxies for physician view; NOT labeled with Sanskrit terms on the patient screen.",
+      "fields": [
+        {
+          "field_id": "tongue_coating",
+          "type": "single_select",
+          "label_en": "Is your tongue often coated white or yellow in the morning?",
+          "options": [
+            {
+              "id": "white_t",
+              "label_en": "White"
+            },
+            {
+              "id": "yellow_t",
+              "label_en": "Yellow"
+            },
+            {
+              "id": "none_t",
+              "label_en": "Not usually"
+            }
+          ]
+        },
+        {
+          "field_id": "mouth_taste",
+          "type": "yes_no",
+          "label_en": "Do you have a bitter or metallic taste in your mouth on waking?"
+        },
+        {
+          "field_id": "body_temp_tendency",
+          "type": "single_select",
+          "label_en": "Does your body usually run warmer or cooler than others around you?",
+          "options": [
+            {
+              "id": "warmer_b",
+              "label_en": "Warmer"
+            },
+            {
+              "id": "cooler_b",
+              "label_en": "Cooler"
+            },
+            {
+              "id": "average_b",
+              "label_en": "About average"
+            }
+          ]
+        }
+      ],
+      "on_complete": {
+        "default_next": "AYURVEDA_AHARA_VIHARA"
+      }
+    },
+    "AYURVEDA_AHARA_VIHARA": {
+      "step_type": "composite",
+      "title_en": "Diet & Daily Routine",
+      "applies_to": "ayurveda",
+      "fields": [
+        {
+          "field_id": "taste_preference",
+          "type": "multi_select",
+          "label_en": "Which tastes do you prefer in food?",
+          "options": [
+            {
+              "id": "spicy_t",
+              "label_en": "Spicy"
+            },
+            {
+              "id": "sour_t",
+              "label_en": "Sour"
+            },
+            {
+              "id": "sweet_t",
+              "label_en": "Sweet"
+            },
+            {
+              "id": "salty_t",
+              "label_en": "Salty"
+            },
+            {
+              "id": "bitter_t",
+              "label_en": "Bitter"
+            }
+          ]
+        },
+        {
+          "field_id": "sleep_hours",
+          "type": "single_select",
+          "label_en": "How many hours do you sleep per night?",
+          "options": [
+            {
+              "id": "lt6",
+              "label_en": "Less than 6"
+            },
+            {
+              "id": "6to8",
+              "label_en": "6-8"
+            },
+            {
+              "id": "gt8",
+              "label_en": "More than 8"
+            }
+          ]
+        },
+        {
+          "field_id": "stress_level",
+          "type": "single_select",
+          "label_en": "How would you describe your daily stress level?",
+          "options": [
+            {
+              "id": "low_s",
+              "label_en": "Low"
+            },
+            {
+              "id": "moderate_s",
+              "label_en": "Moderate"
+            },
+            {
+              "id": "high_s",
+              "label_en": "High"
+            }
+          ]
+        }
+      ],
+      "on_complete": {
+        "default_next": "PAST_HISTORY_AND_ALLERGIES"
+      }
+    },
+    "PAST_HISTORY_AND_ALLERGIES": {
+      "step_type": "composite",
+      "title_en": "Past Health & Allergies",
+      "applies_to": "both",
+      "note": "NEW shared node (see flag #2) - previously only asked on the Allopathy track.",
+      "fields": [
+        {
+          "field_id": "chronic_conditions",
+          "type": "multi_select",
+          "label_en": "Do you have any of these chronic conditions?",
+          "options": [
+            {
+              "id": "diabetes",
+              "label_en": "Diabetes"
+            },
+            {
+              "id": "hypertension",
+              "label_en": "High blood pressure"
+            },
+            {
+              "id": "thyroid",
+              "label_en": "Thyroid disorder"
+            },
+            {
+              "id": "asthma_cc",
+              "label_en": "Asthma"
+            },
+            {
+              "id": "none_cc",
+              "label_en": "None of these"
+            },
+            {
+              "id": "chronic_conditions_other",
+              "label_en": "Other / describe in your own words",
+              "triggers_free_text_or_voice": true
+            }
+          ]
+        },
+        {
+          "field_id": "past_surgeries",
+          "type": "yes_no_with_followup",
+          "label_en": "Have you had any past surgeries?",
+          "followup_if_yes": {
+            "field_id": "past_surgeries_detail",
+            "type": "free_text_or_voice",
+            "label_en": "What surgery, and when?"
+          }
+        },
+        {
+          "field_id": "known_allergies",
+          "type": "yes_no_with_followup",
+          "label_en": "Do you have any known allergies (medicines, foods, herbs, or metals)?",
+          "followup_if_yes": {
+            "field_id": "known_allergies_detail",
+            "type": "free_text_or_voice",
+            "label_en": "Please describe the allergy and reaction."
+          }
+        }
+      ],
+      "on_complete": {
+        "default_next": "MEDICATIONS"
+      }
+    },
+    "MEDICATIONS": {
+      "step_type": "composite",
+      "title_en": "Current Medications",
+      "applies_to": "both",
+      "fields": [
+        {
+          "field_id": "current_medications",
+          "type": "multi_select_with_add",
+          "label_en": "Which medicines do you currently take regularly?",
+          "options": [
+            {
+              "id": "metformin",
+              "label_en": "Metformin (sugar)"
+            },
+            {
+              "id": "telmisartan",
+              "label_en": "Telmisartan (BP)"
+            },
+            {
+              "id": "thyroxine",
+              "label_en": "Thyroxine (thyroid)"
+            },
+            {
+              "id": "ashwagandha",
+              "label_en": "Ashwagandha Churna/Vati"
+            },
+            {
+              "id": "triphala",
+              "label_en": "Triphala Kwath/Churna"
+            },
+            {
+              "id": "none_meds",
+              "label_en": "I do not take any regular medicines"
+            }
+          ],
+          "allow_custom_add": true
+        }
+      ],
+      "on_complete": {
+        "rules": [
+          {
+            "condition": {
+              "patient_sex": "female",
+              "patient_age_between": [
+                10,
+                60
+              ]
+            },
+            "action": "append_fields",
+            "append": [
+              {
+                "field_id": "lmp_status",
+                "type": "single_select",
+                "label_en": "Date of last menstrual period and current status",
+                "options": [
+                  {
+                    "id": "regular_lmp",
+                    "label_en": "Regular"
+                  },
+                  {
+                    "id": "irregular_lmp",
+                    "label_en": "Irregular"
+                  },
+                  {
+                    "id": "pregnant_lmp",
+                    "label_en": "Pregnant"
+                  },
+                  {
+                    "id": "menopausal_lmp",
+                    "label_en": "Menopausal"
+                  }
+                ]
+              }
+            ],
+            "note": "CONFIRM: kept minimal (LMP+status only), not full Section 16 obstetric history - see flag #3."
+          }
+        ],
+        "default_next": "END_OF_INTERVIEW"
+      }
+    },
+    "END_OF_INTERVIEW": {
+      "step_type": "terminal",
+      "next_screen": "document_upload"
+    },
+    "ALLOPATHY_LIFESTYLE": {
+      "step_type": "composite",
+      "title_en": "Occupation & Lifestyle",
+      "applies_to": "allopathy",
+      "fields": [
+        {
+          "field_id": "occupational_hazards",
+          "type": "multi_select",
+          "label_en": "Are you exposed to any of these at work or home?",
+          "options": [
+            {
+              "id": "chemicals_haz",
+              "label_en": "Chemicals/fumes"
+            },
+            {
+              "id": "heavy_labor_haz",
+              "label_en": "Heavy physical labor"
+            },
+            {
+              "id": "sitting_haz",
+              "label_en": "Prolonged sitting"
+            },
+            {
+              "id": "none_haz",
+              "label_en": "None of these"
+            }
+          ]
+        },
+        {
+          "field_id": "smoking_alcohol_habits",
+          "type": "multi_select",
+          "label_en": "Do you use any of the following?",
+          "options": [
+            {
+              "id": "smoking_h",
+              "label_en": "Smoking"
+            },
+            {
+              "id": "alcohol_h",
+              "label_en": "Alcohol"
+            },
+            {
+              "id": "tobacco_h",
+              "label_en": "Tobacco/chewing"
+            },
+            {
+              "id": "none_habits",
+              "label_en": "None of these"
+            }
+          ]
+        },
+        {
+          "field_id": "exercise_habit",
+          "type": "single_select",
+          "label_en": "How would you describe your exercise habit?",
+          "options": [
+            {
+              "id": "regular_ex",
+              "label_en": "Regular"
+            },
+            {
+              "id": "occasional_ex",
+              "label_en": "Occasional"
+            },
+            {
+              "id": "none_ex",
+              "label_en": "Rarely/never"
+            }
+          ]
+        }
+      ],
+      "on_complete": {
+        "default_next": "PAST_HISTORY_AND_ALLERGIES"
+      }
+    }
+  }
+}

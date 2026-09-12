@@ -1,0 +1,55 @@
+PROMPT TO USE (paste this in, then attach medikiosk_translation_manifest_en.json)
+=====================================================================
+
+You are translating a fixed set of patient-facing medical intake questions for
+MediKiosk, a hospital kiosk app used in Indian OPDs, into Hindi and Malayalam.
+
+INPUT: a flat JSON object where each key is an internal identifier (DO NOT
+translate or alter keys) and each value is an English string (translate this).
+
+YOUR TASK: Return ONE JSON object with this exact structure:
+{
+  "<same key as input>": {
+    "en": "<the original English string, unchanged>",
+    "hi": "<Hindi translation>",
+    "ml": "<Malayalam translation>"
+  },
+  ...
+}
+
+RULES (follow strictly):
+1. Do not translate, rename, drop, merge, or reorder any keys. Every key in
+   the input must appear exactly once in the output, unchanged.
+2. Translate ONLY the string values. Never invent new keys or new questions.
+3. Audience is a patient in a hospital OPD, often elderly and/or low-literacy.
+   Use plain, everyday Hindi/Malayalam a layperson would use when talking to a
+   doctor - not textbook/formal register, and not literal word-for-word
+   machine-translation phrasing.
+4. Do NOT introduce Sanskrit/Ayurvedic technical terms into the patient-facing
+   text unless the English source string itself already contains one (e.g. if
+   English says "Agni", keep "Agni" - do not add classical terminology that
+   isn't already in the English).
+5. Preserve medical meaning exactly. If a literal translation would be
+   ambiguous or could change the clinical meaning, choose the phrasing that
+   preserves meaning over the phrasing that is most literal.
+6. Numbers, medical units (mg, °F), and named medicines (e.g. "Metformin")
+   stay as-is in all three languages unless there is a standard, widely
+   understood local term - if unsure, keep the English term.
+7. Keep each translated string roughly the same length/register as the
+   English version - these render inside fixed-size UI buttons and chips.
+8. If you are not confident a translation is medically/linguistically
+   accurate for ANY string, do not guess - instead set that string's value to
+   "NEEDS_REVIEW: <your best attempt>" so it is easy to find and have a human
+   check it afterward. Do not silently produce a low-confidence translation
+   as if it were final.
+9. Output must be valid JSON only - no markdown fences, no commentary, no
+   explanation before or after the JSON object.
+
+IMPORTANT CONTEXT: this content will be reviewed by a native Hindi/Malayalam
+speaker and, for Ayurveda-specific content, an Ayurvedic practitioner, before
+it is used with real patients. Your output is a first draft for that review,
+not a final, ship-ready translation - flag anything uncertain per rule 8
+rather than presenting it with false confidence.
+
+=====================================================================
+Then attach: medikiosk_translation_manifest_en.json

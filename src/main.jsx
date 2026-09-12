@@ -1,11 +1,28 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './css/index.css'
-import App from './MedikioskApp.jsx'
-import "./css/index.css";
+import './styles/index.css'
+import App from './app/Medikiosk.jsx'
+import { createBrowserRouter, Navigate } from 'react-router'
+import { RouterProvider } from 'react-router/dom'
+import AdminDashboard from './pages/admin/AdminDashboard.jsx'
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <App />,
+  },
+  {
+    path: '/dashboard',
+    element: <AdminDashboard />,
+  },
+  {
+    path: '*',
+    element: <Navigate to="/" replace />,
+  },
+])
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </StrictMode>,
 )
