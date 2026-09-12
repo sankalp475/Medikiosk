@@ -47,7 +47,11 @@ explicitly confirmed.
 
 **Decided:**
 - Two paths: **ABHA ID** (persistent identity, past-visit lookup) and **Guest** (one-time only, no
-  persistence, no return lookup at all — not even via a token).
+  persistence, no return lookup at all — not even via a token). **Aadhaar is out for now** — despite
+  the PS naming it as a Step 1 alternative, only ABHA + Guest are implemented in this build.
+- **No third persistent-identity fallback for now.** A name+DOB+phone path (for patients with neither
+  ABHA nor Aadhaar on them who still want a retrievable record) is not implemented — ABHA/Guest remain
+  the only two identification paths. Both of these can be revisited later if time permits.
 - ABHA is **mocked**: the patient types an ABHA-shaped ID; there is no real call to UIDAI/ABDM to
   verify it. On first-time entry, a **hardcoded mock "ABHA fetch"** returns demo demographic data
   (name, age, sex) as if it came from the real registry; this is stored on the `Patient` record from
@@ -69,13 +73,6 @@ explicitly confirmed.
   visit: patient enters **either** their ABHA ID (hashed and compared) **or** their `patient_uuid`
   (matched directly) — both resolve to the same `Patient` row.
 
-**[OPEN]** Aadhaar — the PS text explicitly names Aadhaar as an alternative to ABHA at Step 1. Recent
-messages only discuss ABHA + Guest, dropping Aadhaar without an explicit decision to remove it.
-Confirm: ABHA + Guest only, or ABHA + Aadhaar + Guest?
-
-**[OPEN]** Name+DOB+phone as a third persistent-identity fallback (for someone with neither ABHA nor
-Aadhaar on them but who still wants a retrievable record) — asked once, never explicitly resolved.
-
 ---
 
 ## 3. Auth / Login (Doctor + Admin)
@@ -86,26 +83,16 @@ Aadhaar on them but who still wants a retrievable record) — asked once, never 
 - Doctor login needs to additionally return a `role` field in its response (currently returns
   access/refresh tokens + `doctor_id` only) so the frontend can route correctly.
 
-**[OPEN] — real conflict, needs your decision, not assumed:**
-The original Implementation Plan deliberately scoped Admin to use **Django's own built-in `/admin/`
-panel only** — no custom frontend route for Admin at all ("no custom UI needs to be built for this
-role"). But this message asks for a login that "returns username and role which will be either admin
-or doctor," implying **one shared custom-frontend login with role-based redirect** — which is exactly
-the `main.jsx`/`ProtectedRoute.jsx` pattern you attached (unrelated bus-fleet app, used here only as a
-structural reference for role-whitelisted routing + an axios-driven auth check).
-
-These are two different architectures:
-- **(a)** Admin only ever uses Django's separate `/admin/` (original plan) — Doctor is the only role
-  with a custom-frontend login.
-- **(b)** Admin and Doctor share one custom-frontend login, redirected by role like the reference
-  files show — this requires building an actual Admin-facing dashboard route, which the original plan
-  explicitly avoided to save build time.
-
-Also note: the reference pattern's `ProtectedRoute` calls a `/verify-auth` endpoint and relies on a
-long-lived session concept; MediKiosk's backend uses JWT access/refresh tokens (`simplejwt`) instead —
-if we adopt this pattern, it needs adapting to token-based auth, not copied as-is.
-
-**Please confirm (a) or (b) before this is built.**
+**Decided — resolves the (a)/(b) conflict below: option (b).**
+- Admin and Doctor **share one custom-frontend login, redirected by role** — not Django's built-in
+  `/admin/` panel. This supersedes the original plan's Admin-via-`/admin/`-only approach ("no custom
+  UI needs to be built for this role"); an actual Admin-facing dashboard route now needs to be built,
+  which the original plan had explicitly avoided to save build time.
+- The attached `main.jsx`/`ProtectedRoute.jsx` pattern (unrelated bus-fleet app) is the structural
+  reference for role-whitelisted routing + an axios-driven auth check — **adapted to MediKiosk's JWT
+  access/refresh tokens (`simplejwt`)**, not copied as-is, since the reference's `ProtectedRoute` calls
+  a `/verify-auth` endpoint and relies on a long-lived session concept that doesn't map directly onto
+  token-based auth.
 
 ---
 
@@ -215,11 +202,10 @@ Record client-side using the browser's `MediaRecorder` API directly in a compres
 `audio/webm;codecs=opus`) rather than raw WAV — this compresses on the actual bandwidth-constrained leg
 (patient's device → server over venue wifi), which is where compression actually matters.
 
-**[OPEN] — needs verification, not assumed:** Bhashini's documented pipeline (per your integration
-guide) expects a base64 payload with an explicit `audioFormat` and `samplingRate: 16000`, with the
-sample code using `"wav"`. Whether Bhashini's ASR service accepts `opus`/`webm` directly, or requires
-transcoding to 16kHz mono WAV/FLAC first, is unconfirmed — needs an actual test against the API. If
-transcoding is required, do it **server-side**, immediately before the Bhashini call — that leg isn't
+**Decided — confirmed against the API.** Bhashini's ASR service accepts WAV mainly, not `opus`/`webm`
+directly, so transcoding is required. The client-side recording stays compressed
+(`audio/webm;codecs=opus`, as above) for the bandwidth-constrained device→server leg; the backend then
+transcodes to 16kHz mono WAV **server-side, immediately before the Bhashini call** — that leg isn't
 bandwidth-constrained, so it costs no user-facing latency.
 
 Also keep individual clips short — already a stated demo-reliability tip in the original plan;
@@ -265,14 +251,17 @@ Never answered; affects the data model.
 
 ## 11. Implementation Order
 
-1. Resolve all **[OPEN]** items above that block design (Section 3's auth architecture and Section
-   2's Aadhaar/name+DOB+phone questions block real work; the rest can proceed in parallel).
+1. Section 3's auth architecture and Section 2's Aadhaar/name+DOB+phone questions are now resolved
+   (see Sections 2–3) and no longer block real work. Remaining **[OPEN]** items (Section 1's AYUSH
+   label, Section 4's content questions, Section 5's fallback providers, Section 9's prescription
+   model) can be resolved in parallel as they come up.
 2. Data model migrations (Section 10).
 3. `dialogue_engine.py` — the node-graph orchestrator described in Section 4, against
    `medikiosk_question_bank_v2.json`.
-4. Rewrite `patient_identify`/registration flow for ABHA-hash/Guest/UUID per Section 2.
-5. Update `doctor_login` response to include `role`; build out Admin auth per whichever Section 3
-   architecture is chosen.
+4. Rewrite `patient_identify`/registration flow for ABHA-hash/Guest/UUID per Section 2 (no Aadhaar, no
+   name+DOB+phone fallback).
+5. Update `doctor_login` response to include `role`; build out Admin auth per Section 3's option (b) —
+   shared custom-frontend login with role-based redirect.
 6. AI fallback chain modules (`asr.py`, `tts.py`, OCR/summarizer second providers) — as soon as
    provider choices land.
 7. TTS pre-generation/seeding script per Section 6.
