@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { HeartPulse, Stethoscope, ShieldCheck, User, Mail, Lock, Eye, EyeOff, ArrowRight, Sparkles } from "lucide-react";
 import { getDashboardPath, saveUserSession } from "../../auth/auth";
+import { authenticateAccount } from "../../storage/db";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -20,13 +21,21 @@ export default function LoginPage() {
       return;
     }
 
+    const authResult = authenticateAccount(email, password, role);
+    if (!authResult.success) {
+      setError(authResult.error);
+      return;
+    }
+
     saveUserSession({
-      access: "demo-access-token",
-      refresh: "demo-refresh-token",
-      role,
-      email: email.trim(),
+      access: "local-session-" + Date.now(),
+      refresh: "local-refresh-" + Date.now(),
+      role: authResult.user.role || role,
+      email: authResult.user.email,
+      name: authResult.user.name,
+      department: authResult.user.department,
     });
-    navigate(location.state?.from || getDashboardPath(role), { replace: true });
+    navigate(location.state?.from || getDashboardPath(authResult.user.role || role), { replace: true });
   }
 
   function handleDemoFill(demoRole, demoEmail, demoPass) {
