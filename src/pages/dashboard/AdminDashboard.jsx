@@ -414,26 +414,80 @@ export default function AdminDashboard() {
       </div>
 
       {/* Add Doctor modal */}
-      {isAddDoctorOpen && <dialog className="modal modal-open" open><div className="modal-box"><h2 className="text-xl font-bold">Add a doctor</h2><p className="mt-1 text-sm text-slate-500">Assign a doctor to a department queue.</p><form className="mt-5 space-y-4" onSubmit={addDoctor}><label className="form-control"><span className="label-text mb-2 font-medium">Doctor name</span><input className="input input-bordered" value={doctorName} onChange={(event) => setDoctorName(event.target.value)} placeholder="Dr. Priya Menon" required /></label><label className="form-control"><span className="label-text mb-2 font-medium">Department</span><select className="select select-bordered" value={doctorDepartment} onChange={(event) => setDoctorDepartment(event.target.value)}>{queues.map((queue) => <option key={queue.department}>{queue.department}</option>)}</select></label><div className="modal-action"><button className="btn btn-ghost" type="button" onClick={() => setIsAddDoctorOpen(false)}>Cancel</button><button className="btn border-0 bg-emerald-700 text-white hover:bg-emerald-800" type="submit">Add doctor</button></div></form></div><button className="modal-backdrop" type="button" aria-label="Close dialog" onClick={() => setIsAddDoctorOpen(false)}>Close</button></dialog>}
+      {isAddDoctorOpen && (
+        <dialog className="modal modal-open" open>
+          <div className="modal-box max-w-md">
+            <h2 className="text-xl font-bold text-slate-900">Add a doctor</h2>
+            <p className="mt-1 text-sm text-slate-500">Assign a doctor to a department queue.</p>
+            <form className="mt-5 space-y-4" onSubmit={addDoctor}>
+              <div className="flex flex-col">
+                <label className="mb-1.5 text-xs font-semibold text-slate-700">Doctor name</label>
+                <input
+                  className="input input-bordered w-full bg-white border-slate-300 text-sm focus:border-emerald-600 focus:outline-emerald-600"
+                  value={doctorName}
+                  onChange={(event) => setDoctorName(event.target.value)}
+                  placeholder="Dr. Priya Menon"
+                  required
+                />
+              </div>
+              <div className="flex flex-col">
+                <label className="mb-1.5 text-xs font-semibold text-slate-700">Department</label>
+                <select
+                  className="select select-bordered w-full bg-white border-slate-300 text-sm focus:border-emerald-600 focus:outline-emerald-600"
+                  value={doctorDepartment}
+                  onChange={(event) => setDoctorDepartment(event.target.value)}
+                >
+                  {queues.map((queue) => (
+                    <option key={queue.department}>{queue.department}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="modal-action">
+                <button className="btn btn-ghost" type="button" onClick={() => setIsAddDoctorOpen(false)}>
+                  Cancel
+                </button>
+                <button className="btn border-0 bg-emerald-700 text-white hover:bg-emerald-800" type="submit">
+                  Add doctor
+                </button>
+              </div>
+            </form>
+          </div>
+          <button className="modal-backdrop" type="button" aria-label="Close dialog" onClick={() => setIsAddDoctorOpen(false)}>
+            Close
+          </button>
+        </dialog>
+      )}
 
       {/* Add Department modal */}
       {isAddDepartmentOpen && (
         <dialog className="modal modal-open" open>
-          <div className="modal-box">
-            <h2 className="text-xl font-bold">Add a department</h2>
+          <div className="modal-box max-w-md">
+            <h2 className="text-xl font-bold text-slate-900">Add a department</h2>
             <p className="mt-1 text-sm text-slate-500">Create a new department queue.</p>
             <form className="mt-5 space-y-4" onSubmit={addDepartment}>
-              <label className="form-control">
-                <span className="label-text mb-2 font-medium">Department name</span>
-                <input className="input input-bordered" value={newDepartmentName} onChange={(event) => setNewDepartmentName(event.target.value)} placeholder="e.g. Dermatology" required />
-              </label>
+              <div className="flex flex-col">
+                <label className="mb-1.5 text-xs font-semibold text-slate-700">Department name</label>
+                <input
+                  className="input input-bordered w-full bg-white border-slate-300 text-sm focus:border-emerald-600 focus:outline-emerald-600"
+                  value={newDepartmentName}
+                  onChange={(event) => setNewDepartmentName(event.target.value)}
+                  placeholder="e.g. Dermatology"
+                  required
+                />
+              </div>
               <div className="modal-action">
-                <button className="btn btn-ghost" type="button" onClick={() => setIsAddDepartmentOpen(false)}>Cancel</button>
-                <button className="btn border-0 bg-emerald-700 text-white hover:bg-emerald-800" type="submit">Add department</button>
+                <button className="btn btn-ghost" type="button" onClick={() => setIsAddDepartmentOpen(false)}>
+                  Cancel
+                </button>
+                <button className="btn border-0 bg-emerald-700 text-white hover:bg-emerald-800" type="submit">
+                  Add department
+                </button>
               </div>
             </form>
           </div>
-          <button className="modal-backdrop" type="button" aria-label="Close dialog" onClick={() => setIsAddDepartmentOpen(false)}>Close</button>
+          <button className="modal-backdrop" type="button" aria-label="Close dialog" onClick={() => setIsAddDepartmentOpen(false)}>
+            Close
+          </button>
         </dialog>
       )}
 
