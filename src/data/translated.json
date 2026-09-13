@@ -1,0 +1,1522 @@
+{
+"RED_FLAG.title": {
+"en": "Safety Check",
+"hi": "सुरक्षा जांच",
+"ml": "സുരക്ഷാ പരിശോധന"
+},
+"RED_FLAG.red_flag_items.label": {
+"en": "Are you currently experiencing any of the following?",
+"hi": "क्या आपको अभी इनमें से कोई समस्या हो रही है?",
+"ml": "നിങ്ങൾക്ക് നിലവിൽ താഴെ പറയുന്ന എന്തെങ്കിലും അനുഭവപ്പെടുന്നുണ്ടോ?"
+},
+"RED_FLAG.red_flag_items.option.chest_pain": {
+"en": "Chest pain or pressure",
+"hi": "सीने में दर्द या दबाव",
+"ml": "നെഞ്ചുവേദന അല്ലെങ്കിൽ നെഞ്ചിൽ ഭാരം"
+},
+"RED_FLAG.red_flag_items.option.breathing_difficulty": {
+"en": "Difficulty breathing right now",
+"hi": "अभी सांस लेने में तकलीफ",
+"ml": "ഇപ്പോൾ ശ്വാസമെടുക്കാൻ ബുദ്ധിമുട്ട്"
+},
+"RED_FLAG.red_flag_items.option.high_fever": {
+"en": "Fever above 103°F (39.4°C)",
+"hi": "103°F (39.4°C) से अधिक बुखार",
+"ml": "103°F (39.4°C)-ൽ കൂടുതൽ പനി"
+},
+"RED_FLAG.red_flag_items.option.active_bleeding": {
+"en": "Active or severe bleeding",
+"hi": "लगातार या बहुत अधिक खून बहना",
+"ml": "തുടർച്ചയായ അല്ലെങ്കിൽ കഠിനമായ രക്തസ്രാവം"
+},
+"RED_FLAG.red_flag_items.option.altered_consciousness": {
+"en": "Fainting, confusion, or altered consciousness today",
+"hi": "आज बेहोशी, उलझन या सुध-बुध खोना",
+"ml": "ഇന്ന് ബോധക്ഷയം, ആശയക്കുഴപ്പം അല്ലെങ്കിൽ ബോധമില്ലായ്മ"
+},
+"RED_FLAG.red_flag_items.option.seizure_24h": {
+"en": "A seizure in the last 24 hours",
+"hi": "पिछले 24 घंटों में दौरा (झटके) आना",
+"ml": "കഴിഞ്ഞ 24 മണിക്കൂറിനുള്ളിൽ അപസ്മാരം (വലിവ്) ഉണ്ടായി"
+},
+"RED_FLAG.red_flag_items.option.one_sided_weakness": {
+"en": "Sudden weakness or numbness on one side of the body",
+"hi": "शरीर के एक हिस्से में अचानक कमजोरी या सुन्नपन",
+"ml": "ശരീരത്തിന്റെ ഒരു വശത്ത് പെട്ടെന്ന് തളർച്ചയോ മരവിപ്പോ"
+},
+"RED_FLAG.red_flag_items.option.pregnancy_warning": {
+"en": "Pregnant with severe bleeding or severe abdominal pain",
+"hi": "गर्भावस्था के दौरान बहुत अधिक खून बहना या तेज पेट दर्द",
+"ml": "ഗർഭാവസ്ഥയിൽ കഠിനമായ രക്തസ്രാവം അല്ലെങ്കിൽ കഠിനമായ വയറുവേദന"
+},
+"RED_FLAG.red_flag_items.option.none": {
+"en": "None of the above",
+"hi": "इनमें से कोई नहीं",
+"ml": "മുകളിലൊന്നും അല്ല"
+},
+"CHIEF_COMPLAINT.title": {
+"en": "Your Main Complaint",
+"hi": "आपकी मुख्य समस्या",
+"ml": "നിങ്ങളുടെ പ്രധാന പ്രശ്നം"
+},
+"CHIEF_COMPLAINT.cc_description.label": {
+"en": "What is bothering you the most today, in your own words?",
+"hi": "आज आपको सबसे ज्यादा क्या परेशानी हो रही है, अपने शब्दों में बताएं?",
+"ml": "ഇന്ന് നിങ്ങളെ ഏറ്റവും കൂടുതൽ അലട്ടുന്ന പ്രശ്നം എന്താണ്, നിങ്ങളുടെ സ്വന്തം വാക്കുകളിൽ പറയുക?"
+},
+"CHIEF_COMPLAINT.cc_location.label": {
+"en": "Where is it located?",
+"hi": "यह शरीर में कहाँ है?",
+"ml": "ഇത് എവിടെയാണ് അനുഭവപ്പെടുന്നത്?"
+},
+"CHIEF_COMPLAINT.cc_onset.label": {
+"en": "Did it start suddenly or gradually?",
+"hi": "क्या यह अचानक शुरू हुआ या धीरे-धीरे?",
+"ml": "ഇത് പെട്ടെന്ന് തുടങ്ങിയതാണോ അതോ പതുക്കെ തുടങ്ങിയതാണോ?"
+},
+"CHIEF_COMPLAINT.cc_onset.option.sudden": {
+"en": "Suddenly",
+"hi": "अचानक",
+"ml": "പെട്ടെന്ന്"
+},
+"CHIEF_COMPLAINT.cc_onset.option.gradual": {
+"en": "Gradually",
+"hi": "धीरे-धीरे",
+"ml": "പതുക്കെ"
+},
+"CHIEF_COMPLAINT.cc_onset.option.cc_onset_other": {
+"en": "Other / describe in your own words",
+"hi": "अन्य / अपने शब्दों में बताएं",
+"ml": "മറ്റുള്ളവ / നിങ്ങളുടെ സ്വന്തം വാക്കുകളിൽ പറയുക"
+},
+"CHIEF_COMPLAINT.cc_duration.label": {
+"en": "How long have you had this problem?",
+"hi": "आपको यह समस्या कितने समय से है?",
+"ml": "നിങ്ങൾക്ക് എത്ര കാലമായി ഈ പ്രശ്നമുണ്ട്?"
+},
+"CHIEF_COMPLAINT.cc_sensation.label": {
+"en": "How would you describe the sensation?",
+"hi": "आपको कैसा महसूस होता है?",
+"ml": "എങ്ങനെയുള്ള ബുദ്ധിമുട്ടാണ് നിങ്ങൾക്ക് അനുഭവപ്പെടുന്നത്?"
+},
+"CHIEF_COMPLAINT.cc_sensation.option.burning": {
+"en": "Burning",
+"hi": "जलन",
+"ml": "പുകച്ചിൽ"
+},
+"CHIEF_COMPLAINT.cc_sensation.option.throbbing": {
+"en": "Throbbing",
+"hi": "टीस या चुभन (धड़कने जैसा दर्द)",
+"ml": "തുടിക്കുന്ന വേദന"
+},
+"CHIEF_COMPLAINT.cc_sensation.option.dull": {
+"en": "Dull",
+"hi": "हल्का दर्द",
+"ml": "മങ്ങിയ വേദന"
+},
+"CHIEF_COMPLAINT.cc_sensation.option.sharp": {
+"en": "Sharp",
+"hi": "तेज दर्द",
+"ml": "കഠിനമായ വേദന"
+},
+"CHIEF_COMPLAINT.cc_sensation.option.heaviness": {
+"en": "Heaviness",
+"hi": "भारीपन",
+"ml": "ഭാരം അനുഭവപ്പെടുന്നു"
+},
+"CHIEF_COMPLAINT.cc_sensation.option.tingling": {
+"en": "Tingling",
+"hi": "झुनझुनी",
+"ml": "തരിപ്പ്"
+},
+"CHIEF_COMPLAINT.cc_sensation.option.cc_sensation_other": {
+"en": "Other / describe in your own words",
+"hi": "अन्य / अपने शब्दों में बताएं",
+"ml": "മറ്റുള്ളവ / നിങ്ങളുടെ സ്വന്തം വാക്കുകളിൽ പറയുക"
+},
+"CHIEF_COMPLAINT.cc_timing.label": {
+"en": "Is it worse at a particular time or season?",
+"hi": "क्या यह किसी खास समय या मौसम में बढ़ जाता है?",
+"ml": "ഒരു പ്രത്യേക സമയത്തോ കാലാവസ്ഥയിലോ ഇത് വർദ്ധിക്കാറുണ്ടോ?"
+},
+"CHIEF_COMPLAINT.cc_timing.option.morning": {
+"en": "Morning",
+"hi": "सुबह",
+"ml": "രാവിലെ"
+},
+"CHIEF_COMPLAINT.cc_timing.option.night": {
+"en": "Night",
+"hi": "रात",
+"ml": "രാത്രി"
+},
+"CHIEF_COMPLAINT.cc_timing.option.summer": {
+"en": "Summer",
+"hi": "गर्मी",
+"ml": "വേനൽക്കാലം"
+},
+"CHIEF_COMPLAINT.cc_timing.option.winter": {
+"en": "Winter",
+"hi": "सर्दी",
+"ml": "തണുപ്പുകാലം"
+},
+"CHIEF_COMPLAINT.cc_timing.option.monsoon": {
+"en": "Monsoon",
+"hi": "बारिश",
+"ml": "മഴക്കാലം"
+},
+"CHIEF_COMPLAINT.cc_timing.option.no_pattern": {
+"en": "No particular pattern",
+"hi": "कोई खास समय नहीं",
+"ml": "പ്രത്യേകിച്ച് സമയമില്ല"
+},
+"CHIEF_COMPLAINT.cc_timing.option.cc_timing_other": {
+"en": "Other / describe in your own words",
+"hi": "अन्य / अपने शब्दों में बताएं",
+"ml": "മറ്റുള്ളവ / നിങ്ങളുടെ സ്വന്തം വാക്കുകളിൽ പറയുക"
+},
+"CHIEF_COMPLAINT.cc_aggravating.label": {
+"en": "What makes it worse?",
+"hi": "किस चीज़ से यह बढ़ जाता है?",
+"ml": "എന്തുകൊണ്ടാണ് ഇത് കൂടുന്നത്?"
+},
+"CHIEF_COMPLAINT.cc_aggravating.option.food": {
+"en": "Certain food",
+"hi": "कुछ खाने से",
+"ml": "ചില ഭക്ഷണങ്ങൾ"
+},
+"CHIEF_COMPLAINT.cc_aggravating.option.activity": {
+"en": "Physical activity",
+"hi": "काम या कसरत करने से",
+"ml": "ശാരീരിക അധ്വാനം"
+},
+"CHIEF_COMPLAINT.cc_aggravating.option.cold": {
+"en": "Cold weather/breeze",
+"hi": "ठंड या ठंडी हवा से",
+"ml": "തണുത്ത കാലാവസ്ഥ / കാറ്റ്"
+},
+"CHIEF_COMPLAINT.cc_aggravating.option.stress": {
+"en": "Mental stress",
+"hi": "दिमागी तनाव से",
+"ml": "മാനസിക സമ്മർദ്ദം"
+},
+"CHIEF_COMPLAINT.cc_aggravating.option.none_agg": {
+"en": "Nothing in particular",
+"hi": "किसी खास चीज से नहीं",
+"ml": "പ്രത്യേകിച്ചൊന്നുമില്ല"
+},
+"CHIEF_COMPLAINT.cc_aggravating.option.cc_aggravating_other": {
+"en": "Other / describe in your own words",
+"hi": "अन्य / अपने शब्दों में बताएं",
+"ml": "മറ്റുള്ളവ / നിങ്ങളുടെ സ്വന്തം വാക്കുകളിൽ പറയുക"
+},
+"CHIEF_COMPLAINT.cc_relieving.label": {
+"en": "What makes it feel better?",
+"hi": "किस चीज़ से आराम मिलता है?",
+"ml": "എന്ത് ചെയ്യുമ്പോഴാണ് ആശ്വാസം ലഭിക്കുന്നത്?"
+},
+"CHIEF_COMPLAINT.cc_relieving.option.rest": {
+"en": "Rest",
+"hi": "आराम करने से",
+"ml": "വിശ്രമിക്കുമ്പോൾ"
+},
+"CHIEF_COMPLAINT.cc_relieving.option.warmth": {
+"en": "Warm application",
+"hi": "गर्म सेंक से",
+"ml": "ചൂടുവയ്ക്കുമ്പോൾ"
+},
+"CHIEF_COMPLAINT.cc_relieving.option.medication": {
+"en": "Medication",
+"hi": "दवा से",
+"ml": "മരുന്ന് കഴിക്കുമ്പോൾ"
+},
+"CHIEF_COMPLAINT.cc_relieving.option.none_rel": {
+"en": "Nothing helps so far",
+"hi": "अब तक किसी चीज से नहीं",
+"ml": "ഇതുവരെ ആശ്വാസമൊന്നും ലഭിച്ചിട്ടില്ല"
+},
+"CHIEF_COMPLAINT.cc_relieving.option.cc_relieving_other": {
+"en": "Other / describe in your own words",
+"hi": "अन्य / अपने शब्दों में बताएं",
+"ml": "മറ്റുള്ളവ / നിങ്ങളുടെ സ്വന്തം വാക്കുകളിൽ പറയുക"
+},
+"CHIEF_COMPLAINT.cc_severity.label": {
+"en": "On a scale of 1-10, how severe is it?",
+"hi": "1 से 10 के पैमाने पर, यह कितना गंभीर है?",
+"ml": "1 മുതൽ 10 വരെയുള്ള സ്കെയിലിൽ, ബുദ്ധിമുട്ട് എത്രത്തോളമുണ്ട്?"
+},
+"CHIEF_COMPLAINT.cc_recurrence.label": {
+"en": "Has this ever happened before?",
+"hi": "क्या ऐसा पहले कभी हुआ है?",
+"ml": "ഇതിന് മുൻപ് ഇങ്ങനെ ഉണ്ടായിട്ടുണ്ടോ?"
+},
+"CHIEF_COMPLAINT.cc_recurrence_detail.label": {
+"en": "When, and how was it then?",
+"hi": "कब, और तब यह कैसा था?",
+"ml": "എപ്പോഴാണ്, അന്ന് എങ്ങനെയായിരുന്നു?"
+},
+"HISTORY_OF_PRESENT_ILLNESS.title": {
+"en": "How Things Have Progressed",
+"hi": "लक्षण कैसे बढ़े हैं",
+"ml": "ലക്ഷണങ്ങൾ എങ്ങനെയാണ് മാറിയത്"
+},
+"HISTORY_OF_PRESENT_ILLNESS.hpi_progression.label": {
+"en": "How did the symptoms progress from start to now?",
+"hi": "शुरुआत से लेकर अब तक लक्षण कैसे बढ़े हैं?",
+"ml": "തുടക്കം മുതൽ ഇതുവരെ ലക്ഷണങ്ങളിൽ എന്തൊക്കെ മാറ്റങ്ങൾ വന്നു?"
+},
+"HISTORY_OF_PRESENT_ILLNESS.hpi_treatment_tried.label": {
+"en": "Have you taken any treatment for this episode already?",
+"hi": "क्या आपने इस बार इसके लिए कोई इलाज लिया है?",
+"ml": "ഇതിനായി നിങ്ങൾ എന്തെങ്കിലും ചികിത്സ എടുത്തിരുന്നോ?"
+},
+"HISTORY_OF_PRESENT_ILLNESS.hpi_treatment_helped.label": {
+"en": "Did it help?",
+"hi": "क्या इससे फायदा हुआ?",
+"ml": "അതുകൊണ്ട് പ്രയോജനമുണ്ടായോ?"
+},
+"HISTORY_OF_PRESENT_ILLNESS.hpi_treatment_helped.option.yes_helped": {
+"en": "Yes, it helped",
+"hi": "हां, फायदा हुआ",
+"ml": "ഉവ്വ്, പ്രയോജനമുണ്ടായി"
+},
+"HISTORY_OF_PRESENT_ILLNESS.hpi_treatment_helped.option.no_help": {
+"en": "No, it did not help",
+"hi": "नहीं, फायदा नहीं हुआ",
+"ml": "ഇല്ല, പ്രയോജനമുണ്ടായില്ല"
+},
+"HISTORY_OF_PRESENT_ILLNESS.hpi_treatment_helped.option.partial": {
+"en": "Helped a little",
+"hi": "थोड़ा फायदा हुआ",
+"ml": "കുറച്ച് ആശ്വാസം ലഭിച്ചു"
+},
+"HISTORY_OF_PRESENT_ILLNESS.hpi_associated_symptoms.label": {
+"en": "Any other symptoms occurring alongside the main complaint?",
+"hi": "क्या मुख्य परेशानी के साथ कोई और लक्षण भी हैं?",
+"ml": "പ്രധാന പ്രശ്നത്തോടൊപ്പം വേറെ എന്തെങ്കിലും ബുദ്ധിമുട്ടുകൾ ഉണ്ടോ?"
+},
+"HISTORY_OF_PRESENT_ILLNESS.hpi_appetite_change.label": {
+"en": "Has your appetite changed since this started?",
+"hi": "जब से यह शुरू हुआ है, क्या आपकी भूख में कोई बदलाव आया है?",
+"ml": "ഇത് തുടങ്ങിയ ശേഷം നിങ്ങളുടെ വിശപ്പിൽ എന്തെങ്കിലും മാറ്റമുണ്ടോ?"
+},
+"HISTORY_OF_PRESENT_ILLNESS.hpi_sleep_change.label": {
+"en": "Has your sleep changed since this started?",
+"hi": "जब से यह शुरू हुआ है, क्या आपकी नींद में कोई बदलाव आया है?",
+"ml": "ഇത് തുടങ്ങിയ ശേഷം നിങ്ങളുടെ ഉറക്കത്തിൽ എന്തെങ്കിലും മാറ്റമുണ്ടോ?"
+},
+"HISTORY_OF_PRESENT_ILLNESS.hpi_energy_change.label": {
+"en": "Has your energy level changed since this started?",
+"hi": "जब से यह शुरू हुआ है, क्या आपके शरीर की ऊर्जा (ताकत) में कोई कमी आई है?",
+"ml": "ഇത് തുടങ്ങിയ ശേഷം നിങ്ങൾക്ക് ക്ഷീണം കൂടുതൽ തോന്നുന്നുണ്ടോ?"
+},
+"HISTORY_OF_PRESENT_ILLNESS.hpi_weight_change.label": {
+"en": "Has your weight changed recently?",
+"hi": "क्या हाल ही में आपके वजन में कोई बदलाव आया है?",
+"ml": "അടുത്തകാലത്തായി നിങ്ങളുടെ ശരീരഭാരത്തിൽ എന്തെങ്കിലും മാറ്റമുണ്ടായോ?"
+},
+"DEPARTMENT_MODULE.title": {
+"en": "About Your [Department]",
+"hi": "आपके [Department] के बारे में",
+"ml": "നിങ്ങളുടെ [Department]-നെ കുറിച്ച്"
+},
+"DEPARTMENT_MODULE.EYES.eyes_symptoms.label": {
+"en": "Do you have any of the following eye problems?",
+"hi": "क्या आपको आँखों से जुड़ी इनमें से कोई समस्या है?",
+"ml": "നിങ്ങൾക്ക് താഴെ പറയുന്ന എന്തെങ്കിലും നേത്രരോഗങ്ങൾ ഉണ്ടോ?"
+},
+"DEPARTMENT_MODULE.EYES.eyes_symptoms.option.eye_pain": {
+"en": "Pain in or around the eyes",
+"hi": "आँखों में या उसके आसपास दर्द",
+"ml": "കണ്ണുകളിലോ ചുറ്റുമോ വേദന"
+},
+"DEPARTMENT_MODULE.EYES.eyes_symptoms.option.eye_dry": {
+"en": "Dry or gritty feeling",
+"hi": "आँखों में सूखापन या किरकिरापन",
+"ml": "കണ്ണുകളിൽ വരൾച്ചയോ കരട് പോലെയോ തോന്നുക"
+},
+"DEPARTMENT_MODULE.EYES.eyes_symptoms.option.eye_watering": {
+"en": "Excessive watering",
+"hi": "आँखों से बहुत ज्यादा पानी आना",
+"ml": "കണ്ണിൽ നിന്ന് അമിതമായി വെള്ളം വരിക"
+},
+"DEPARTMENT_MODULE.EYES.eyes_symptoms.option.eye_redness": {
+"en": "Redness",
+"hi": "आँखों का लाल होना",
+"ml": "കണ്ണ് ചുവക്കുക"
+},
+"DEPARTMENT_MODULE.EYES.eyes_symptoms.option.eye_discharge": {
+"en": "Discharge from the eyes",
+"hi": "आँखों से कीचड़ या पानी आना",
+"ml": "കണ്ണിൽ നിന്ന് പീള വരിക"
+},
+"DEPARTMENT_MODULE.EYES.eyes_symptoms.option.eye_blurred": {
+"en": "Blurred or reduced vision",
+"hi": "धुंधला या कम दिखना",
+"ml": "മങ്ങിയ കാഴ്ച അല്ലെങ്കിൽ കാഴ്ചക്കുറവ്"
+},
+"DEPARTMENT_MODULE.EYES.eyes_symptoms.option.eye_jaundice": {
+"en": "Yellowish discoloration of the white of the eye",
+"hi": "आँखों के सफेद हिस्से का पीला होना",
+"ml": "കണ്ണിന്റെ വെള്ള ഭാഗത്തിന് മഞ്ഞനിറം"
+},
+"DEPARTMENT_MODULE.EYES.eyes_symptoms.option.eye_halos": {
+"en": "Halos around lights",
+"hi": "रौशनी के चारों ओर गोले (छल्ले) दिखना",
+"ml": "വെളിച്ചത്തിന് ചുറ്റും വലയങ്ങൾ കാണുക"
+},
+"DEPARTMENT_MODULE.EYES.eyes_symptoms.option.eye_ptosis": {
+"en": "Drooping of an eyelid",
+"hi": "आँख की पलक का गिरना या झुकना",
+"ml": "കൺപോളകൾ തൂങ്ങിക്കിടക്കുക"
+},
+"DEPARTMENT_MODULE.EYES.eyes_symptoms.option.eye_night": {
+"en": "Difficulty seeing at night",
+"hi": "रात में देखने में परेशानी",
+"ml": "രാത്രിയിൽ കാണാൻ ബുദ്ധിമുട്ട്"
+},
+"DEPARTMENT_MODULE.EYES.eyes_symptoms.option.none_eyes": {
+"en": "None of these",
+"hi": "इनमें से कोई नहीं",
+"ml": "ഇവയൊന്നുമല്ല"
+},
+"DEPARTMENT_MODULE.EYES.eyes_symptoms.option.eyes_symptoms_other": {
+"en": "Other / describe in your own words",
+"hi": "अन्य / अपने शब्दों में बताएं",
+"ml": "മറ്റുള്ളവ / നിങ്ങളുടെ സ്വന്തം വാക്കുകളിൽ പറയുക"
+},
+"DEPARTMENT_MODULE.EYES.eye_discharge_type.label": {
+"en": "What kind of discharge?",
+"hi": "किस तरह का कीचड़ या पानी आता है?",
+"ml": "എങ്ങനെയുള്ള സ്രവമാണ് കണ്ണിൽ നിന്ന് വരുന്നത്?"
+},
+"DEPARTMENT_MODULE.EYES.eye_discharge_type.option.watery": {
+"en": "Watery",
+"hi": "पानी जैसा",
+"ml": "വെള്ളം പോലെ"
+},
+"DEPARTMENT_MODULE.EYES.eye_discharge_type.option.sticky": {
+"en": "Sticky",
+"hi": "चिपचिपा",
+"ml": "ഒട്ടിപ്പിടിക്കുന്നത്"
+},
+"DEPARTMENT_MODULE.EYES.eye_discharge_type.option.pus": {
+"en": "Pus-like",
+"hi": "मवाद (पस) जैसा",
+"ml": "പഴുപ്പ് പോലെ"
+},
+"DEPARTMENT_MODULE.EYES.eye_redness_trigger.label": {
+"en": "Does it happen more with anger, alcohol, or sunlight?",
+"hi": "क्या यह गुस्से, शराब या धूप से ज्यादा होता है?",
+"ml": "ദേഷ്യം, മദ്യം അല്ലെങ്കിൽ സൂര്യപ്രകാശം എന്നിവയേൽക്കുമ്പോൾ ഇത് കൂടാറുണ്ടോ?"
+},
+"DEPARTMENT_MODULE.EYES.eye_redness_trigger.option.anger": {
+"en": "Anger",
+"hi": "गुस्से से",
+"ml": "ദേഷ്യപ്പെടുമ്പോൾ"
+},
+"DEPARTMENT_MODULE.EYES.eye_redness_trigger.option.alcohol": {
+"en": "Alcohol",
+"hi": "शराब से",
+"ml": "മദ്യപിക്കുമ്പോൾ"
+},
+"DEPARTMENT_MODULE.EYES.eye_redness_trigger.option.sunlight": {
+"en": "Sunlight",
+"hi": "धूप से",
+"ml": "സൂര്യപ്രകാശമേൽക്കുമ്പോൾ"
+},
+"DEPARTMENT_MODULE.EYES.eye_redness_trigger.option.no_trigger": {
+"en": "No particular trigger",
+"hi": "किसी खास चीज से नहीं",
+"ml": "പ്രത്യേക കാരണങ്ങളൊന്നുമില്ല"
+},
+"DEPARTMENT_MODULE.EARS.ears_symptoms.label": {
+"en": "Do you have any of the following ear problems?",
+"hi": "क्या आपको कानों से जुड़ी इनमें से कोई समस्या है?",
+"ml": "നിങ്ങൾക്ക് താഴെ പറയുന്ന എന്തെങ്കിലും ചെവി പ്രശ്നങ്ങൾ ഉണ്ടോ?"
+},
+"DEPARTMENT_MODULE.EARS.ears_symptoms.option.ear_pain": {
+"en": "Pain in either ear",
+"hi": "किसी भी कान में दर्द",
+"ml": "ചെവി വേദന"
+},
+"DEPARTMENT_MODULE.EARS.ears_symptoms.option.ear_discharge": {
+"en": "Discharge from the ear",
+"hi": "कान से पानी या मवाद बहना",
+"ml": "ചെവിയിൽ നിന്ന് പഴുപ്പോ വെള്ളമോ വരിക"
+},
+"DEPARTMENT_MODULE.EARS.ears_symptoms.option.tinnitus": {
+"en": "Ringing or buzzing (tinnitus)",
+"hi": "कान में सीटी बजना या भिनभिनाहट (टिनिटस)",
+"ml": "ചെവിയിൽ മൂളലോ ശബ്ദമോ കേൾക്കുക"
+},
+"DEPARTMENT_MODULE.EARS.ears_symptoms.option.hearing_loss": {
+"en": "Reduced hearing",
+"hi": "कम सुनाई देना",
+"ml": "കേൾവിക്കുറവ്"
+},
+"DEPARTMENT_MODULE.EARS.ears_symptoms.option.ear_fullness": {
+"en": "Fullness or blockage",
+"hi": "कान भारी लगना या बंद होना",
+"ml": "ചെവി അടഞ്ഞതുപോലെ തോന്നുക"
+},
+"DEPARTMENT_MODULE.EARS.ears_symptoms.option.ear_itching": {
+"en": "Itching inside the ear canal",
+"hi": "कान के अंदर खुजली",
+"ml": "ചെവിക്കുള്ളിൽ ചൊറിച്ചിൽ"
+},
+"DEPARTMENT_MODULE.EARS.ears_symptoms.option.ear_recent_infection": {
+"en": "Recent ear infection",
+"hi": "हाल ही में कान में इन्फेक्शन",
+"ml": "അടുത്തിടെ ചെവിയിൽ അണുബാധ ഉണ്ടായി"
+},
+"DEPARTMENT_MODULE.EARS.ears_symptoms.option.vertigo": {
+"en": "Dizziness or spinning sensation",
+"hi": "चक्कर आना या सिर घूमना",
+"ml": "തലകറക്കം"
+},
+"DEPARTMENT_MODULE.EARS.ears_symptoms.option.none_ears": {
+"en": "None of these",
+"hi": "इनमें से कोई नहीं",
+"ml": "ഇവയൊന്നുമല്ല"
+},
+"DEPARTMENT_MODULE.EARS.ears_symptoms.option.ears_symptoms_other": {
+"en": "Other / describe in your own words",
+"hi": "अन्य / अपने शब्दों में बताएं",
+"ml": "മറ്റുള്ളവ / നിങ്ങളുടെ സ്വന്തം വാക്കുകളിൽ പറയുക"
+},
+"DEPARTMENT_MODULE.EARS.vertigo_frequency.label": {
+"en": "How often does the spinning sensation happen?",
+"hi": "सिर घूमने की समस्या कितनी बार होती है?",
+"ml": "എത്ര തവണ തലകറക്കം ഉണ്ടാകാറുണ്ട്?"
+},
+"DEPARTMENT_MODULE.EARS.vertigo_frequency.option.rarely": {
+"en": "Rarely",
+"hi": "कभी-कभार",
+"ml": "വളരെ അപൂർവ്വമായി"
+},
+"DEPARTMENT_MODULE.EARS.vertigo_frequency.option.sometimes": {
+"en": "Sometimes",
+"hi": "कभी-कभी",
+"ml": "ചിലപ്പോൾ"
+},
+"DEPARTMENT_MODULE.EARS.vertigo_frequency.option.often": {
+"en": "Often",
+"hi": "अक्सर (बार-बार)",
+"ml": "പലപ്പോഴും"
+},
+"DEPARTMENT_MODULE.NOSE.nose_symptoms.label": {
+"en": "Do you have any of the following nose problems?",
+"hi": "क्या आपको नाक से जुड़ी इनमें से कोई समस्या है?",
+"ml": "നിങ്ങൾക്ക് താഴെ പറയുന്ന മൂക്ക് സംബന്ധമായ പ്രശ്നങ്ങൾ ഉണ്ടോ?"
+},
+"DEPARTMENT_MODULE.NOSE.nose_symptoms.option.congestion": {
+"en": "Nasal congestion or blockage",
+"hi": "नाक बंद होना",
+"ml": "മൂക്കടപ്പ്"
+},
+"DEPARTMENT_MODULE.NOSE.nose_symptoms.option.sneezing": {
+"en": "Frequent sneezing",
+"hi": "बार-बार छींक आना",
+"ml": "തുടർച്ചയായുള്ള തുമ്മൽ"
+},
+"DEPARTMENT_MODULE.NOSE.nose_symptoms.option.runny_nose": {
+"en": "Runny nose",
+"hi": "नाक बहना",
+"ml": "മൂക്കൊലിപ്പ്"
+},
+"DEPARTMENT_MODULE.NOSE.nose_symptoms.option.reduced_smell": {
+"en": "Reduced sense of smell",
+"hi": "सूंघने की क्षमता कम होना",
+"ml": "ഗന്ധം അറിയാനുള്ള കഴിവ് കുറയുക"
+},
+"DEPARTMENT_MODULE.NOSE.nose_symptoms.option.nosebleeds": {
+"en": "Nosebleeds",
+"hi": "नकसीर फूटना (नाक से खून आना)",
+"ml": "മൂക്കിൽ നിന്ന് രക്തം വരിക"
+},
+"DEPARTMENT_MODULE.NOSE.nose_symptoms.option.nose_polyps_septum": {
+"en": "Known nasal polyps or deviated septum",
+"hi": "नाक में मांस बढ़ना या हड्डी टेढ़ी होना",
+"ml": "മൂക്കിലെ ദശ വളർച്ച അല്ലെങ്കിൽ മൂക്കിന്റെ പാലം വളഞ്ഞിരിക്കുക"
+},
+"DEPARTMENT_MODULE.NOSE.nose_symptoms.option.nose_dust_trigger": {
+"en": "Worse with dust, pollen, or specific seasons",
+"hi": "धूल, पराग या किसी खास मौसम में बढ़ जाना",
+"ml": "പൊടി, പൂമ്പൊടി അല്ലെങ്കിൽ പ്രത്യേക കാലാവസ്ഥകളിൽ ബുദ്ധിമുട്ട് കൂടുക"
+},
+"DEPARTMENT_MODULE.NOSE.nose_symptoms.option.facial_pressure": {
+"en": "Facial pain or pressure around sinuses",
+"hi": "चेहरे पर दर्द या साइनस के आसपास भारीपन",
+"ml": "മുഖത്ത് വേദന അല്ലെങ്കിൽ സൈനസ് ഭാഗങ്ങളിൽ ഭാരം തോന്നുക"
+},
+"DEPARTMENT_MODULE.NOSE.nose_symptoms.option.none_nose": {
+"en": "None of these",
+"hi": "इनमें से कोई नहीं",
+"ml": "ഇവയൊന്നുമല്ല"
+},
+"DEPARTMENT_MODULE.NOSE.nose_symptoms.option.nose_symptoms_other": {
+"en": "Other / describe in your own words",
+"hi": "अन्य / अपने शब्दों में बताएं",
+"ml": "മറ്റുള്ളവ / നിങ്ങളുടെ സ്വന്തം വാക്കുകളിൽ പറയുക"
+},
+"DEPARTMENT_MODULE.NOSE.discharge_character.label": {
+"en": "Is the discharge watery, thick, or blood-tinged?",
+"hi": "क्या नाक से बहने वाला पानी पतला, गाढ़ा या खून मिला हुआ है?",
+"ml": "മൂക്കിൽ നിന്ന് വരുന്നത് വെള്ളം പോലെയാണോ, കട്ടിയുള്ളതാണോ, അതോ രക്തം കലർന്നതാണോ?"
+},
+"DEPARTMENT_MODULE.NOSE.discharge_character.option.watery_d": {
+"en": "Watery",
+"hi": "पानी जैसा",
+"ml": "വെള്ളം പോലെ"
+},
+"DEPARTMENT_MODULE.NOSE.discharge_character.option.thick_d": {
+"en": "Thick",
+"hi": "गाढ़ा",
+"ml": "കട്ടിയുള്ളത്"
+},
+"DEPARTMENT_MODULE.NOSE.discharge_character.option.blood_d": {
+"en": "Blood-tinged",
+"hi": "खून मिला हुआ",
+"ml": "രക്തം കലർന്നത്"
+},
+"DEPARTMENT_MODULE.SKIN.skin_symptoms.label": {
+"en": "Do you have any of the following skin problems?",
+"hi": "क्या आपको त्वचा (चमड़ी) से जुड़ी इनमें से कोई समस्या है?",
+"ml": "നിങ്ങൾക്ക് താഴെ പറയുന്ന ചർമ്മരോഗങ്ങൾ ഉണ്ടോ?"
+},
+"DEPARTMENT_MODULE.SKIN.skin_symptoms.option.rash": {
+"en": "Rashes currently",
+"hi": "अभी शरीर पर चकत्ते (रैश) हैं",
+"ml": "ശരീരത്തിൽ പാടുകൾ അല്ലെങ്കിൽ തടിപ്പുകൾ"
+},
+"DEPARTMENT_MODULE.SKIN.skin_symptoms.option.itching": {
+"en": "Excessive itching",
+"hi": "बहुत ज्यादा खुजली",
+"ml": "അമിതമായ ചൊറിച്ചിൽ"
+},
+"DEPARTMENT_MODULE.SKIN.skin_symptoms.option.easy_bruising": {
+"en": "Easy bruising",
+"hi": "जल्दी नील पड़ जाना",
+"ml": "പെട്ടെന്ന് മുറിവോ ചതവോ ഉണ്ടാകുക"
+},
+"DEPARTMENT_MODULE.SKIN.skin_symptoms.option.non_healing": {
+"en": "Non-healing wounds or ulcers",
+"hi": "घाव या छाले जो ठीक नहीं हो रहे",
+"ml": "ഉണങ്ങാത്ത മുറിവുകൾ അല്ലെങ്കിൽ വ്രണങ്ങൾ"
+},
+"DEPARTMENT_MODULE.SKIN.skin_symptoms.option.abnormal_sweat": {
+"en": "Excessive or very little sweating",
+"hi": "बहुत ज्यादा या बहुत कम पसीना आना",
+"ml": "വളരെ കൂടുതൽ അല്ലെങ്കിൽ തീരെ കുറഞ്ഞ വിയർപ്പ്"
+},
+"DEPARTMENT_MODULE.SKIN.skin_symptoms.option.skin_discoloration": {
+"en": "Patches lighter or darker than surrounding skin",
+"hi": "त्वचा पर हल्के या गहरे रंग के धब्बे",
+"ml": "ചർമ്മത്തിൽ നിറവ്യത്യാസമുള്ള പാടുകൾ"
+},
+"DEPARTMENT_MODULE.SKIN.skin_symptoms.option.skin_temp_abnormal": {
+"en": "Skin feels unusually cold or warm to touch",
+"hi": "छूने पर त्वचा असामान्य रूप से ठंडी या गर्म लगना",
+"ml": "തൊടുമ്പോൾ ചർമ്മത്തിന് അസാധാരണമായ തണുപ്പോ ചൂടോ തോന്നുക"
+},
+"DEPARTMENT_MODULE.SKIN.skin_symptoms.option.skin_infection": {
+"en": "Acne, boils, or frequent infections",
+"hi": "मुंहासे, फोड़े, या बार-बार इन्फेक्शन होना",
+"ml": "മുഖക്കുരു, കുരുക്കൾ അല്ലെങ്കിൽ ഇടയ്ക്കിടെ ഉണ്ടാകുന്ന അണുബാധ"
+},
+"DEPARTMENT_MODULE.SKIN.skin_symptoms.option.none_skin": {
+"en": "None of these",
+"hi": "इनमें से कोई नहीं",
+"ml": "ഇവയൊന്നുമല്ല"
+},
+"DEPARTMENT_MODULE.SKIN.skin_symptoms.option.skin_symptoms_other": {
+"en": "Other / describe in your own words",
+"hi": "अन्य / अपने शब्दों में बताएं",
+"ml": "മറ്റുള്ളവ / നിങ്ങളുടെ സ്വന്തം വാക്കുകളിൽ പറയുക"
+},
+"DEPARTMENT_MODULE.SKIN.non_healing_duration.label": {
+"en": "How long has the wound/ulcer been present?",
+"hi": "घाव/छाला कितने समय से है?",
+"ml": "മുറിവ്/വ്രണം എത്ര കാലമായി ഉണ്ട്?"
+},
+"DEPARTMENT_MODULE.HEART.heart_symptoms.label": {
+"en": "Do you have any of the following heart-related problems?",
+"hi": "क्या आपको दिल से जुड़ी इनमें से कोई समस्या है?",
+"ml": "നിങ്ങൾക്ക് ഹൃദയസംബന്ധമായ താഴെ പറയുന്ന പ്രശ്നങ്ങളുണ്ടോ?"
+},
+"DEPARTMENT_MODULE.HEART.heart_symptoms.option.tightness": {
+"en": "Chest pain or tightness",
+"hi": "सीने में दर्द या जकड़न",
+"ml": "നെഞ്ചുവേദന അല്ലെങ്കിൽ നെഞ്ചിൽ ഭാരം"
+},
+"DEPARTMENT_MODULE.HEART.heart_symptoms.option.palpitations": {
+"en": "Palpitations (racing/fluttering heartbeat)",
+"hi": "दिल की धड़कन तेज होना या धक-धक करना",
+"ml": "നെഞ്ചിടിപ്പ് കൂടുക"
+},
+"DEPARTMENT_MODULE.HEART.heart_symptoms.option.breathless_flat": {
+"en": "Breathless while lying flat",
+"hi": "सीधे लेटने पर सांस फूलना",
+"ml": "നേരെ കിടക്കുമ്പോൾ ശ്വാസംമുട്ടൽ"
+},
+"DEPARTMENT_MODULE.HEART.heart_symptoms.option.breathless_exertion": {
+"en": "Breathless on exertion or climbing stairs",
+"hi": "मेहनत करने या सीढ़ियां चढ़ने पर सांस फूलना",
+"ml": "അധ്വാനിക്കുമ്പോഴോ കോണിപ്പടികൾ കയറുമ്പോഴോ ശ്വാസംമുട്ടൽ"
+},
+"DEPARTMENT_MODULE.HEART.heart_symptoms.option.swelling_legs": {
+"en": "Swelling in feet, ankles, or legs",
+"hi": "पैरों या टखनों में सूजन",
+"ml": "കാലുകളിലോ കണങ്കാലിലോ നീര്"
+},
+"DEPARTMENT_MODULE.HEART.heart_symptoms.option.dizzy_standing": {
+"en": "Dizzy or light-headed on standing",
+"hi": "खड़े होने पर चक्कर आना या सिर हल्का लगना",
+"ml": "എഴുന്നേൽക്കുമ്പോൾ തലകറക്കമോ തലയ്ക്ക് ഭാരക്കുറവോ തോന്നുക"
+},
+"DEPARTMENT_MODULE.HEART.heart_symptoms.option.none_heart": {
+"en": "None of these",
+"hi": "इनमें से कोई नहीं",
+"ml": "ഇവയൊന്നുമല്ല"
+},
+"DEPARTMENT_MODULE.HEART.heart_symptoms.option.heart_symptoms_other": {
+"en": "Other / describe in your own words",
+"hi": "अन्य / अपने शब्दों में बताएं",
+"ml": "മറ്റുള്ളവ / നിങ്ങളുടെ സ്വന്തം വാക്കുകളിൽ പറയുക"
+},
+"DEPARTMENT_MODULE.HEART.heart_tightness_radiation.label": {
+"en": "Does the pain spread anywhere (arm, jaw, back)?",
+"hi": "क्या यह दर्द कहीं और (हाथ, जबड़े या पीठ में) भी फैलता है?",
+"ml": "വേദന ശരീരത്തിന്റെ മറ്റ് ഭാഗങ്ങളിലേക്ക് (കൈ, താടിയെല്ല്, പുറം) വ്യാപിക്കാറുണ്ടോ?"
+},
+"DEPARTMENT_MODULE.HEART.heart_tightness_radiation.option.arm": {
+"en": "Arm",
+"hi": "हाथ में",
+"ml": "കൈ"
+},
+"DEPARTMENT_MODULE.HEART.heart_tightness_radiation.option.jaw": {
+"en": "Jaw",
+"hi": "जबड़े में",
+"ml": "താടിയെല്ല്"
+},
+"DEPARTMENT_MODULE.HEART.heart_tightness_radiation.option.back": {
+"en": "Back",
+"hi": "पीठ में",
+"ml": "പുറംഭാഗം"
+},
+"DEPARTMENT_MODULE.HEART.heart_tightness_radiation.option.no_radiation": {
+"en": "Stays in one place",
+"hi": "एक ही जगह रहता है",
+"ml": "ഒരു സ്ഥലത്ത് തന്നെ നിൽക്കുന്നു"
+},
+"DEPARTMENT_MODULE.HEART.heart_bp_history.label": {
+"en": "Have you ever been told you have high or low blood pressure?",
+"hi": "क्या आपको कभी हाई या लो ब्लड प्रेशर (BP) की समस्या बताई गई है?",
+"ml": "നിങ്ങൾക്ക് ഉയർന്ന അല്ലെങ്കിൽ കുറഞ്ഞ രക്തസമ്മർദ്ദം (BP) ഉണ്ടെന്ന് എപ്പോഴെങ്കിലും പറഞ്ഞിട്ടുണ്ടോ?"
+},
+"DEPARTMENT_MODULE.HEART.heart_bp_history.option.bp_high": {
+"en": "High",
+"hi": "हाई (ज्यादा)",
+"ml": "ഉയർന്നത് (High)"
+},
+"DEPARTMENT_MODULE.HEART.heart_bp_history.option.bp_low": {
+"en": "Low",
+"hi": "लो (कम)",
+"ml": "കുറഞ്ഞത് (Low)"
+},
+"DEPARTMENT_MODULE.HEART.heart_bp_history.option.bp_never": {
+"en": "Never told",
+"hi": "कभी नहीं बताया गया",
+"ml": "ഒരിക്കലും പറഞ്ഞിട്ടില്ല"
+},
+"DEPARTMENT_MODULE.HEART.heart_cold_extremities.label": {
+"en": "Do you experience cold hands and feet frequently?",
+"hi": "क्या आपके हाथ और पैर अक्सर ठंडे रहते हैं?",
+"ml": "നിങ്ങളുടെ കൈകളും കാലുകളും ഇടയ്ക്കിടെ തണുത്ത് പോകാറുണ്ടോ?"
+},
+"DEPARTMENT_MODULE.HEART.heart_easily_tired.label": {
+"en": "Do you tire easily with minor physical activity?",
+"hi": "क्या आप थोड़ा सा काम करने पर ही जल्दी थक जाते हैं?",
+"ml": "ചെറിയ ജോലികൾ ചെയ്യുമ്പോൾ തന്നെ നിങ്ങൾക്ക് എളുപ്പത്തിൽ ക്ഷീണം തോന്നാറുണ്ടോ?"
+},
+"DEPARTMENT_MODULE.LUNGS.lungs_symptoms.label": {
+"en": "Do you have any of the following breathing/lung problems?",
+"hi": "क्या आपको सांस या फेफड़ों से जुड़ी इनमें से कोई समस्या है?",
+"ml": "നിങ്ങൾക്ക് ശ്വാസകോശ സംബന്ധമായ താഴെ പറയുന്ന എന്തെങ്കിലും പ്രശ്നങ്ങളുണ്ടോ?"
+},
+"DEPARTMENT_MODULE.LUNGS.lungs_symptoms.option.cough": {
+"en": "Persistent cough",
+"hi": "लगातार खांसी",
+"ml": "വിട്ടുമാറാത്ത ചുമ"
+},
+"DEPARTMENT_MODULE.LUNGS.lungs_symptoms.option.wheezing": {
+"en": "Wheezing or whistling sound",
+"hi": "सांस लेते समय सीटी जैसी आवाज आना",
+"ml": "ശ്വാസമെടുക്കുമ്പോൾ കുറുകുറുപ്പ് അല്ലെങ്കിൽ ചൂളമടിക്കുന്ന ശബ്ദം"
+},
+"DEPARTMENT_MODULE.LUNGS.lungs_symptoms.option.breathless_mild": {
+"en": "Breathless with mild exertion",
+"hi": "हल्के काम पर भी सांस फूलना",
+"ml": "ചെറിയ ജോലികൾ ചെയ്യുമ്പോഴേക്കും ശ്വാസംമുട്ടൽ"
+},
+"DEPARTMENT_MODULE.LUNGS.lungs_symptoms.option.chest_tightness_lung": {
+"en": "Chest tightness or heaviness",
+"hi": "सीने में जकड़न या भारीपन",
+"ml": "നെഞ്ചിൽ ഭാരം അല്ലെങ്കിൽ മുറുക്കം"
+},
+"DEPARTMENT_MODULE.LUNGS.lungs_symptoms.option.snoring": {
+"en": "Loud snoring or breathing pauses in sleep",
+"hi": "जोर से खर्राटे लेना या सोते समय सांस रुकना",
+"ml": "ഉറക്കത്തിൽ ഉച്ചത്തിലുള്ള കൂർക്കംവലി അല്ലെങ്കിൽ ശ്വാസം നിലയ്ക്കുക"
+},
+"DEPARTMENT_MODULE.LUNGS.lungs_symptoms.option.none_lungs": {
+"en": "None of these",
+"hi": "इनमें से कोई नहीं",
+"ml": "ഇവയൊന്നുമല്ല"
+},
+"DEPARTMENT_MODULE.LUNGS.lungs_symptoms.option.lungs_symptoms_other": {
+"en": "Other / describe in your own words",
+"hi": "अन्य / अपने शब्दों में बताएं",
+"ml": "മറ്റുള്ളവ / നിങ്ങളുടെ സ്വന്തം വാക്കുകളിൽ പറയുക"
+},
+"DEPARTMENT_MODULE.LUNGS.cough_type.label": {
+"en": "Is the cough dry or with phlegm?",
+"hi": "खांसी सूखी है या बलगम वाली?",
+"ml": "വരണ്ട ചുമയാണോ അതോ കഫത്തോട് കൂടിയതാണോ?"
+},
+"DEPARTMENT_MODULE.LUNGS.cough_type.option.dry_cough": {
+"en": "Dry",
+"hi": "सूखी",
+"ml": "വരണ്ട ചുമ"
+},
+"DEPARTMENT_MODULE.LUNGS.cough_type.option.productive_cough": {
+"en": "With phlegm",
+"hi": "बलगम वाली",
+"ml": "കഫത്തോട് കൂടിയത്"
+},
+"DEPARTMENT_MODULE.LUNGS.phlegm_color.label": {
+"en": "What color is the phlegm?",
+"hi": "बलगम का रंग कैसा है?",
+"ml": "കഫത്തിന് എന്ത് നിറമാണ്?"
+},
+"DEPARTMENT_MODULE.LUNGS.phlegm_color.option.clear_ph": {
+"en": "Clear",
+"hi": "साफ (पानी जैसा)",
+"ml": "നിറമില്ലാത്തത്"
+},
+"DEPARTMENT_MODULE.LUNGS.phlegm_color.option.white_ph": {
+"en": "White",
+"hi": "सफ़ेद",
+"ml": "വെള്ള"
+},
+"DEPARTMENT_MODULE.LUNGS.phlegm_color.option.yellow_ph": {
+"en": "Yellow",
+"hi": "पीला",
+"ml": "മഞ്ഞ"
+},
+"DEPARTMENT_MODULE.LUNGS.phlegm_color.option.green_ph": {
+"en": "Green",
+"hi": "हरा",
+"ml": "പച്ച"
+},
+"DEPARTMENT_MODULE.LUNGS.phlegm_color.option.blood_ph": {
+"en": "Blood-tinged",
+"hi": "खून मिला हुआ",
+"ml": "രക്തം കലർന്നത്"
+},
+"DEPARTMENT_MODULE.LUNGS.lungs_chronic_history.label": {
+"en": "Do you have a history of any of these?",
+"hi": "क्या आपको पहले कभी इनमें से कोई बीमारी रही है?",
+"ml": "നിങ്ങൾക്ക് ഇതിൽ ഏതെങ്കിലും അസുഖം മുൻപ് വന്നിട്ടുണ്ടോ?"
+},
+"DEPARTMENT_MODULE.LUNGS.lungs_chronic_history.option.asthma_l": {
+"en": "Asthma",
+"hi": "दमा (अस्थमा)",
+"ml": "ആസ്ത്മ (Asthma)"
+},
+"DEPARTMENT_MODULE.LUNGS.lungs_chronic_history.option.bronchitis_l": {
+"en": "Bronchitis",
+"hi": "ब्रोंकाइटिस",
+"ml": "ബ്രോങ്കൈറ്റിസ് (Bronchitis)"
+},
+"DEPARTMENT_MODULE.LUNGS.lungs_chronic_history.option.tb_l": {
+"en": "Tuberculosis",
+"hi": "टीबी (Tuberculosis)",
+"ml": "ക്ഷയം (TB)"
+},
+"DEPARTMENT_MODULE.LUNGS.lungs_chronic_history.option.none_l_hist": {
+"en": "None of these",
+"hi": "इनमें से कोई नहीं",
+"ml": "ഇവയൊന്നുമല്ല"
+},
+"DEPARTMENT_MODULE.LUNGS.lungs_smoking.label": {
+"en": "Do you smoke, or have you smoked in the past?",
+"hi": "क्या आप धूम्रपान (बीड़ी/सिगरेट) करते हैं, या पहले करते थे?",
+"ml": "നിങ്ങൾ പുകവലിക്കാറുണ്ടോ, അല്ലെങ്കിൽ മുൻപ് പുകവലിച്ചിരുന്നോ?"
+},
+"DEPARTMENT_MODULE.LUNGS.lungs_smoking.option.smoke_current": {
+"en": "Currently smoke",
+"hi": "अभी धूम्रपान करते हैं",
+"ml": "ഇപ്പോൾ പുകവലിക്കാറുണ്ട്"
+},
+"DEPARTMENT_MODULE.LUNGS.lungs_smoking.option.smoke_past": {
+"en": "Smoked in the past",
+"hi": "पहले करते थे",
+"ml": "മുൻപ് പുകവലിച്ചിരുന്നു"
+},
+"DEPARTMENT_MODULE.LUNGS.lungs_smoking.option.smoke_never": {
+"en": "Never smoked",
+"hi": "कभी धूम्रपान नहीं किया",
+"ml": "ഒരിക്കലും പുകവലിച്ചിട്ടില്ല"
+},
+"DEPARTMENT_MODULE.KIDNEY.kidney_symptoms.label": {
+"en": "Do you have any of the following urinary problems?",
+"hi": "क्या आपको पेशाब से जुड़ी इनमें से कोई समस्या है?",
+"ml": "നിങ്ങൾക്ക് മൂത്രമൊഴിക്കുന്നതുമായി ബന്ധപ്പെട്ട താഴെ പറയുന്ന പ്രശ്നങ്ങളുണ്ടോ?"
+},
+"DEPARTMENT_MODULE.KIDNEY.kidney_symptoms.option.burning_urination": {
+"en": "Burning or pain while urinating",
+"hi": "पेशाब करते समय जलन या दर्द",
+"ml": "മൂത്രമൊഴിക്കുമ്പോൾ പുകച്ചിൽ അല്ലെങ്കിൽ വേദന"
+},
+"DEPARTMENT_MODULE.KIDNEY.kidney_symptoms.option.blood_urine": {
+"en": "Blood in the urine",
+"hi": "पेशाब में खून आना",
+"ml": "മൂത്രത്തിൽ രക്തം കാണുക"
+},
+"DEPARTMENT_MODULE.KIDNEY.kidney_symptoms.option.weak_stream": {
+"en": "Weak or difficult urine stream",
+"hi": "पेशाब रुक-रुक कर या धीरे आना",
+"ml": "മൂത്രം തടസ്സപ്പെട്ടോ പതുക്കെയോ വരിക"
+},
+"DEPARTMENT_MODULE.KIDNEY.kidney_symptoms.option.incomplete_emptying": {
+"en": "Bladder feels not fully empty",
+"hi": "पेशाब पूरी तरह से न होने का अहसास",
+"ml": "മൂത്രസഞ്ചി പൂർണ്ണമായും ഒഴിയാത്തതുപോലെ തോന്നുക"
+},
+"DEPARTMENT_MODULE.KIDNEY.kidney_symptoms.option.urgency": {
+"en": "Sudden urgent need to urinate",
+"hi": "अचानक तेज पेशाब लगना",
+"ml": "പെട്ടെന്ന് മൂത്രമൊഴിക്കാൻ മുട്ടുക"
+},
+"DEPARTMENT_MODULE.KIDNEY.kidney_symptoms.option.swelling_general": {
+"en": "Swelling around eyes, face, or legs",
+"hi": "आँखों, चेहरे या पैरों के आसपास सूजन",
+"ml": "കണ്ണുകൾ, മുഖം അല്ലെങ്കിൽ കാലുകൾക്ക് ചുറ്റും നീര്"
+},
+"DEPARTMENT_MODULE.KIDNEY.kidney_symptoms.option.none_kidney": {
+"en": "None of these",
+"hi": "इनमें से कोई नहीं",
+"ml": "ഇവയൊന്നുമല്ല"
+},
+"DEPARTMENT_MODULE.KIDNEY.kidney_symptoms.option.kidney_symptoms_other": {
+"en": "Other / describe in your own words",
+"hi": "अन्य / अपने शब्दों में बताएं",
+"ml": "മറ്റുള്ളവ / നിങ്ങളുടെ സ്വന്തം വാക്കുകളിൽ പറയുക"
+},
+"DEPARTMENT_MODULE.KIDNEY.blood_urine_duration.label": {
+"en": "Since when have you noticed this?",
+"hi": "आपने यह कब से महसूस किया है?",
+"ml": "എന്ന് മുതലാണ് നിങ്ങൾ ഇത് ശ്രദ്ധിച്ചത്?"
+},
+"DEPARTMENT_MODULE.KIDNEY.kidney_day_frequency.label": {
+"en": "How many times do you urinate during the day?",
+"hi": "दिन के समय आप कितनी बार पेशाब करने जाते हैं?",
+"ml": "പകൽ സമയത്ത് നിങ്ങൾ എത്ര തവണ മൂത്രമൊഴിക്കാൻ പോകാറുണ്ട്?"
+},
+"DEPARTMENT_MODULE.KIDNEY.kidney_night_frequency.label": {
+"en": "How many times do you wake up at night to urinate?",
+"hi": "रात में पेशाब करने के लिए आप कितनी बार उठते हैं?",
+"ml": "രാത്രിയിൽ മൂത്രമൊഴിക്കാൻ നിങ്ങൾ എത്ര തവണ എഴുന്നേൽക്കാറുണ്ട്?"
+},
+"DEPARTMENT_MODULE.KIDNEY.kidney_stone_history.label": {
+"en": "Have you ever had kidney stones?",
+"hi": "क्या आपको कभी गुर्दे (किडनी) की पथरी हुई है?",
+"ml": "നിങ്ങൾക്ക് എപ്പോഴെങ്കിലും കിഡ്നി സ്റ്റോൺ (മൂത്രത്തിൽ കല്ല്) ഉണ്ടായിട്ടുണ്ടോ?"
+},
+"DEPARTMENT_MODULE.DIGESTION.digestion_symptoms.label": {
+"en": "Do you have any of the following digestion-related problems?",
+"hi": "क्या आपको पाचन (पेट) से जुड़ी इनमें से कोई समस्या है?",
+"ml": "നിങ്ങൾക്ക് ദഹനവുമായി ബന്ധപ്പെട്ട താഴെ പറയുന്ന പ്രശ്നങ്ങളുണ്ടോ?"
+},
+"DEPARTMENT_MODULE.DIGESTION.digestion_symptoms.option.bloating": {
+"en": "Bloating after meals",
+"hi": "खाना खाने के बाद पेट फूलना",
+"ml": "ഭക്ഷണം കഴിച്ച ശേഷം വയറു വീർക്കുക"
+},
+"DEPARTMENT_MODULE.DIGESTION.digestion_symptoms.option.heartburn": {
+"en": "Acidity or heartburn",
+"hi": "एसिडिटी या सीने में जलन",
+"ml": "ഗ്യാസ്ട്രബിൾ അല്ലെങ്കിൽ നെഞ്ചെരിച്ചിൽ"
+},
+"DEPARTMENT_MODULE.DIGESTION.digestion_symptoms.option.nausea": {
+"en": "Nausea or vomiting",
+"hi": "जी मिचलाना या उल्टी आना",
+"ml": "ഓക്കാനം അല്ലെങ്കിൽ ഛർദ്ദി"
+},
+"DEPARTMENT_MODULE.DIGESTION.digestion_symptoms.option.abdominal_heaviness": {
+"en": "Heaviness in the abdomen after eating",
+"hi": "खाना खाने के बाद पेट में भारीपन",
+"ml": "ഭക്ഷണം കഴിച്ച ശേഷം വയറ്റിൽ ഭാരം തോന്നുക"
+},
+"DEPARTMENT_MODULE.DIGESTION.digestion_symptoms.option.food_intolerance": {
+"en": "Certain foods consistently disagree with you",
+"hi": "कुछ खाने से अक्सर पेट खराब हो जाता है",
+"ml": "ചില ഭക്ഷണങ്ങൾ കഴിക്കുമ്പോൾ വയറിന് ബുദ്ധിമുട്ട് ഉണ്ടാകാറുണ്ട്"
+},
+"DEPARTMENT_MODULE.DIGESTION.digestion_symptoms.option.none_digestion": {
+"en": "None of these",
+"hi": "इनमें से कोई नहीं",
+"ml": "ഇവയൊന്നുമല്ല"
+},
+"DEPARTMENT_MODULE.DIGESTION.digestion_symptoms.option.digestion_symptoms_other": {
+"en": "Other / describe in your own words",
+"hi": "अन्य / अपने शब्दों में बताएं",
+"ml": "മറ്റുള്ളവ / നിങ്ങളുടെ സ്വന്തം വാക്കുകളിൽ പറയുക"
+},
+"DEPARTMENT_MODULE.DIGESTION.nausea_vomiting_frequency.label": {
+"en": "How often does this happen?",
+"hi": "ऐसा कितनी बार होता है?",
+"ml": "ഇങ്ങനെ എത്ര തവണ ഉണ്ടാകാറുണ്ട്?"
+},
+"DEPARTMENT_MODULE.DIGESTION.nausea_vomiting_frequency.option.rare_n": {
+"en": "Rarely",
+"hi": "कभी-कभार",
+"ml": "വളരെ അപൂർവ്വമായി"
+},
+"DEPARTMENT_MODULE.DIGESTION.nausea_vomiting_frequency.option.frequent_n": {
+"en": "Frequently",
+"hi": "अक्सर (बार-बार)",
+"ml": "പലപ്പോഴും"
+},
+"DEPARTMENT_MODULE.DIGESTION.nausea_vomiting_frequency.option.daily_n": {
+"en": "Daily",
+"hi": "रोज",
+"ml": "ദിവസവും"
+},
+"DEPARTMENT_MODULE.DIGESTION.digestion_appetite.label": {
+"en": "How would you describe your appetite?",
+"hi": "आपकी भूख कैसी है?",
+"ml": "നിങ്ങൾക്ക് വിശപ്പ് എങ്ങനെയുണ്ട്?"
+},
+"DEPARTMENT_MODULE.DIGESTION.digestion_appetite.option.strong_app": {
+"en": "Strong",
+"hi": "बहुत अच्छी (तेज)",
+"ml": "നല്ല വിശപ്പുണ്ട്"
+},
+"DEPARTMENT_MODULE.DIGESTION.digestion_appetite.option.irregular_app": {
+"en": "Irregular",
+"hi": "कभी कम, कभी ज्यादा",
+"ml": "കൃത്യമല്ലാത്ത വിശപ്പ്"
+},
+"DEPARTMENT_MODULE.DIGESTION.digestion_appetite.option.poor_app": {
+"en": "Poor",
+"hi": "बहुत कम",
+"ml": "വിശപ്പില്ല"
+},
+"DEPARTMENT_MODULE.DIGESTION.digestion_bowel_pattern.label": {
+"en": "How would you describe your bowel movements?",
+"hi": "आपका मल (टॉयलेट) कैसा होता है?",
+"ml": "നിങ്ങൾക്ക് മലവിസർജ്ജനം എങ്ങനെയുണ്ട്?"
+},
+"DEPARTMENT_MODULE.DIGESTION.digestion_bowel_pattern.option.soft_bp": {
+"en": "Soft",
+"hi": "नरम",
+"ml": "അയഞ്ഞത്"
+},
+"DEPARTMENT_MODULE.DIGESTION.digestion_bowel_pattern.option.hard_bp": {
+"en": "Hard",
+"hi": "कठोर (टाइट)",
+"ml": "കട്ടിയുള്ളത്"
+},
+"DEPARTMENT_MODULE.DIGESTION.digestion_bowel_pattern.option.loose_bp": {
+"en": "Loose",
+"hi": "पतला (दस्त जैसा)",
+"ml": "വെള്ളം പോലെ"
+},
+"DEPARTMENT_MODULE.DIGESTION.digestion_bowel_pattern.option.alternating_bp": {
+"en": "Alternating",
+"hi": "कभी नरम, कभी कठोर",
+"ml": "ചിലപ്പോൾ അയഞ്ഞതും ചിലപ്പോൾ കട്ടിയുള്ളതും"
+},
+"DEPARTMENT_MODULE.DIGESTION.digestion_bowel_frequency.label": {
+"en": "How many times a day do you pass stool?",
+"hi": "दिन में आप कितनी बार शौच (टॉयलेट) जाते हैं?",
+"ml": "ദിവസത്തിൽ എത്ര തവണ നിങ്ങൾ മലവിസർജ്ജനം ചെയ്യാറുണ്ട്?"
+},
+"ALLOPATHY_SEVERITY.title": {
+"en": "Severity & General Symptoms",
+"hi": "गंभीरता और सामान्य लक्षण",
+"ml": "തീവ്രതയും പൊതുവായ ലക്ഷണങ്ങളും"
+},
+"ALLOPATHY_SEVERITY.allo_systemic_symptoms.label": {
+"en": "Any of these general symptoms right now?",
+"hi": "क्या आपको अभी इनमें से कोई सामान्य लक्षण है?",
+"ml": "നിങ്ങൾക്ക് നിലവിൽ ഈ പറയുന്ന എന്തെങ്കിലും പൊതുവായ ലക്ഷണങ്ങൾ ഉണ്ടോ?"
+},
+"ALLOPATHY_SEVERITY.allo_systemic_symptoms.option.fever_sys": {
+"en": "Fever",
+"hi": "बुखार",
+"ml": "പനി"
+},
+"ALLOPATHY_SEVERITY.allo_systemic_symptoms.option.chills_sys": {
+"en": "Chills",
+"hi": "ठंड लगना",
+"ml": "കുളിര്"
+},
+"ALLOPATHY_SEVERITY.allo_systemic_symptoms.option.weight_loss_sys": {
+"en": "Unexpected weight loss",
+"hi": "अचानक वजन कम होना",
+"ml": "പെട്ടെന്ന് ശരീരഭാരം കുറയുക"
+},
+"ALLOPATHY_SEVERITY.allo_systemic_symptoms.option.fatigue_sys": {
+"en": "Fatigue",
+"hi": "थकान",
+"ml": "ക്ഷീണം"
+},
+"ALLOPATHY_SEVERITY.allo_systemic_symptoms.option.none_sys": {
+"en": "None of these",
+"hi": "इनमें से कोई नहीं",
+"ml": "ഇവയൊന്നുമല്ല"
+},
+"ALLOPATHY_SEVERITY.allo_systemic_symptoms.option.allo_systemic_symptoms_other": {
+"en": "Other / describe in your own words",
+"hi": "अन्य / अपने शब्दों में बताएं",
+"ml": "മറ്റുള്ളവ / നിങ്ങളുടെ സ്വന്തം വാക്കുകളിൽ പറയുക"
+},
+"ALLOPATHY_TREATMENT_HISTORY.title": {
+"en": "Care So Far",
+"hi": "अब तक का इलाज",
+"ml": "ഇതുവരെയുള്ള ചികിത്സ"
+},
+"ALLOPATHY_TREATMENT_HISTORY.allo_prior_consult.label": {
+"en": "Have you consulted a doctor for this before?",
+"hi": "क्या आपने इसके लिए पहले किसी डॉक्टर को दिखाया है?",
+"ml": "ഇതിനായി നിങ്ങൾ മുൻപ് ഏതെങ്കിലും ഡോക്ടറെ കണ്ടിട്ടുണ്ടോ?"
+},
+"ALLOPATHY_TREATMENT_HISTORY.allo_diagnostic_tests.label": {
+"en": "Have you had any diagnostic tests done for this?",
+"hi": "क्या आपने इसके लिए कोई जांच (टेस्ट) करवाई है?",
+"ml": "ഇതിനായി നിങ്ങൾ എന്തെങ്കിലും ടെസ്റ്റുകൾ ചെയ്തിട്ടുണ്ടോ?"
+},
+"ALLOPATHY_TREATMENT_HISTORY.allo_diagnostic_tests_detail.label": {
+"en": "What tests, and do you have the reports? (You can upload them in the next step.)",
+"hi": "कौन से टेस्ट हुए हैं, और क्या आपके पास उनकी रिपोर्ट है? (आप उन्हें अगले चरण में अपलोड कर सकते हैं।)",
+"ml": "എന്തൊക്കെ ടെസ്റ്റുകളാണ് ചെയ്തത്, റിപ്പോർട്ടുകൾ നിങ്ങളുടെ കൈവശമുണ്ടോ? (നിങ്ങൾക്ക് അവ അടുത്ത ഘട്ടത്തിൽ അപ്‌ലോഡ് ചെയ്യാവുന്നതാണ്.)"
+},
+"AYURVEDA_AGNI.title": {
+"en": "Agni (Digestive Capacity)",
+"hi": "अग्नि (पाचन क्षमता)",
+"ml": "അഗ്നി (ദഹനശേഷി)"
+},
+"AYURVEDA_AGNI.agni_appetite.label": {
+"en": "When you are otherwise well, is your appetite usually irregular, strong/quick, or steady/moderate?",
+"hi": "जब आप ठीक होते हैं, तब आपकी भूख कैसी होती है - अनियमित, तेज/जल्दी लगने वाली, या सामान्य/संतुलित?",
+"ml": "നിങ്ങൾക്ക് മറ്റ് അസുഖങ്ങളില്ലാത്തപ്പോൾ, വിശപ്പ് സാധാരണയായി കൃത്യമല്ലാത്തതാണോ, പെട്ടെന്ന് വിശക്കുന്നതാണോ, അതോ മിതമായതാണോ?"
+},
+"AYURVEDA_AGNI.agni_appetite.option.irregular_a": {
+"en": "Irregular",
+"hi": "अनियमित (कभी कम, कभी ज्यादा)",
+"ml": "കൃത്യമല്ലാത്തത്"
+},
+"AYURVEDA_AGNI.agni_appetite.option.strong_a": {
+"en": "Strong/quick",
+"hi": "तेज/जल्दी लगने वाली",
+"ml": "പെട്ടെന്ന് വിശക്കുന്ന പ്രകൃതം"
+},
+"AYURVEDA_AGNI.agni_appetite.option.steady_a": {
+"en": "Steady/moderate",
+"hi": "सामान्य/संतुलित",
+"ml": "മിതമായത്"
+},
+"AYURVEDA_AGNI.agni_meal_interval.label": {
+"en": "How long does it typically take you to feel hungry again after a meal?",
+"hi": "खाना खाने के बाद आपको दोबारा भूख लगने में आमतौर पर कितना समय लगता है?",
+"ml": "ഭക്ഷണം കഴിച്ച ശേഷം വീണ്ടും വിശക്കാൻ സാധാരണയായി എത്ര സമയം എടുക്കാറുണ്ട്?"
+},
+"AYURVEDA_AGNI.agni_heartburn_level.label": {
+"en": "How often do you get acidity or heartburn?",
+"hi": "आपको एसिडिटी या सीने में जलन कितनी बार होती है?",
+"ml": "നിങ്ങൾക്ക് ഗ്യാസ്ട്രബിളോ നെഞ്ചെരിച്ചിലോ എത്രത്തോളം ഉണ്ടാകാറുണ്ട്?"
+},
+"AYURVEDA_AGNI.agni_heartburn_level.option.rare_hb": {
+"en": "Rarely",
+"hi": "कभी-कभार",
+"ml": "വളരെ അപൂർവ്വമായി"
+},
+"AYURVEDA_AGNI.agni_heartburn_level.option.sometimes_hb": {
+"en": "Sometimes",
+"hi": "कभी-कभी",
+"ml": "ചിലപ്പോൾ"
+},
+"AYURVEDA_AGNI.agni_heartburn_level.option.often_hb": {
+"en": "Often",
+"hi": "अक्सर (बार-बार)",
+"ml": "പലപ്പോഴും"
+},
+"AYURVEDA_KOSHTHA.title": {
+"en": "Koshtha (Bowel Nature)",
+"hi": "कोष्ठ (पेट साफ़ होने की प्रवृत्ति)",
+"ml": "कोष्ठം (മലവിസർജ്ജന സ്വഭാവം)"
+},
+"AYURVEDA_KOSHTHA.koshtha_consistency.label": {
+"en": "How would you describe your bowel movements?",
+"hi": "आपका मल (टॉयलेट) कैसा होता है?",
+"ml": "നിങ്ങൾക്ക് മലവിസർജ്ജനം എങ്ങനെയുണ്ട്?"
+},
+"AYURVEDA_KOSHTHA.koshtha_consistency.option.soft_k": {
+"en": "Soft",
+"hi": "नरम",
+"ml": "അയഞ്ഞത്"
+},
+"AYURVEDA_KOSHTHA.koshtha_consistency.option.hard_k": {
+"en": "Hard",
+"hi": "कठोर (टाइट)",
+"ml": "കട്ടിയുള്ളത്"
+},
+"AYURVEDA_KOSHTHA.koshtha_consistency.option.loose_k": {
+"en": "Loose",
+"hi": "पतला (दस्त जैसा)",
+"ml": "വെള്ളം പോലെ"
+},
+"AYURVEDA_KOSHTHA.koshtha_consistency.option.alternating_k": {
+"en": "Alternating",
+"hi": "कभी नरम, कभी कठोर",
+"ml": "ചിലപ്പോൾ അയഞ്ഞതും ചിലപ്പോൾ കട്ടിയുള്ളതും"
+},
+"AYURVEDA_KOSHTHA.koshtha_straining.label": {
+"en": "Do you strain during bowel movements?",
+"hi": "क्या आपको शौच (टॉयलेट) करते समय जोर लगाना पड़ता है?",
+"ml": "മലവിസർജ്ജനം ചെയ്യുമ്പോൾ നിങ്ങൾക്ക് ബുദ്ധിമുട്ട് അനുഭവപ്പെടാറുണ്ടോ?"
+},
+"AYURVEDA_KOSHTHA.koshtha_gas.label": {
+"en": "Do you experience gas or excessive flatulence?",
+"hi": "क्या आपको गैस की समस्या बहुत ज्यादा होती है?",
+"ml": "നിങ്ങൾക്ക് ഗ്യാസ് ട്രബിൾ കൂടുതലായി അനുഭവപ്പെടാറുണ്ടോ?"
+},
+"AYURVEDA_ASHTAVIDHA.title": {
+"en": "A Few Physical Signs",
+"hi": "कुछ शारीरिक लक्षण",
+"ml": "ചില ശാരീരിക ലക്ഷണങ്ങൾ"
+},
+"AYURVEDA_ASHTAVIDHA.tongue_coating.label": {
+"en": "Is your tongue often coated white or yellow in the morning?",
+"hi": "क्या सुबह उठने पर आपकी जीभ पर सफेद या पीली परत (मैल) जमी होती है?",
+"ml": "രാവിലെ എഴുന്നേൽക്കുമ്പോൾ നിങ്ങളുടെ നാവിൽ വെള്ളയോ മഞ്ഞയോ നിറത്തിൽ പാട ഉണ്ടാകാറുണ്ടോ?"
+},
+"AYURVEDA_ASHTAVIDHA.tongue_coating.option.white_t": {
+"en": "White",
+"hi": "सफ़ेद",
+"ml": "വെള്ള"
+},
+"AYURVEDA_ASHTAVIDHA.tongue_coating.option.yellow_t": {
+"en": "Yellow",
+"hi": "पीला",
+"ml": "മഞ്ഞ"
+},
+"AYURVEDA_ASHTAVIDHA.tongue_coating.option.none_t": {
+"en": "Not usually",
+"hi": "आमतौर पर नहीं",
+"ml": "സാധാരണയായി ഇല്ല"
+},
+"AYURVEDA_ASHTAVIDHA.mouth_taste.label": {
+"en": "Do you have a bitter or metallic taste in your mouth on waking?",
+"hi": "क्या जागने पर आपके मुँह का स्वाद कड़वा या अजीब सा होता है?",
+"ml": "ഉറക്കമുണരുമ്പോൾ വായ്ക്ക് കയ്പ്പോ മറ്റെന്തെങ്കിലും അരുചിയോ തോന്നാറുണ്ടോ?"
+},
+"AYURVEDA_ASHTAVIDHA.body_temp_tendency.label": {
+"en": "Does your body usually run warmer or cooler than others around you?",
+"hi": "क्या आपका शरीर आमतौर पर दूसरों की तुलना में ज्यादा गर्म या ज्यादा ठंडा रहता है?",
+"ml": "മറ്റുള്ളവരെ അപേക്ഷിച്ച് നിങ്ങളുടെ ശരീരത്തിന് സാധാരണയായി ചൂടാണോ അതോ തണുപ്പാണോ കൂടുതൽ അനുഭവപ്പെടാറുള്ളത്?"
+},
+"AYURVEDA_ASHTAVIDHA.body_temp_tendency.option.warmer_b": {
+"en": "Warmer",
+"hi": "ज्यादा गर्म",
+"ml": "കൂടുതൽ ചൂട്"
+},
+"AYURVEDA_ASHTAVIDHA.body_temp_tendency.option.cooler_b": {
+"en": "Cooler",
+"hi": "ज्यादा ठंडा",
+"ml": "കൂടുതൽ തണുപ്പ്"
+},
+"AYURVEDA_ASHTAVIDHA.body_temp_tendency.option.average_b": {
+"en": "About average",
+"hi": "औसत (सामान्य)",
+"ml": "സാധാരണ നിലയിൽ"
+},
+"AYURVEDA_AHARA_VIHARA.title": {
+"en": "Diet & Daily Routine",
+"hi": "खानपान और दिनचर्या",
+"ml": "ഭക്ഷണക്രമവും ദിനചര്യയും"
+},
+"AYURVEDA_AHARA_VIHARA.taste_preference.label": {
+"en": "Which tastes do you prefer in food?",
+"hi": "खाने में आपको कौन सा स्वाद ज्यादा पसंद है?",
+"ml": "ഭക്ഷണത്തിൽ നിങ്ങൾക്ക് ഏത് രുചിയോടാണ് കൂടുതൽ താല്പര്യം?"
+},
+"AYURVEDA_AHARA_VIHARA.taste_preference.option.spicy_t": {
+"en": "Spicy",
+"hi": "तीखा",
+"ml": "എരിവുള്ളത്"
+},
+"AYURVEDA_AHARA_VIHARA.taste_preference.option.sour_t": {
+"en": "Sour",
+"hi": "खट्टा",
+"ml": "പുളിയുള്ളത്"
+},
+"AYURVEDA_AHARA_VIHARA.taste_preference.option.sweet_t": {
+"en": "Sweet",
+"hi": "मीठा",
+"ml": "മധുരമുള്ളത്"
+},
+"AYURVEDA_AHARA_VIHARA.taste_preference.option.salty_t": {
+"en": "Salty",
+"hi": "नमकीन",
+"ml": "ഉപ്പുള്ളത്"
+},
+"AYURVEDA_AHARA_VIHARA.taste_preference.option.bitter_t": {
+"en": "Bitter",
+"hi": "कड़वा",
+"ml": "കയ്പ്പുള്ളത്"
+},
+"AYURVEDA_AHARA_VIHARA.sleep_hours.label": {
+"en": "How many hours do you sleep per night?",
+"hi": "आप रात में कितने घंटे सोते हैं?",
+"ml": "രാത്രിയിൽ നിങ്ങൾ എത്ര മണിക്കൂർ ഉറങ്ങാറുണ്ട്?"
+},
+"AYURVEDA_AHARA_VIHARA.sleep_hours.option.lt6": {
+"en": "Less than 6",
+"hi": "6 घंटे से कम",
+"ml": "6 മണിക്കൂറിൽ താഴെ"
+},
+"AYURVEDA_AHARA_VIHARA.sleep_hours.option.6to8": {
+"en": "6-8",
+"hi": "6-8 घंटे",
+"ml": "6-8 മണിക്കൂർ"
+},
+"AYURVEDA_AHARA_VIHARA.sleep_hours.option.gt8": {
+"en": "More than 8",
+"hi": "8 घंटे से ज्यादा",
+"ml": "8 മണിക്കൂറിൽ കൂടുതൽ"
+},
+"AYURVEDA_AHARA_VIHARA.stress_level.label": {
+"en": "How would you describe your daily stress level?",
+"hi": "रोजमर्रा के जीवन में आपका दिमागी तनाव (टेंशन) कैसा रहता है?",
+"ml": "നിങ്ങളുടെ ദൈനംദിന ജീവിതത്തിലെ മാനസിക സമ്മർദ്ദം എങ്ങനെയുണ്ട്?"
+},
+"AYURVEDA_AHARA_VIHARA.stress_level.option.low_s": {
+"en": "Low",
+"hi": "कम",
+"ml": "കുറവാണ്"
+},
+"AYURVEDA_AHARA_VIHARA.stress_level.option.moderate_s": {
+"en": "Moderate",
+"hi": "मध्यम (ठीक-ठाक)",
+"ml": "മിതമായത്"
+},
+"AYURVEDA_AHARA_VIHARA.stress_level.option.high_s": {
+"en": "High",
+"hi": "बहुत ज्यादा",
+"ml": "കൂടുതലാണ്"
+},
+"PAST_HISTORY_AND_ALLERGIES.title": {
+"en": "Past Health & Allergies",
+"hi": "पिछली बीमारियां और एलर्जी",
+"ml": "മുൻകാല അസുഖങ്ങളും അലർജിയും"
+},
+"PAST_HISTORY_AND_ALLERGIES.chronic_conditions.label": {
+"en": "Do you have any of these chronic conditions?",
+"hi": "क्या आपको इनमें से कोई पुरानी बीमारी है?",
+"ml": "നിങ്ങൾക്ക് ഇതിൽ ഏതെങ്കിലും വിട്ടുമാറാത്ത അസുഖങ്ങൾ ഉണ്ടോ?"
+},
+"PAST_HISTORY_AND_ALLERGIES.chronic_conditions.option.diabetes": {
+"en": "Diabetes",
+"hi": "डायबिटीज (शुगर)",
+"ml": "പ്രമേഹം (ഷുഗർ)"
+},
+"PAST_HISTORY_AND_ALLERGIES.chronic_conditions.option.hypertension": {
+"en": "High blood pressure",
+"hi": "हाई ब्लड प्रेशर (बीपी)",
+"ml": "ഉയർന്ന രക്തസമ്മർദ്ദം (ബി.പി)"
+},
+"PAST_HISTORY_AND_ALLERGIES.chronic_conditions.option.thyroid": {
+"en": "Thyroid disorder",
+"hi": "थायराइड की बीमारी",
+"ml": "തൈറോയ്ഡ് പ്രശ്നങ്ങൾ"
+},
+"PAST_HISTORY_AND_ALLERGIES.chronic_conditions.option.asthma_cc": {
+"en": "Asthma",
+"hi": "दमा (अस्थमा)",
+"ml": "ആസ്ത്മ (Asthma)"
+},
+"PAST_HISTORY_AND_ALLERGIES.chronic_conditions.option.none_cc": {
+"en": "None of these",
+"hi": "इनमें से कोई नहीं",
+"ml": "ഇവയൊന്നുമല്ല"
+},
+"PAST_HISTORY_AND_ALLERGIES.chronic_conditions.option.chronic_conditions_other": {
+"en": "Other / describe in your own words",
+"hi": "अन्य / अपने शब्दों में बताएं",
+"ml": "മറ്റുള്ളവ / നിങ്ങളുടെ സ്വന്തം വാക്കുകളിൽ പറയുക"
+},
+"PAST_HISTORY_AND_ALLERGIES.past_surgeries.label": {
+"en": "Have you had any past surgeries?",
+"hi": "क्या पहले कभी आपकी कोई सर्जरी (ऑपरेशन) हुई है?",
+"ml": "മുൻപ് നിങ്ങൾക്ക് എന്തെങ്കിലും സർജറി (ഓപ്പറേഷൻ) ചെയ്തിട്ടുണ്ടോ?"
+},
+"PAST_HISTORY_AND_ALLERGIES.past_surgeries_detail.label": {
+"en": "What surgery, and when?",
+"hi": "कौन सी सर्जरी हुई, और कब?",
+"ml": "ഏത് സർജറിയാണ് ചെയ്തത്, എപ്പോഴാണ്?"
+},
+"PAST_HISTORY_AND_ALLERGIES.known_allergies.label": {
+"en": "Do you have any known allergies (medicines, foods, herbs, or metals)?",
+"hi": "क्या आपको किसी चीज़ (दवा, खाना, जड़ी-बूटी या धातु) से एलर्जी है?",
+"ml": "നിങ്ങൾക്ക് എന്തെങ്കിലും അലർജി (മരുന്നുകൾ, ഭക്ഷണങ്ങൾ, പച്ചമരുന്നുകൾ, അല്ലെങ്കിൽ ലോഹങ്ങൾ) ഉള്ളതായി അറിയാമോ?"
+},
+"PAST_HISTORY_AND_ALLERGIES.known_allergies_detail.label": {
+"en": "Please describe the allergy and reaction.",
+"hi": "कृपया बताएं कि एलर्जी किस चीज से है और उससे क्या होता है।",
+"ml": "അലർജി എന്തിനോടാണെന്നും എന്താണ് സംഭവിക്കുന്നതെന്നും ദയവായി വ്യക്തമാക്കുക."
+},
+"MEDICATIONS.title": {
+"en": "Current Medications",
+"hi": "अभी चलने वाली दवाएं",
+"ml": "നിലവിൽ കഴിക്കുന്ന മരുന്നുകൾ"
+},
+"MEDICATIONS.current_medications.label": {
+"en": "Which medicines do you currently take regularly?",
+"hi": "आप अभी कौन सी दवाएं नियमित रूप से ले रहे हैं?",
+"ml": "നിങ്ങൾ ഇപ്പോൾ സ്ഥിരമായി കഴിക്കുന്ന മരുന്നുകൾ ഏതൊക്കെയാണ്?"
+},
+"MEDICATIONS.current_medications.option.metformin": {
+"en": "Metformin (sugar)",
+"hi": "Metformin (शुगर)",
+"ml": "Metformin (ഷുഗർ)"
+},
+"MEDICATIONS.current_medications.option.telmisartan": {
+"en": "Telmisartan (BP)",
+"hi": "Telmisartan (बीपी)",
+"ml": "Telmisartan (ബി.പി)"
+},
+"MEDICATIONS.current_medications.option.thyroxine": {
+"en": "Thyroxine (thyroid)",
+"hi": "Thyroxine (थायराइड)",
+"ml": "Thyroxine (തൈറോയ്ഡ്)"
+},
+"MEDICATIONS.current_medications.option.ashwagandha": {
+"en": "Ashwagandha Churna/Vati",
+"hi": "Ashwagandha Churna/Vati",
+"ml": "Ashwagandha Churna/Vati"
+},
+"MEDICATIONS.current_medications.option.triphala": {
+"en": "Triphala Kwath/Churna",
+"hi": "Triphala Kwath/Churna",
+"ml": "Triphala Kwath/Churna"
+},
+"MEDICATIONS.current_medications.option.none_meds": {
+"en": "I do not take any regular medicines",
+"hi": "मैं नियमित रूप से कोई दवा नहीं लेता/लेती हूँ",
+"ml": "ഞാൻ സ്ഥിരമായി മരുന്നുകളൊന്നും കഴിക്കാറില്ല"
+},
+"MEDICATIONS.append.lmp_status.label": {
+"en": "Date of last menstrual period and current status",
+"hi": "आखिरी माहवारी (पीरियड्स) की तारीख और वर्तमान स्थिति",
+"ml": "അവസാനമായി ആർത്തവം ഉണ്ടായ തിയ്യതിയും നിലവിലെ അവസ്ഥയും"
+},
+"MEDICATIONS.append.lmp_status.option.regular_lmp": {
+"en": "Regular",
+"hi": "नियमित (समय पर)",
+"ml": "കൃത്യമാണ്"
+},
+"MEDICATIONS.append.lmp_status.option.irregular_lmp": {
+"en": "Irregular",
+"hi": "अनियमित (समय पर नहीं)",
+"ml": "കൃത്യമല്ല"
+},
+"MEDICATIONS.append.lmp_status.option.pregnant_lmp": {
+"en": "Pregnant",
+"hi": "गर्भवती (प्रेग्नेंट)",
+"ml": "ഗർഭിണി"
+},
+"MEDICATIONS.append.lmp_status.option.menopausal_lmp": {
+"en": "Menopausal",
+"hi": "माहवारी बंद हो चुकी है (मीनोपॉज)",
+"ml": "ആർത്തവം നിന്ന അവസ്ഥ (മെനോപോസ്)"
+},
+"ALLOPATHY_LIFESTYLE.title": {
+"en": "Occupation & Lifestyle",
+"hi": "कामकाज और जीवनशैली",
+"ml": "തൊഴിലും ജീവിതരീതിയും"
+},
+"ALLOPATHY_LIFESTYLE.occupational_hazards.label": {
+"en": "Are you exposed to any of these at work or home?",
+"hi": "क्या आपको काम पर या घर में इनमें से किसी का सामना करना पड़ता है?",
+"ml": "ജോലിസ്ഥലത്തോ വീട്ടിലോ നിങ്ങൾക്ക് ഇതിൽ ഏതെങ്കിലും സാഹചര്യങ്ങൾ നേരിടേണ്ടി വരാറുണ്ടോ?"
+},
+"ALLOPATHY_LIFESTYLE.occupational_hazards.option.chemicals_haz": {
+"en": "Chemicals/fumes",
+"hi": "केमिकल या धुआं",
+"ml": "രാസവസ്തുക്കൾ / പുക"
+},
+"ALLOPATHY_LIFESTYLE.occupational_hazards.option.heavy_labor_haz": {
+"en": "Heavy physical labor",
+"hi": "भारी शारीरिक मेहनत",
+"ml": "കഠിനമായ ശാരീരിക അധ്വാനം"
+},
+"ALLOPATHY_LIFESTYLE.occupational_hazards.option.sitting_haz": {
+"en": "Prolonged sitting",
+"hi": "लंबे समय तक बैठे रहना",
+"ml": "തുടർച്ചയായി ഇരുന്നുള്ള ജോലി"
+},
+"ALLOPATHY_LIFESTYLE.occupational_hazards.option.none_haz": {
+"en": "None of these",
+"hi": "इनमें से कोई नहीं",
+"ml": "ഇവയൊന്നുമല്ല"
+},
+"ALLOPATHY_LIFESTYLE.smoking_alcohol_habits.label": {
+"en": "Do you use any of the following?",
+"hi": "क्या आप इनमें से किसी का सेवन करते हैं?",
+"ml": "നിങ്ങൾ ഇതിൽ ഏതെങ്കിലും ഉപയോഗിക്കാറുണ്ടോ?"
+},
+"ALLOPATHY_LIFESTYLE.smoking_alcohol_habits.option.smoking_h": {
+"en": "Smoking",
+"hi": "धूम्रपान (बीड़ी/सिगरेट)",
+"ml": "പുകവലി"
+},
+"ALLOPATHY_LIFESTYLE.smoking_alcohol_habits.option.alcohol_h": {
+"en": "Alcohol",
+"hi": "शराब",
+"ml": "മദ്യപാനം"
+},
+"ALLOPATHY_LIFESTYLE.smoking_alcohol_habits.option.tobacco_h": {
+"en": "Tobacco/chewing",
+"hi": "तंबाकू या गुटखा चबाना",
+"ml": "പുകയില / മുറുക്കാൻ"
+},
+"ALLOPATHY_LIFESTYLE.smoking_alcohol_habits.option.none_habits": {
+"en": "None of these",
+"hi": "इनमें से कोई नहीं",
+"ml": "ഇവയൊന്നുമല്ല"
+},
+"ALLOPATHY_LIFESTYLE.exercise_habit.label": {
+"en": "How would you describe your exercise habit?",
+"hi": "आप कितनी कसरत (व्यायाम) करते हैं?",
+"ml": "നിങ്ങൾ എത്രത്തോളം വ്യായാമം ചെയ്യാറുണ്ട്?"
+},
+"ALLOPATHY_LIFESTYLE.exercise_habit.option.regular_ex": {
+"en": "Regular",
+"hi": "रोज (नियमित)",
+"ml": "സ്ഥിരമായി"
+},
+"ALLOPATHY_LIFESTYLE.exercise_habit.option.occasional_ex": {
+"en": "Occasional",
+"hi": "कभी-कभी",
+"ml": "വല്ലപ്പോഴും"
+},
+"ALLOPATHY_LIFESTYLE.exercise_habit.option.none_ex": {
+"en": "Rarely/never",
+"hi": "शायद ही कभी/कभी नहीं",
+"ml": "വളരെ അപൂർവ്വമായി / ഒരിക്കലുമില്ല"
+}
+}

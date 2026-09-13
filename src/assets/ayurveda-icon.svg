@@ -1,0 +1,16 @@
+<svg width="24" height="24" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 118c-8 8-8 20 0 28l6 6c8 8 20 8 28 0l84-84c8-8 8-20 0-28l-6-6c-8-8-20-8-28 0z" stroke="currentColor" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M64 76 178 190" stroke="currentColor" stroke-width="20" stroke-linecap="round"/>
+  <path d="M112 142 226 256" stroke="currentColor" stroke-width="20" stroke-linecap="round"/>
+  <path d="M258 222 328 292" stroke="currentColor" stroke-width="20" stroke-linecap="round"/>
+  <path d="M228 20c60-20 130 10 150 70 20 60-10 130-70 150" stroke="currentColor" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M228 20c-20 60 10 130 70 150 20 6 42 8 60 4" stroke="currentColor" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M280 62 328 292" stroke="currentColor" stroke-width="20" stroke-linecap="round"/>
+  <rect x="18" y="218" width="476" height="52" rx="26" stroke="currentColor" stroke-width="20"/>
+  <path d="M42 270c0 90 74 168 172 168h84c98 0 172-78 172-168" stroke="currentColor" stroke-width="20" stroke-linecap="round"/>
+  <path d="M436 356c-14 16-32 28-52 36" stroke="currentColor" stroke-width="20" stroke-linecap="round"/>
+  <path d="M188 330c8-10 22-10 30 0" stroke="currentColor" stroke-width="18" stroke-linecap="round"/>
+  <path d="M296 330c8-10 22-10 30 0" stroke="currentColor" stroke-width="18" stroke-linecap="round"/>
+  <path d="M232 350c4 10 12 16 24 16s20-6 24-16" stroke="currentColor" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M182 438v14c0 20 16 36 36 36h76c20 0 36-16 36-36v-14" stroke="currentColor" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

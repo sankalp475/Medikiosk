@@ -11,8 +11,10 @@ import ProtectedRoute from './auth/ProtectedRoute.jsx'
 
 const router = createBrowserRouter([
   { path: '/', element: <App /> },
-  { path: '/dashboard/admin/login', element: <LoginPage role="admin" /> },
-  { path: '/dashboard/doctor/login', element: <LoginPage role="doctor" /> },
+  // Single shared login for both roles - the backend's /auth/login/ determines
+  // role from the account itself (admin_profile vs doctor_profile), so the
+  // frontend never needs to ask which portal you're signing into.
+  { path: '/login', element: <LoginPage /> },
   {
     element: <ProtectedRoute allowedRoles={["admin"]} />,
     children: [{ path: '/dashboard/admin', element: <AdminDashboard /> }],

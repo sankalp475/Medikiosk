@@ -1,25 +1,20 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { HeartPulse, Stethoscope, ShieldCheck, Mail, Lock, Eye, EyeOff, ArrowRight, Sparkles } from "lucide-react";
+import { HeartPulse, ShieldCheck, Mail, Lock, Eye, EyeOff, ArrowRight, Sparkles } from "lucide-react";
 import { getDashboardPath, saveUserSession } from "../../auth/auth";
-import { authenticateAccount } from "../../storage/db";
+import { authApi, ApiError } from "../../api/client";
 
-export default function LoginPage({ role: propRole }) {
+export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
-
-  // Role is chosen based on URL path or explicit prop:
-  // /dashboard/admin/login -> "admin"
-  // /dashboard/doctor/login -> "doctor"
-  const role = propRole || (location.pathname.toLowerCase().includes("admin") ? "admin" : "doctor");
-  const isAdmin = role === "admin";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
     setError("");
     if (!email.trim() || !password) {
@@ -27,31 +22,28 @@ export default function LoginPage({ role: propRole }) {
       return;
     }
 
-    const authResult = authenticateAccount(email, password, role);
-    if (!authResult.success) {
-      setError(authResult.error);
-      return;
+    setIsSubmitting(true);
+    try {
+      const result = await authApi.login(email.trim(), password);
+
+      saveUserSession({
+        token: result.token,
+        role: result.role,
+        email: result.email,
+        name: result.role === "doctor" ? result.doctor_name : result.hospital_name,
+        doctorId: result.doctor_id,
+        hospitalId: result.hospital_id,
+      });
+      navigate(location.state?.from || getDashboardPath(result.role), { replace: true });
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Unable to reach the server. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
-
-    saveUserSession({
-      access: "local-session-" + Date.now(),
-      refresh: "local-refresh-" + Date.now(),
-      role: authResult.user.role || role,
-      email: authResult.user.email,
-      name: authResult.user.name,
-      department: authResult.user.department,
-    });
-    navigate(location.state?.from || getDashboardPath(authResult.user.role || role), { replace: true });
-  }
-
-  function handleDemoFill(demoEmail, demoPass) {
-    setEmail(demoEmail);
-    setPassword(demoPass);
-    setError("");
   }
 
   return (
-    <main className="min-h-screen bg-slate-900 px-4 py-8 text-slate-900 sm:px-6 flex items-center justify-center">
+    <main className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-teal-50 px-4 py-8 text-slate-900 sm:px-6 flex items-center justify-center">
       <div className="w-full max-w-5xl overflow-hidden rounded-3xl bg-white shadow-2xl shadow-slate-950/40 grid lg:grid-cols-[1fr_1.1fr]">
         {/* Left Branding Showcase */}
         <section className="relative hidden flex-col justify-between overflow-hidden bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-950 p-10 text-white lg:flex">
@@ -74,15 +66,14 @@ export default function LoginPage({ role: propRole }) {
             <div className="mt-12">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-700/50 px-3 py-1 text-xs font-semibold text-emerald-200 backdrop-blur-sm">
                 <Sparkles className="h-3.5 w-3.5 text-emerald-300" />
-                {isAdmin ? "Hospital Central Administration" : "Physician Consultation Portal"}
+                Multi-Department Staff Portal
               </span>
               <h1 className="mt-4 text-3xl font-extrabold leading-tight text-white sm:text-4xl">
-                {isAdmin ? "Central Triage & Dispatch Control." : "Smart Doctor Consultation Intake."}
+                One Portal for the Whole Hospital.
               </h1>
               <p className="mt-4 text-sm leading-relaxed text-emerald-100/90">
-                {isAdmin
-                  ? "Manage hospital clinical capacity, staff allocations, and triage queues across all departments."
-                  : "Review assigned patients, call the next patient in queue, and manage clinical consultations effortlessly."}
+                A single, unified workspace for every clinical and administrative team across Aayush Integrated
+                Super-Specialty Hospital.
               </p>
             </div>
           </div>
@@ -90,15 +81,15 @@ export default function LoginPage({ role: propRole }) {
           <div className="relative space-y-3 pt-8 border-t border-emerald-700/50">
             <div className="flex items-center gap-3 text-xs text-emerald-100">
               <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-emerald-700/60 text-emerald-300 font-bold">✓</div>
-              <span>{isAdmin ? "Centralized triage queue dispatch" : "Live consultation queue management"}</span>
+              <span>Central triage queue dispatch (Admin)</span>
             </div>
             <div className="flex items-center gap-3 text-xs text-emerald-100">
               <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-emerald-700/60 text-emerald-300 font-bold">✓</div>
-              <span>{isAdmin ? "Multi-department doctor roster allocation" : "Next patient call & attendance tracking"}</span>
+              <span>Live consultation queue management (Doctor)</span>
             </div>
             <div className="flex items-center gap-3 text-xs text-emerald-100">
               <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-emerald-700/60 text-emerald-300 font-bold">✓</div>
-              <span>Role-restricted security with encrypted session tokens</span>
+              <span>Role-restricted security with token-based sessions</span>
             </div>
           </div>
         </section>
@@ -110,30 +101,26 @@ export default function LoginPage({ role: propRole }) {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-bold uppercase tracking-wider text-emerald-700">
-                  {isAdmin ? "Admin Security Portal" : "Clinical Staff Sign in"}
+                  Clinical Staff Sign in
                 </p>
                 <h2 className="mt-1 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
-                  {isAdmin ? "Admin Control" : "Doctor Portal"}
+                  Staff Portal
                 </h2>
               </div>
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-800 shadow-sm">
-                {isAdmin ? <ShieldCheck className="h-5 w-5" /> : <Stethoscope className="h-5 w-5" />}
+                <ShieldCheck className="h-5 w-5" />
               </div>
             </div>
 
             <p className="mt-2 text-xs text-slate-500">
-              {isAdmin
-                ? "Sign in with your administrative credentials to manage central triage dispatch."
-                : "Sign in with your clinical staff credentials to manage consultation queues."}
+              Sign in with your Admin or Doctor credentials - you'll be taken to the right console automatically.
             </p>
 
             {/* Form */}
             <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
               {/* Email field */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  {isAdmin ? "Admin Email ID" : "Doctor Work Email"}
-                </label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Work Email</label>
                 <div className="relative">
                   <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
                     <Mail className="h-4 w-4" />
@@ -142,7 +129,7 @@ export default function LoginPage({ role: propRole }) {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder={isAdmin ? "admin@hospital.org" : "dr.rao@hospital.org"}
+                    placeholder="you@hospital.org"
                     className="input input-bordered w-full pl-9 pr-3 text-sm bg-white border-slate-300 focus:border-emerald-600 focus:outline-emerald-600"
                     autoComplete="username"
                     required
@@ -190,38 +177,13 @@ export default function LoginPage({ role: propRole }) {
 
               <button
                 type="submit"
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-700 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-emerald-800 focus:ring-4 focus:ring-emerald-700/20"
+                disabled={isSubmitting}
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-700 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-emerald-800 focus:ring-4 focus:ring-emerald-700/20 disabled:opacity-60"
               >
-                <span>Sign in to {isAdmin ? "Admin Control" : "Doctor Portal"}</span>
+                <span>{isSubmitting ? "Signing in..." : "Sign in"}</span>
                 <ArrowRight className="h-4 w-4" />
               </button>
             </form>
-          </div>
-
-          {/* Quick Demo Fill & Cross-portal Switcher */}
-          <div className="mt-8 border-t border-slate-100 pt-5">
-            <p className="text-[11px] font-medium uppercase tracking-wider text-slate-400 text-center mb-2.5">
-              Quick One-Click Demo Access
-            </p>
-            <div className="flex justify-center">
-              {isAdmin ? (
-                <button
-                  type="button"
-                  onClick={() => handleDemoFill("admin@hospital.org", "admin123")}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs font-medium text-slate-700 transition-colors hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-800"
-                >
-                  <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" /> Fill Admin Demo Credentials
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => handleDemoFill("dr.ananya@hospital.org", "doctor123")}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs font-medium text-slate-700 transition-colors hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-800"
-                >
-                  <Stethoscope className="h-3.5 w-3.5 text-emerald-600" /> Fill Doctor Demo Credentials
-                </button>
-              )}
-            </div>
           </div>
         </section>
       </div>

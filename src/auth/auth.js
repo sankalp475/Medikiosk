@@ -3,7 +3,7 @@ const USER_STORAGE_KEY = "medikiosk_user";
 export function getStoredUser() {
   try {
     const user = JSON.parse(localStorage.getItem(USER_STORAGE_KEY));
-    return user?.access && user?.role ? user : null;
+    return user?.token && user?.role ? user : null;
   } catch {
     return null;
   }

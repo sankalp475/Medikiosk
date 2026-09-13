@@ -1,122 +1,149 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { HeartPulse, LogOut, Plus, Users, Stethoscope, Building2, LayoutDashboard, Clock } from "lucide-react";
-import { clearUserSession } from "../../auth/auth";
-import { getStoredDoctors, saveStoredDoctors, getStoredQueues, saveStoredQueues, saveStoredAccount } from "../../storage/db";
+import { clearUserSession, getStoredUser } from "../../auth/auth";
+import { adminApi, authApi } from "../../api/client";
 
 const QUEUE_COLORS = ["bg-emerald-600", "bg-sky-600", "bg-amber-500", "bg-violet-600", "bg-rose-500", "bg-teal-600", "bg-indigo-500", "bg-orange-500"];
 
 export default function AdminDashboard() {
-  const [doctors, setDoctors] = useState(() => getStoredDoctors());
-  const [queues, setQueues] = useState(() => getStoredQueues());
+  const user = getStoredUser();
+  const [departments, setDepartments] = useState([]);
+  const [doctors, setDoctors] = useState([]);
+  const [doctorsOnDuty, setDoctorsOnDuty] = useState({ active: 0, total: 0 });
   const [department, setDepartment] = useState("All departments");
   const [doctorName, setDoctorName] = useState("");
-  const [doctorDepartment, setDoctorDepartment] = useState("General Medicine");
+  const [doctorDepartmentId, setDoctorDepartmentId] = useState(null);
   const [doctorEmail, setDoctorEmail] = useState("");
   const [doctorPassword, setDoctorPassword] = useState("");
+  const [doctorRoomNumber, setDoctorRoomNumber] = useState("");
   const [isAddDoctorOpen, setIsAddDoctorOpen] = useState(false);
   const [isAddDepartmentOpen, setIsAddDepartmentOpen] = useState(false);
   const [newDepartmentName, setNewDepartmentName] = useState("");
+  const [newDepartmentPatientLabel, setNewDepartmentPatientLabel] = useState("");
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [formError, setFormError] = useState("");
 
-  const departments = useMemo(
-    () => ["All departments", ...new Set(queues.map((queue) => queue.department))],
-    [queues],
-  );
-  const visibleQueues = department === "All departments" ? queues : queues.filter((queue) => queue.department === department);
-  const totalPatients = queues.reduce((total, queue) => total + queue.patients, 0);
+  useEffect(() => {
+    loadAll();
+  }, []);
 
-  function addDoctor(event) {
-    event.preventDefault();
-    const name = doctorName.trim();
-    if (!name) return;
-    const email = doctorEmail.trim() || `${name.toLowerCase().replace(/[^a-z]/g, "")}@hospital.org`;
-    const newDoctor = {
-      id: Date.now(),
-      name,
-      department: doctorDepartment,
-      email,
-      status: "Available",
-    };
-
-    setDoctors((currentDoctors) => {
-      const updated = [...currentDoctors, newDoctor];
-      saveStoredDoctors(updated);
-      return updated;
-    });
-
-    // Save doctor account into localStorage so they can log in immediately
-    saveStoredAccount({
-      email,
-      password: doctorPassword || "doctor123",
-      role: "doctor",
-      name,
-      department: doctorDepartment,
-    });
-
-    setDoctorName("");
-    setDoctorEmail("");
-    setDoctorPassword("");
-    setIsAddDoctorOpen(false);
+  async function loadAll() {
+    try {
+      const [deptRes, doctorRes, statsRes] = await Promise.all([
+        adminApi.departments(),
+        adminApi.doctors(),
+        adminApi.stats(),
+      ]);
+      setDepartments(
+        deptRes.departments.map((d, idx) => ({
+          id: d.department_id,
+          name: d.department_name,
+          patientLabel: d.patient_label,
+          doctorsOnDuty: d.doctors_on_duty,
+          waiting: d.waiting,
+          avgWait: d.avg_wait_minutes,
+          color: QUEUE_COLORS[idx % QUEUE_COLORS.length],
+        }))
+      );
+      setDoctors(doctorRes.doctors);
+      setDoctorsOnDuty(statsRes.doctors);
+      if (!doctorDepartmentId && deptRes.departments.length > 0) {
+        setDoctorDepartmentId(deptRes.departments[0].department_id);
+      }
+    } catch {
+      // Dashboard fetch failure - panels just render empty until next load.
+    }
   }
 
-  function addDepartment(event) {
+  const departmentNames = useMemo(
+    () => ["All departments", ...departments.map((d) => d.name)],
+    [departments],
+  );
+  const visibleDepartments = department === "All departments" ? departments : departments.filter((d) => d.name === department);
+  const totalPatients = departments.reduce((total, d) => total + d.waiting, 0);
+
+  async function addDoctor(event) {
     event.preventDefault();
+    setFormError("");
+    const name = doctorName.trim();
+    if (!name || !doctorEmail.trim() || !doctorPassword || !doctorDepartmentId) return;
+
+    try {
+      await adminApi.createDoctor({
+        name,
+        email: doctorEmail.trim(),
+        password: doctorPassword,
+        department_id: doctorDepartmentId,
+        room_number: doctorRoomNumber.trim(),
+      });
+      await loadAll();
+      setDoctorName("");
+      setDoctorEmail("");
+      setDoctorPassword("");
+      setDoctorRoomNumber("");
+      setIsAddDoctorOpen(false);
+    } catch (err) {
+      setFormError(err.message || "Could not add doctor.");
+    }
+  }
+
+  async function addDepartment(event) {
+    event.preventDefault();
+    setFormError("");
     const name = newDepartmentName.trim();
     if (!name) return;
-    const exists = queues.some((queue) => queue.department.toLowerCase() === name.toLowerCase());
-    if (exists) return;
 
-    setQueues((currentQueues) => {
-      const updated = [
-        ...currentQueues,
-        { department: name, patients: 0, next: "—", wait: "0 min", color: QUEUE_COLORS[currentQueues.length % QUEUE_COLORS.length] },
-      ];
-      saveStoredQueues(updated);
-      return updated;
-    });
-
-    setNewDepartmentName("");
-    setIsAddDepartmentOpen(false);
+    try {
+      await adminApi.createDepartment({ name, patient_label: newDepartmentPatientLabel.trim() });
+      await loadAll();
+      setNewDepartmentName("");
+      setNewDepartmentPatientLabel("");
+      setIsAddDepartmentOpen(false);
+    } catch (err) {
+      setFormError(err.message || "Could not add department.");
+    }
   }
 
-  function callNextPatient(departmentName) {
-    setQueues((currentQueues) => {
-      const updated = currentQueues.map((queue) => (
-        queue.department === departmentName && queue.patients > 0 ? { ...queue, patients: queue.patients - 1 } : queue
-      ));
-      saveStoredQueues(updated);
-      return updated;
-    });
-  }
-
-  function signOut() {
+  async function signOut() {
+    try {
+      await authApi.logout();
+    } catch {
+      // Even if the server call fails, still clear the local session below.
+    }
     clearUserSession();
-    window.location.assign("/dashboard/admin/login");
+    window.location.assign("/login");
   }
 
   return (
     <main className="min-h-screen bg-slate-200/60 font-sans text-slate-900">
       <header className="border-b border-slate-200 bg-white shadow-2xs">
-        <div className="navbar mx-auto max-w-7xl px-4 py-3.5 sm:px-6 sm:py-4 min-h-[76px] sm:min-h-[84px]">
-          <div className="flex flex-1 items-center gap-3.5">
-            <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-800 ring-2 ring-emerald-300/80 shadow-xs">
-              <HeartPulse className="h-7 w-7 sm:h-8 sm:w-8" aria-hidden="true" />
+        <div className="navbar w-full px-4 py-2.5 sm:px-8 sm:py-3 min-h-[68px] sm:min-h-[76px] flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 sm:gap-3.5">
+            <div className="flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-800 ring-2 ring-emerald-300/80 shadow-xs">
+              <HeartPulse className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
             </div>
-            <div className="flex flex-col">
-              <div className="flex items-center gap-3">
-                <p className="text-3xl sm:text-4xl font-black leading-none tracking-[-0.03em] text-slate-950">
+            <div className="flex flex-col leading-tight">
+              <div className="flex items-center gap-2">
+                <p className="text-lg sm:text-xl lg:text-2xl font-black leading-none tracking-[-0.03em] text-slate-950">
                   Medi<span className="text-emerald-700">Kiosk</span>
                 </p>
-                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-0.5 text-xs font-bold text-emerald-700">
-                  Allopathy &amp; Ayurveda
+                <span className="hidden sm:inline-flex items-center rounded-full bg-emerald-50 border border-emerald-200 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
+                  Admin Control Panel
                 </span>
               </div>
-              <p className="mt-1 text-xs sm:text-sm font-semibold text-slate-500">Clinic Patient Intake &amp; Registration</p>
+              <p className="hidden sm:block mt-1 text-xs font-semibold text-slate-500">Aayush Integrated Super-Specialty Hospital</p>
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <span className="hidden text-sm sm:text-base font-semibold text-slate-600 sm:inline">Today, 12 September 2026</span>
-            <button className="btn btn-md border-slate-200 bg-white text-sm font-bold text-slate-700 hover:border-emerald-700 hover:bg-emerald-700 hover:text-white transition-colors rounded-xl px-4 shadow-xs" type="button" onClick={signOut}>
+
+          <div className="flex items-center gap-3 shrink-0">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs sm:text-sm font-bold text-emerald-800">
+              {user?.name || "Admin"}
+            </span>
+            <button
+              className="btn btn-sm border-slate-200 bg-white text-xs sm:text-sm font-bold text-slate-700 hover:border-emerald-700 hover:bg-emerald-700 hover:text-white transition-colors rounded-xl px-3.5 shadow-xs"
+              type="button"
+              onClick={signOut}
+            >
               <LogOut className="h-4 w-4" /> Sign out
             </button>
           </div>
@@ -124,15 +151,6 @@ export default function AdminDashboard() {
       </header>
 
       <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6">
-        {/* Hospital name panel — compact dark emerald */}
-        <div className="rounded-2xl bg-emerald-800 p-4 sm:p-5 shadow-md shadow-emerald-900/20">
-          <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-emerald-300">Admin Control Panel</p>
-            <h1 className="mt-1 text-xl font-bold tracking-tight text-white sm:text-2xl">Aayush Integrated Super-Specialty Hospital</h1>
-            <p className="mt-1 text-xs text-emerald-200/80">Administration &amp; Central Triage Dispatch Control</p>
-          </div>
-        </div>
-
         {/* Mobile Navigation Tabs with horizontal scrollbar if screen is narrow */}
         <div className="mt-5 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:thin] lg:hidden">
           <button
@@ -203,7 +221,7 @@ export default function AdminDashboard() {
                         onChange={(event) => setDepartment(event.target.value)}
                         aria-label="Filter queues by department"
                       >
-                        {departments.map((item) => <option key={item}>{item}</option>)}
+                        {departmentNames.map((item) => <option key={item}>{item}</option>)}
                       </select>
                     </div>
                   </div>
@@ -217,24 +235,24 @@ export default function AdminDashboard() {
                         </tr>
                       </thead>
                       <tbody>
-                        {visibleQueues.map((queue, index) => (
+                        {visibleDepartments.map((d, index) => (
                           <tr
-                            key={queue.department}
+                            key={d.id}
                             className={`transition-colors ${
                               index % 2 === 0 ? "bg-slate-100/90" : "bg-white"
                             } hover:bg-slate-200/60`}
                           >
                             <td className="border border-slate-300 px-3 py-1.5">
                               <div className="flex items-center gap-2">
-                                <span className={`h-2.5 w-2.5 rounded-full ${queue.color}`} aria-hidden="true" />
-                                <span className="text-xs font-semibold text-slate-900">{queue.department}</span>
+                                <span className={`h-2.5 w-2.5 rounded-full ${d.color}`} aria-hidden="true" />
+                                <span className="text-xs font-semibold text-slate-900">{d.name}</span>
                               </div>
                             </td>
                             <td className="border border-slate-300 px-3 py-1.5">
-                              <span className="badge badge-sm border-emerald-200 bg-emerald-50 text-[11px] font-medium text-emerald-700">{queue.wait}</span>
+                              <span className="badge badge-sm border-emerald-200 bg-emerald-50 text-[11px] font-medium text-emerald-700">{d.avgWait} min</span>
                             </td>
                             <td className="border border-slate-300 px-3 py-1.5 text-center">
-                              <span className="text-xs font-bold text-slate-950">{queue.patients}</span>
+                              <span className="text-xs font-bold text-slate-950">{d.waiting}</span>
                             </td>
                           </tr>
                         ))}
@@ -245,7 +263,7 @@ export default function AdminDashboard() {
                   {/* Card bottom: Showing status on left, Patients waiting & Doctors on duty stats on right */}
                   <div className="mt-3 flex flex-col gap-2.5 border-t border-slate-100 pt-3 sm:flex-row sm:items-center sm:justify-between">
                     <span className="inline-flex items-center gap-1.5 text-xs text-slate-500">
-                      Showing <strong className="font-semibold text-slate-800">{visibleQueues.length}</strong> of {queues.length} departments
+                      Showing <strong className="font-semibold text-slate-800">{visibleDepartments.length}</strong> of {departments.length} departments
                     </span>
 
                     <div className="flex flex-wrap items-center gap-2 sm:justify-end">
@@ -255,7 +273,7 @@ export default function AdminDashboard() {
                       </span>
                       <span className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs text-slate-600">
                         <Stethoscope className="h-3.5 w-3.5 text-emerald-600" />
-                        Doctors on duty: <strong className="font-bold text-slate-900">{doctors.filter((d) => d.status === "Available").length} / {doctors.length}</strong>
+                        Doctors on duty: <strong className="font-bold text-slate-900">{doctorsOnDuty.active_today ?? doctorsOnDuty.active} / {doctorsOnDuty.total}</strong>
                       </span>
                     </div>
                   </div>
@@ -299,26 +317,26 @@ export default function AdminDashboard() {
                             <td className="border border-slate-300 px-3 py-1.5">
                               <div className="flex items-center gap-2">
                                 <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-emerald-100 text-[11px] font-bold text-emerald-800">
-                                  {doctor.name.replace("Dr. ", "").charAt(0)}
+                                  {doctor.avatar_initial}
                                 </div>
                                 <span className="text-xs font-semibold text-slate-900">{doctor.name}</span>
                               </div>
                             </td>
-                            <td className="border border-slate-300 px-3 py-1.5 text-xs text-slate-600">{doctor.department}</td>
+                            <td className="border border-slate-300 px-3 py-1.5 text-xs text-slate-600">{doctor.department_name}</td>
                             <td className="border border-slate-300 px-3 py-1.5">
                               <span
                                 className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-medium ${
-                                  doctor.status === "Available"
+                                  doctor.status === "available"
                                     ? "bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20"
                                     : "bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-600/20"
                                 }`}
                               >
                                 <span
                                   className={`h-1.5 w-1.5 rounded-full ${
-                                    doctor.status === "Available" ? "bg-emerald-600" : "bg-amber-500"
+                                    doctor.status === "available" ? "bg-emerald-600" : "bg-amber-500"
                                   }`}
                                 />
-                                {doctor.status}
+                                {doctor.status_display}
                               </span>
                             </td>
                           </tr>
@@ -340,11 +358,11 @@ export default function AdminDashboard() {
                     <div className="flex flex-wrap items-center gap-2 sm:justify-end">
                       <span className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs text-slate-600">
                         <Stethoscope className="h-3.5 w-3.5 text-emerald-600" />
-                        Doctors on duty: <strong className="font-bold text-slate-900">{doctors.filter((d) => d.status === "Available").length} / {doctors.length}</strong>
+                        Doctors on duty: <strong className="font-bold text-slate-900">{doctors.filter((d) => d.status === "available").length} / {doctors.length}</strong>
                       </span>
                       <span className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs text-slate-600">
                         <Building2 className="h-3.5 w-3.5 text-slate-600" />
-                        Active Departments: <strong className="font-bold text-slate-900">{queues.length}</strong>
+                        Active Departments: <strong className="font-bold text-slate-900">{departments.length}</strong>
                       </span>
                     </div>
                   </div>
@@ -363,7 +381,7 @@ export default function AdminDashboard() {
                       <p className="text-xs text-slate-500">Manage clinical specialties, triage queues, and doctor assignments.</p>
                     </div>
                     <span className="badge badge-sm border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-800">
-                      {queues.length} Total Departments
+                      {departments.length} Total Departments
                     </span>
                   </div>
 
@@ -373,45 +391,48 @@ export default function AdminDashboard() {
                       <thead className="sticky top-0 z-10 bg-slate-100 shadow-[0_1px_2px_rgba(0,0,0,0.06)]">
                         <tr className="bg-slate-100 text-xs font-semibold uppercase tracking-wide text-slate-700">
                           <th className="border border-slate-300 bg-slate-100 px-3 py-1.5">Department</th>
+                          <th className="border border-slate-300 bg-slate-100 px-3 py-1.5">Patient-Facing Label</th>
                           <th className="border border-slate-300 bg-slate-100 px-3 py-1.5">Doctors on Duty</th>
                           <th className="border border-slate-300 bg-slate-100 px-3 py-1.5">Avg Wait</th>
                           <th className="border border-slate-300 bg-slate-100 px-3 py-1.5 text-center">Waiting</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {queues.map((queue, index) => {
-                          const deptDoctors = doctors.filter((d) => d.department === queue.department);
-                          return (
-                            <tr
-                              key={queue.department}
-                              className={`transition-colors ${
-                                index % 2 === 0 ? "bg-slate-100/90" : "bg-white"
-                              } hover:bg-slate-200/60`}
-                            >
-                              <td className="border border-slate-300 px-3 py-1.5">
-                                <div className="flex items-center gap-2">
-                                  <span className={`h-2.5 w-2.5 rounded-full ${queue.color}`} aria-hidden="true" />
-                                  <span className="text-xs font-semibold text-slate-900">{queue.department}</span>
-                                </div>
-                              </td>
-                              <td className="border border-slate-300 px-3 py-1.5 text-xs text-slate-600">
-                                {deptDoctors.length > 0 ? (
-                                  <span className="font-medium text-slate-800">
-                                    {deptDoctors.map((d) => d.name).join(", ")}
-                                  </span>
-                                ) : (
-                                  <span className="italic text-slate-400">No doctor assigned</span>
-                                )}
-                              </td>
-                              <td className="border border-slate-300 px-3 py-1.5">
-                                <span className="badge badge-sm border-emerald-200 bg-emerald-50 text-[11px] font-medium text-emerald-700">{queue.wait}</span>
-                              </td>
-                              <td className="border border-slate-300 px-3 py-1.5 text-center">
-                                <span className="text-xs font-bold text-slate-950">{queue.patients}</span>
-                              </td>
-                            </tr>
-                          );
-                        })}
+                        {departments.map((d, index) => (
+                          <tr
+                            key={d.id}
+                            className={`transition-colors ${
+                              index % 2 === 0 ? "bg-slate-100/90" : "bg-white"
+                            } hover:bg-slate-200/60`}
+                          >
+                            <td className="border border-slate-300 px-3 py-1.5">
+                              <div className="flex items-center gap-2">
+                                <span className={`h-2.5 w-2.5 rounded-full ${d.color}`} aria-hidden="true" />
+                                <span className="text-xs font-semibold text-slate-900">{d.name}</span>
+                              </div>
+                            </td>
+                            <td className="border border-slate-300 px-3 py-1.5 text-xs text-slate-600">
+                              {d.patientLabel ? (
+                                <span className="font-medium text-emerald-700">{d.patientLabel}</span>
+                              ) : (
+                                <span className="italic text-slate-400">Same as name</span>
+                              )}
+                            </td>
+                            <td className="border border-slate-300 px-3 py-1.5 text-xs text-slate-600">
+                              {d.doctorsOnDuty.length > 0 ? (
+                                <span className="font-medium text-slate-800">{d.doctorsOnDuty.join(", ")}</span>
+                              ) : (
+                                <span className="italic text-slate-400">No doctor assigned</span>
+                              )}
+                            </td>
+                            <td className="border border-slate-300 px-3 py-1.5">
+                              <span className="badge badge-sm border-emerald-200 bg-emerald-50 text-[11px] font-medium text-emerald-700">{d.avgWait} min</span>
+                            </td>
+                            <td className="border border-slate-300 px-3 py-1.5 text-center">
+                              <span className="text-xs font-bold text-slate-950">{d.waiting}</span>
+                            </td>
+                          </tr>
+                        ))}
                       </tbody>
                     </table>
                   </div>
@@ -429,7 +450,7 @@ export default function AdminDashboard() {
                     <div className="flex flex-wrap items-center gap-2 sm:justify-end">
                       <span className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs text-slate-600">
                         <Building2 className="h-3.5 w-3.5 text-emerald-600" />
-                        Active Departments: <strong className="font-bold text-slate-900">{queues.length}</strong>
+                        Active Departments: <strong className="font-bold text-slate-900">{departments.length}</strong>
                       </span>
                       <span className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs text-slate-600">
                         <Users className="h-3.5 w-3.5 text-slate-600" />
@@ -466,11 +487,11 @@ export default function AdminDashboard() {
                 <label className="mb-1.5 text-xs font-semibold text-slate-700">Department</label>
                 <select
                   className="select select-bordered w-full bg-white border-slate-300 text-sm focus:border-emerald-600 focus:outline-emerald-600"
-                  value={doctorDepartment}
-                  onChange={(event) => setDoctorDepartment(event.target.value)}
+                  value={doctorDepartmentId || ""}
+                  onChange={(event) => setDoctorDepartmentId(Number(event.target.value))}
                 >
-                  {queues.map((queue) => (
-                    <option key={queue.department}>{queue.department}</option>
+                  {departments.map((d) => (
+                    <option key={d.id} value={d.id}>{d.name}</option>
                   ))}
                 </select>
               </div>
@@ -499,6 +520,17 @@ export default function AdminDashboard() {
                 />
                 <p className="mt-1 text-[11px] text-slate-400">Doctor will use this email &amp; password to sign in to the Doctor Portal.</p>
               </div>
+
+              <div className="flex flex-col">
+                <label className="mb-1.5 text-xs font-semibold text-slate-700">Room Number (optional)</label>
+                <input
+                  className="input input-bordered w-full bg-white border-slate-300 text-sm focus:border-emerald-600 focus:outline-emerald-600"
+                  value={doctorRoomNumber}
+                  onChange={(event) => setDoctorRoomNumber(event.target.value)}
+                  placeholder="e.g. Room 201 • Cardiology Wing"
+                />
+              </div>
+              {formError && <p className="text-xs font-semibold text-rose-700">{formError}</p>}
               <div className="modal-action">
                 <button className="btn btn-ghost" type="button" onClick={() => setIsAddDoctorOpen(false)}>
                   Cancel
@@ -528,10 +560,23 @@ export default function AdminDashboard() {
                   className="input input-bordered w-full bg-white border-slate-300 text-sm focus:border-emerald-600 focus:outline-emerald-600"
                   value={newDepartmentName}
                   onChange={(event) => setNewDepartmentName(event.target.value)}
-                  placeholder="e.g. Dermatology"
+                  placeholder="e.g. Ophthalmology"
                   required
                 />
               </div>
+              <div className="flex flex-col">
+                <label className="mb-1.5 text-xs font-semibold text-slate-700">Patient-facing label (optional)</label>
+                <input
+                  className="input input-bordered w-full bg-white border-slate-300 text-sm focus:border-emerald-600 focus:outline-emerald-600"
+                  value={newDepartmentPatientLabel}
+                  onChange={(event) => setNewDepartmentPatientLabel(event.target.value)}
+                  placeholder="e.g. Eyes (defaults to department name if left blank)"
+                />
+                <p className="mt-1 text-[11px] text-slate-400">
+                  This is what patients see on the kiosk instead of the department name above.
+                </p>
+              </div>
+              {formError && <p className="text-xs font-semibold text-rose-700">{formError}</p>}
               <div className="modal-action">
                 <button className="btn btn-ghost" type="button" onClick={() => setIsAddDepartmentOpen(false)}>
                   Cancel
@@ -569,4 +614,3 @@ function SidebarLink({ icon: Icon, label, active, onClick }) {
     </button>
   );
 }
-
