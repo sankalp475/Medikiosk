@@ -2,6 +2,8 @@ import { useState } from "react";
 import {
   HeartPulse,
   Languages,
+  Globe,
+  BookOpen,
   ShieldAlert,
   Sparkles,
   Stethoscope,
@@ -39,6 +41,12 @@ import {
   mockAbhaRecords,
 } from "../storage/db.js";
 
+const LANGUAGE_OPTIONS = [
+  { id: "en", label: "English", icon: Globe },
+  { id: "hi", label: "हिन्दी", icon: Languages },
+  { id: "ml", label: "മലയാളം", icon: BookOpen },
+];
+
 export default function Medikiosk() {
   const [lang, setLang] = useState(null); // by default no language is selected
   const t = UI_TEXTS[lang || "en"];
@@ -46,7 +54,7 @@ export default function Medikiosk() {
   // Kiosk Initial Screen State: false shows grand Patient Self-Registration & Clinical Case Intake box with language selection; true opens intake flow
   const [isStarted, setIsStarted] = useState(false);
 
-  // Stepper: 1: Identification, 2: Red Flag Triage, 3: Track & Complaint, 4: Clinical Intake, 5: Pass Issued
+  // Stepper: 1: Identification, 2: Allopathy/Ayurveda Track, 3: Emergency Path, 4: Clinical Intake & Complaints, 5: Pass Issued
   const [currentStep, setCurrentStep] = useState(1);
 
   // Helper: Click on any language to set language and immediately advance to questionnaire
@@ -132,8 +140,19 @@ export default function Medikiosk() {
     const record = lookupAbhaRecord(query);
     if (record) {
       setPatientName(record.patientName);
-      setAge(record.age);
       setDob(record.dob || "");
+      if (record.dob) {
+        const birth = new Date(record.dob);
+        const today = new Date();
+        let calculated = today.getFullYear() - birth.getFullYear();
+        const m = today.getMonth() - birth.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+          calculated--;
+        }
+        setAge(calculated);
+      } else {
+        setAge(record.age);
+      }
       setSex(record.sex);
       setPhone(record.phone);
       setAbhaId(record.abhaId);
@@ -145,8 +164,8 @@ export default function Medikiosk() {
       const cleanNum = query.replace(/[^0-9]/g, "");
       const formatted = cleanNum.length >= 14 ? cleanNum.slice(0, 14).replace(/(\d{2})(\d{4})(\d{4})(\d{4})/, "$1-$2-$3-$4") : query;
       setPatientName("Aaditya Kashyap");
-      setAge(36);
       setDob("1990-04-12");
+      setAge(36);
       setSex("Male");
       setPhone("+91 98110 44219");
       setAbhaId(formatted);
@@ -168,20 +187,13 @@ export default function Medikiosk() {
       setIdError("Please enter the patient full name.");
       return;
     }
-    if (idMethod === "guest") {
-      if (!dob) {
-        setIdError("Please select your Date of Birth (DOB).");
-        return;
-      }
-      if (age === "" || Number(age) < 0 || Number(age) > 125) {
-        setIdError("Please select a valid Date of Birth.");
-        return;
-      }
-    } else {
-      if (!age || Number(age) <= 0 || Number(age) > 120) {
-        setIdError("Please enter a valid age between 1 and 120.");
-        return;
-      }
+    if (!dob) {
+      setIdError("Please select or confirm Date of Birth (DOB).");
+      return;
+    }
+    if (age === "" || Number(age) < 0 || Number(age) > 125) {
+      setIdError("Please select a valid Date of Birth.");
+      return;
     }
     if (idMethod === "guest" && !phone.trim()) {
       setIdError("Please enter a valid contact phone number.");
@@ -368,20 +380,20 @@ export default function Medikiosk() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-200/60 font-sans text-slate-900 flex flex-col">
+    <main className="min-h-screen bg-slate-200/60 font-sans text-slate-900 flex flex-col lg:h-screen lg:overflow-hidden">
       {/* 1. Universal Top Navbar — IDENTICAL to Admin/Doctor Console, NO Logout Button */}
-      <header className="shrink-0 border-b border-slate-200 bg-white shadow-xs">
-        <div className="navbar mx-auto max-w-7xl px-4 py-2 sm:px-6 min-h-0">
-          <div className="flex flex-1 items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800 ring-1 ring-emerald-300">
-              <HeartPulse className="h-6 w-6" aria-hidden="true" />
+      <header className="shrink-0 border-b border-slate-200 bg-white shadow-2xs">
+        <div className="navbar mx-auto max-w-7xl px-4 py-3 sm:px-6 sm:py-3.5 min-h-[74px] sm:min-h-[80px]">
+          <div className="flex flex-1 items-center gap-3.5">
+            <div className="flex h-12 w-12 sm:h-13 sm:w-13 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-800 ring-2 ring-emerald-300/80 shadow-xs">
+              <HeartPulse className="h-7 w-7" aria-hidden="true" />
             </div>
             <div className="flex flex-col">
-              <div className="flex items-center gap-2.5">
-                <p className="text-2xl sm:text-3xl font-black leading-none tracking-[-0.03em] text-slate-950">
+              <div className="flex items-center gap-3">
+                <p className="text-2xl sm:text-3xl lg:text-4xl font-black leading-none tracking-[-0.03em] text-slate-950">
                   Medi<span className="text-emerald-700">Kiosk</span>
                 </p>
-                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-bold text-emerald-700">
+                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-0.5 text-xs font-bold text-emerald-700">
                   {t.allopathyAyurvedaBadge}
                 </span>
               </div>
@@ -390,839 +402,851 @@ export default function Medikiosk() {
           </div>
 
           {/* Right Side: Date (NO LOGOUT BUTTON) */}
-          <div className="flex items-center gap-3.5">
+          <div className="flex items-center gap-4">
             <span className="hidden text-sm sm:text-base font-semibold text-slate-600 sm:inline">Today, 12 September 2026</span>
           </div>
         </div>
       </header>
 
-      {/* Main Container */}
-      <div className="mx-auto flex-1 w-full max-w-7xl px-3 py-3 sm:px-5 sm:py-4 flex flex-col min-h-0">
+      {/* Main Container - Fitted to screen on desktop */}
+      <div className="mx-auto flex-1 w-full max-w-7xl px-3 py-2.5 sm:px-6 sm:py-3 lg:py-4 flex flex-col min-h-0 justify-center">
         {!isStarted ? (
           /* INITIAL LANDING SCREEN:
-             Shows Patient Self-Registration & Clinical Case Intake box with language switcher right at the touch button.
-             Once clicked, moves forward to intake questionnaire. */
-          <div className="flex-1 flex flex-col items-center justify-center py-6 sm:py-10">
-            {/* Large Box: Patient Self-Registration & Clinical Case Intake with Direct Language Selection */}
-            <div className="my-auto w-full max-w-2xl rounded-3xl border-2 border-emerald-500/40 bg-white p-7 sm:p-10 shadow-xl shadow-emerald-950/10 text-center flex flex-col items-center justify-center gap-6 ring-4 ring-emerald-50">
-              <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-800 ring-4 ring-emerald-300">
-                <HeartPulse className="h-8 w-8 sm:h-10 sm:w-10" />
+             Patient OPD Registration card with language buttons.
+             Each button has language icon on left and language name on right.
+             Clicking any language immediately begins registration in that language. */
+          <div className="flex-1 flex flex-col items-center justify-center py-2 sm:py-4">
+            <div className="my-auto w-full max-w-lg rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm text-center flex flex-col items-center justify-center gap-4 sm:gap-5">
+              <div className="flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700 border border-emerald-200/70 shadow-xs">
+                <HeartPulse className="h-7 w-7 sm:h-8 sm:w-8" />
               </div>
 
-              <div className="space-y-2">
-                <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-950 leading-tight">
-                  Patient Self-Registration &amp; Clinical Case Intake
+              <div className="space-y-1">
+                <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 leading-tight">
+                  Patient OPD Registration
                 </h1>
-                <p className="text-xs sm:text-sm font-semibold text-emerald-800">
-                  Select your language to begin / शुरू करने के लिए भाषा चुनें / ആരംഭിക്കാൻ ഭാഷ തിരഞ്ഞെടുക്കുക
+                <p className="text-xs sm:text-sm text-slate-500 font-medium">
+                  Select your language to begin
                 </p>
               </div>
 
-              {/* 3-Language Action Buttons: Click any language to immediately enter intake in that language */}
+              {/* 3-Language Action Buttons: Icon on Left, Language Name on Right */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-lg pt-1">
-                <button
-                  type="button"
-                  onClick={() => handleSelectLanguageAndStart("en")}
-                  className="group/btn flex flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-emerald-300 bg-emerald-50/70 p-4 text-slate-800 transition-all cursor-pointer hover:bg-emerald-700 hover:text-white hover:border-emerald-700 hover:shadow-lg hover:scale-105 active:scale-95 shadow-xs"
-                >
-                  <span className="text-lg sm:text-xl font-black tracking-wide">English</span>
-                  <span className="text-xs font-semibold text-emerald-800 group-hover/btn:text-emerald-100 flex items-center gap-1">
-                    Start <ArrowRight className="h-3.5 w-3.5" />
-                  </span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => handleSelectLanguageAndStart("hi")}
-                  className="group/btn flex flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-emerald-300 bg-emerald-50/70 p-4 text-slate-800 transition-all cursor-pointer hover:bg-emerald-700 hover:text-white hover:border-emerald-700 hover:shadow-lg hover:scale-105 active:scale-95 shadow-xs"
-                >
-                  <span className="text-lg sm:text-xl font-black tracking-wide">हिन्दी</span>
-                  <span className="text-xs font-semibold text-emerald-800 group-hover/btn:text-emerald-100 flex items-center gap-1">
-                    शुरू करें <ArrowRight className="h-3.5 w-3.5" />
-                  </span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => handleSelectLanguageAndStart("ml")}
-                  className="group/btn flex flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-emerald-300 bg-emerald-50/70 p-4 text-slate-800 transition-all cursor-pointer hover:bg-emerald-700 hover:text-white hover:border-emerald-700 hover:shadow-lg hover:scale-105 active:scale-95 shadow-xs"
-                >
-                  <span className="text-lg sm:text-xl font-black tracking-wide">മലയാളം</span>
-                  <span className="text-xs font-semibold text-emerald-800 group-hover/btn:text-emerald-100 flex items-center gap-1">
-                    ആരംഭിക്കുക <ArrowRight className="h-3.5 w-3.5" />
-                  </span>
-                </button>
+                {LANGUAGE_OPTIONS.map((opt) => {
+                  const Icon = opt.icon;
+                  return (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      onClick={() => {
+                        setLang(opt.id);
+                        setIsStarted(true);
+                      }}
+                      className="group flex items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-slate-50/90 hover:bg-emerald-700 hover:border-emerald-700 px-4 py-3.5 text-slate-800 hover:text-white transition-all cursor-pointer shadow-xs active:scale-[0.98]"
+                    >
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-emerald-700 group-hover:bg-white/20 group-hover:text-white transition-colors shadow-2xs">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <span className="text-base font-bold">
+                        {opt.label}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
 
-              <p className="text-[11px] sm:text-xs font-medium text-slate-400">
-                ABHA ID Instant Fetch • Walk-in Guest Demographics • Allopathy &amp; Ayurveda OPD Triaging
+              <p className="text-xs sm:text-sm font-medium text-slate-400">
+                ABHA Verification • Walk-in Guest • Ayush Path
               </p>
             </div>
           </div>
         ) : (
-          /* 5-STEP CLINICAL INTAKE FLOW (Visible after clicking initial box) */
-          <>
-            {/* Hospital Banner — dark emerald */}
-            <div className="shrink-0 rounded-2xl bg-emerald-800 px-4 py-3 sm:px-5 sm:py-3.5 shadow-sm shadow-emerald-900/20 text-white flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[0.16em] text-emerald-300">{t.hospitalName}</p>
-                <h1 className="mt-1 text-2xl sm:text-3xl font-black tracking-tight text-white">{t.welcomeTitle}</h1>
-              </div>
-              <p className="text-xs sm:text-sm font-medium text-emerald-100/90">{t.welcomeSubtitle}</p>
-            </div>
-
-        {/* Multi-Step Intake Progress Stepper */}
-        <div className="mt-3 flex items-center justify-between overflow-x-auto rounded-xl bg-white px-4 py-2.5 shadow-xs border border-slate-200 text-xs font-bold [scrollbar-width:thin]">
-          {[
-            { step: 1, label: t.step1Title },
-            { step: 2, label: t.step2Title },
-            { step: 3, label: t.step3Title },
-            { step: 4, label: t.step4Title },
-            { step: 5, label: t.step5Title },
-          ].map((s) => (
-            <div
-              key={s.step}
-              className={`flex items-center gap-1.5 px-2 py-1 rounded-lg transition-colors shrink-0 ${
-                currentStep === s.step
-                  ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
-                  : currentStep > s.step
-                  ? "text-emerald-700"
-                  : "text-slate-400"
-              }`}
-            >
-              <span
-                className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-black ${
-                  currentStep === s.step
-                    ? "bg-emerald-700 text-white"
-                    : currentStep > s.step
-                    ? "bg-emerald-200 text-emerald-900"
-                    : "bg-slate-200 text-slate-600"
-                }`}
-              >
-                {currentStep > s.step ? "✓" : s.step}
-              </span>
-              <span>{s.label}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Dynamic Step Content Container */}
-        <div className="mt-3 flex-1 flex flex-col rounded-2xl bg-white p-4 sm:p-6 shadow-sm border border-slate-200 min-h-0">
-          {/* STEP 1: PATIENT IDENTIFICATION */}
-          {currentStep === 1 && (
-            <div className="flex-1 flex flex-col max-w-3xl mx-auto w-full">
-              <div className="text-center pb-3">
-                <h2 className="text-lg font-black text-slate-900">{t.welcomeTitle}</h2>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Select your identification method to initiate case intake
-                </p>
-              </div>
-
-              {/* ID Tabs: ABHA ID vs New Guest Walk-in */}
-              <div className="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-xl mt-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIdMethod("abha");
-                    setIsAbhaVerified(false);
-                    setIdError("");
-                  }}
-                  className={`py-2 text-xs font-bold rounded-lg transition-all ${
-                    idMethod === "abha" ? "bg-white text-emerald-800 shadow-xs" : "text-slate-600 hover:text-slate-900"
-                  }`}
-                >
-                  {t.abhaTab}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIdMethod("guest");
-                    setIsAbhaVerified(false);
-                    setPatientName("");
-                    setDob("");
-                    setAge("");
-                    setPhone("");
-                    setAbhaId("Unregistered Guest");
-                    setIdError("");
-                  }}
-                  className={`py-2 text-xs font-bold rounded-lg transition-all ${
-                    idMethod === "guest" ? "bg-white text-emerald-800 shadow-xs" : "text-slate-600 hover:text-slate-900"
-                  }`}
-                >
-                  {t.guestTab}
-                </button>
-              </div>
-
-              {/* ID Method Form Fields */}
-              <div className="mt-4 space-y-4">
-                {idMethod === "abha" && (
-                  <div className="space-y-3">
-                    <div>
-                      <label className="text-xs font-bold text-slate-700 block mb-1">
-                        Ayushman Bharat Health Account (ABHA ID):
-                      </label>
-                      <div className="flex gap-2">
-                        <input
-                          type="text"
-                          placeholder={t.abhaPlaceholder}
-                          value={abhaInput}
-                          onChange={(e) => setAbhaInput(e.target.value)}
-                          onKeyDown={(e) => e.key === "Enter" && handleAbhaVerification()}
-                          className="input input-sm flex-1 bg-slate-50 border-slate-300 text-xs rounded-xl focus:bg-white focus:border-emerald-600"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => handleAbhaVerification()}
-                          className="btn btn-sm bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold rounded-xl"
-                        >
-                          {t.fetchAbhaBtn}
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Fast Demo Autofill Chips */}
-                    <div className="rounded-xl border border-slate-200 bg-slate-50 p-2.5">
-                      <p className="text-[11px] font-bold text-slate-600 mb-1.5">
-                        ⚡ Quick Demo Autofill (Click to test realistic patient records):
-                      </p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {mockAbhaRecords.map((demo) => (
-                          <button
-                            key={demo.abhaId}
-                            type="button"
-                            onClick={() => applyDemoAbha(demo)}
-                            className="rounded-lg border border-emerald-300 bg-emerald-50 px-2 py-1 text-[11px] font-semibold text-emerald-800 hover:bg-emerald-100 transition-colors"
-                          >
-                            {demo.patientName} ({demo.age}y {demo.sex})
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Error Banner */}
-                {idError && (
-                  <div className="rounded-xl border border-rose-300 bg-rose-50 p-2.5 text-xs font-bold text-rose-800 flex items-center gap-2">
-                    <AlertTriangle className="h-4 w-4 shrink-0 text-rose-600" />
-                    <span>{idError}</span>
-                  </div>
-                )}
-
-                {/* Demographic Form (Pre-filled via ABHA or entered for Guest) */}
-                <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs space-y-3">
-                  <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-                    <span className="text-xs font-bold text-slate-800 uppercase tracking-wide">
-                      Patient Profile &amp; Demographics
-                    </span>
-                    {isAbhaVerified && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700 border border-emerald-200">
-                        <CheckCircle2 className="h-3 w-3" /> ABHA Verified Record
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="text-xs font-bold text-slate-700 block mb-1">{t.fullName} *</label>
-                      <input
-                        type="text"
-                        value={patientName}
-                        onChange={(e) => setPatientName(e.target.value)}
-                        placeholder="e.g. Ramesh Patel"
-                        className="input input-sm w-full bg-slate-50 border-slate-300 text-xs rounded-xl focus:bg-white focus:border-emerald-600"
-                      />
-                    </div>
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <label className="text-xs font-bold text-slate-700">
-                          {idMethod === "guest" ? `${t.dob} *` : `${t.age} *`}
-                        </label>
-                        {age !== "" && (
-                          <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded-md">
-                            {t.calculatedAge}: {age}y
-                          </span>
-                        )}
-                      </div>
-                      {idMethod === "guest" ? (
-                        <input
-                          type="date"
-                          value={dob}
-                          max={new Date().toISOString().split("T")[0]}
-                          onChange={handleDobChange}
-                          className="input input-sm w-full bg-slate-50 border-slate-300 text-xs rounded-xl focus:bg-white focus:border-emerald-600"
-                        />
-                      ) : (
-                        <input
-                          type="number"
-                          value={age}
-                          onChange={(e) => setAge(e.target.value)}
-                          placeholder="e.g. 45"
-                          className="input input-sm w-full bg-slate-50 border-slate-300 text-xs rounded-xl focus:bg-white focus:border-emerald-600"
-                        />
-                      )}
-                    </div>
-                    <div>
-                      <label className="text-xs font-bold text-slate-700 block mb-1">
-                        {t.gender} * <span className="text-[10px] text-slate-400">(Required for clinical routing)</span>
-                      </label>
-                      <select
-                        value={sex}
-                        onChange={(e) => setSex(e.target.value)}
-                        className="select select-sm w-full bg-slate-50 border-slate-300 text-xs rounded-xl focus:bg-white focus:border-emerald-600"
-                      >
-                        <option value="Male">{t.genderMale}</option>
-                        <option value="Female">{t.genderFemale}</option>
-                        <option value="Other">{t.genderOther}</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="text-xs font-bold text-slate-700 block mb-1">{t.phone} *</label>
-                      <input
-                        type="text"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        placeholder="+91 98765 43210"
-                        className="input input-sm w-full bg-slate-50 border-slate-300 text-xs rounded-xl focus:bg-white focus:border-emerald-600"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Action Button */}
-              <div className="mt-auto pt-6 flex justify-end">
-                <button
-                  type="button"
-                  onClick={handleProceedFromStep1}
-                  className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-emerald-800 transition-colors"
-                >
-                  <span>{t.continueBtn}</span>
-                  <ArrowRight className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* STEP 2: EMERGENCY TRIAGE GATE (RED-FLAG CHECK) */}
-          {currentStep === 2 && (
-            <div className="flex-1 flex flex-col max-w-3xl mx-auto w-full">
-              <div className="rounded-2xl border-2 border-rose-300 bg-rose-50/50 p-4 sm:p-5 shadow-xs">
-                <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-xl bg-rose-100 text-rose-700">
-                    <ShieldAlert className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <h2 className="text-base font-black text-rose-950 uppercase tracking-wide">
-                      {t.redFlagHeader}
-                    </h2>
-                    <p className="text-xs font-semibold text-rose-800 mt-0.5">{t.redFlagSub}</p>
-                  </div>
-                </div>
-
-                {/* Red Flag Options List */}
-                <div className="mt-4 space-y-2">
-                  {RED_FLAG_ITEMS.map((rf) => {
-                    const isSelected = selectedRedFlags.some((item) => item.id === rf.id);
-                    return (
-                      <div
-                        key={rf.id}
-                        onClick={() => toggleRedFlag(rf)}
-                        className={`cursor-pointer rounded-xl border p-3 transition-all flex items-center justify-between gap-3 ${
-                          isSelected
-                            ? "border-rose-600 bg-rose-600 text-white font-bold shadow-sm"
-                            : "border-rose-200 bg-white hover:border-rose-400 text-slate-900"
-                        }`}
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <span
-                            className={`h-4 w-4 shrink-0 rounded-md border flex items-center justify-center text-xs ${
-                              isSelected ? "bg-white text-rose-700 border-white font-black" : "border-slate-300"
-                            }`}
-                          >
-                            {isSelected && "✓"}
-                          </span>
-                          <span className="text-xs">{rf[lang] || rf.en}</span>
-                        </div>
-                        <span className={`text-[10px] uppercase font-bold shrink-0 px-2 py-0.5 rounded-md ${
-                          isSelected ? "bg-rose-700 text-white" : "bg-rose-100 text-rose-900"
-                        }`}>
-                          High Priority
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* Emergency Alert Banner if any red flag selected */}
-                {isRedFlag && (
-                  <div className="mt-4 rounded-xl border border-rose-500 bg-rose-600 p-3 text-white shadow-sm animate-pulse">
-                    <p className="text-xs font-black uppercase tracking-wider">{t.immediateEmergencyAlert}</p>
-                    <p className="text-xs mt-0.5 opacity-95">{t.emergencyActionMsg}</p>
-                  </div>
-                )}
-              </div>
-
-              {/* Navigation Footer */}
-              <div className="mt-auto pt-6 flex items-center justify-between">
-                <button
-                  type="button"
-                  onClick={() => setCurrentStep(1)}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors"
-                >
-                  <ArrowLeft className="h-4 w-4" /> {t.backBtn}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setCurrentStep(3)}
-                  className={`inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-xs font-bold text-white shadow-sm transition-colors ${
-                    isRedFlag ? "bg-rose-600 hover:bg-rose-700" : "bg-emerald-700 hover:bg-emerald-800"
-                  }`}
-                >
-                  <span>{isRedFlag ? "Proceed with Urgent Triage Marker" : t.continueBtn}</span>
-                  <ArrowRight className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* STEP 3: TRACK SELECTION & CHIEF COMPLAINT */}
-          {currentStep === 3 && (
-            <div className="flex-1 flex flex-col max-w-3xl mx-auto w-full">
-              {/* Track Selector */}
-              <div>
-                <h3 className="text-sm font-bold text-slate-900 mb-2">{t.trackSelectionHeader}</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div
-                    onClick={() => setTrack("Allopathy")}
-                    className={`cursor-pointer rounded-2xl border-2 p-3.5 transition-all flex items-start gap-3 ${
-                      track === "Allopathy"
-                        ? "border-emerald-700 bg-emerald-50/50 shadow-sm"
-                        : "border-slate-200 bg-white hover:border-slate-300"
-                    }`}
-                  >
-                    <div className={`p-2.5 rounded-xl ${track === "Allopathy" ? "bg-emerald-700 text-white" : "bg-slate-100 text-slate-700"}`}>
-                      <Stethoscope className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-slate-900">{t.allopathyTrack}</h4>
-                      <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">{t.allopathyTrackDesc}</p>
-                    </div>
-                  </div>
-
-                  <div
-                    onClick={() => setTrack("Ayurveda")}
-                    className={`cursor-pointer rounded-2xl border-2 p-3.5 transition-all flex items-start gap-3 ${
-                      track === "Ayurveda"
-                        ? "border-amber-600 bg-amber-50/50 shadow-sm"
-                        : "border-slate-200 bg-white hover:border-slate-300"
-                    }`}
-                  >
-                    <div className={`p-2.5 rounded-xl ${track === "Ayurveda" ? "bg-amber-600 text-white" : "bg-slate-100 text-slate-700"}`}>
-                      <Sparkles className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-slate-900">{t.ayurvedaTrack}</h4>
-                      <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">{t.ayurvedaTrackDesc}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Chief Complaint Category Tabs */}
-              <div className="mt-4">
-                <div className="flex items-center justify-between mb-2">
-                  <div>
-                    <h3 className="text-sm font-bold text-slate-900">{t.chiefComplaintHeader}</h3>
-                    <p className="text-xs text-slate-500">{t.chiefComplaintSub}</p>
-                  </div>
-                  {/* Voice Microphone Input Button */}
-                  <button
-                    type="button"
-                    onClick={toggleVoiceInput}
-                    className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition-all shadow-xs ${
-                      voiceActive ? "bg-rose-600 text-white animate-pulse" : "bg-emerald-100 text-emerald-900 hover:bg-emerald-200"
-                    }`}
-                    title={t.voicePrompt}
-                  >
-                    {voiceActive ? <MicOff className="h-3.5 w-3.5" /> : <Mic className="h-3.5 w-3.5" />}
-                    <span>{voiceActive ? "Listening..." : "Voice Input"}</span>
-                  </button>
-                </div>
-
-                {/* Categories Bar */}
-                <div className="flex gap-1.5 overflow-x-auto pb-1 [scrollbar-width:thin]">
-                  {CHIEF_COMPLAINTS.map((cat) => (
-                    <button
-                      key={cat.id}
-                      type="button"
-                      onClick={() => setSelectedCategory(cat.id)}
-                      className={`rounded-xl px-3 py-1.5 text-xs font-semibold shrink-0 transition-colors ${
-                        selectedCategory === cat.id ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+          /* 5-STEP CLINICAL INTAKE FLOW (Fitted to Single Screen on Desktop) */
+          <div className="flex-1 flex flex-col items-center justify-center py-1 sm:py-2 lg:py-3 w-full min-h-0">
+            <div className="w-full max-w-3xl flex flex-col gap-2.5 sm:gap-3 my-auto min-h-0">
+              {/* Scaled Minimal Progress Stepper */}
+              <div className="flex items-center justify-between gap-1.5 overflow-x-auto py-0.5 [scrollbar-width:none]">
+                {[
+                  { step: 1, label: t.step1Title },
+                  { step: 2, label: t.step2Title },
+                  { step: 3, label: t.step3Title },
+                  { step: 4, label: t.step4Title },
+                  { step: 5, label: t.step5Title },
+                ].map((s) => {
+                  const cleanLabel = s.label.replace(/^\d+\.\s*/, "");
+                  const isActive = currentStep === s.step;
+                  const isCompleted = currentStep > s.step;
+                  return (
+                    <div
+                      key={s.step}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all shrink-0 text-xs sm:text-sm ${
+                        isActive
+                          ? "bg-emerald-700 text-white font-bold shadow-xs ring-2 ring-emerald-200"
+                          : isCompleted
+                          ? "bg-emerald-50 text-emerald-800 font-semibold border border-emerald-200"
+                          : "bg-slate-100 text-slate-500 font-medium"
                       }`}
                     >
-                      {cat[lang] || cat.en}
-                    </button>
-                  ))}
-                </div>
+                      <span className={`flex h-5 w-5 items-center justify-center rounded-full text-xs font-black ${
+                        isActive ? "bg-white text-emerald-800" : isCompleted ? "bg-emerald-200 text-emerald-900" : "bg-slate-200 text-slate-600"
+                      }`}>
+                        {isCompleted ? "✓" : s.step}
+                      </span>
+                      <span className="hidden sm:inline font-semibold">{cleanLabel}</span>
+                    </div>
+                  );
+                })}
+              </div>
 
-                {/* Symptom Tap Chips for active category */}
-                <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {CHIEF_COMPLAINTS.find((c) => c.id === selectedCategory)?.symptoms.map((s) => {
-                    const isChecked = selectedSymptoms.some((item) => item.id === s.id);
-                    return (
+              {/* Dynamic Step Content Container — Proper Form Dimensions & Natural Height */}
+              <div className="rounded-2xl sm:rounded-3xl bg-white p-5 sm:p-6 lg:p-7 shadow-sm border border-slate-200/90 flex flex-col min-h-0">
+                {/* STEP 1: PATIENT IDENTIFICATION */}
+                {currentStep === 1 && (
+                  <div className="w-full space-y-4">
+                    <div className="text-center pb-0.5">
+                      <h2 className="text-xl sm:text-2xl font-black text-slate-900">{t.step1Title.replace(/^\d+\.\s*/, "")}</h2>
+                      <p className="text-xs sm:text-sm text-slate-500 mt-0.5 font-medium">
+                        Select identification method to initiate case intake
+                      </p>
+                    </div>
+
+                    {/* ID Tabs: ABHA ID vs New Guest Walk-in */}
+                    <div className="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-xl">
                       <button
-                        key={s.id}
                         type="button"
-                        onClick={() => toggleSymptom(s)}
-                        className={`flex items-center justify-between p-2.5 rounded-xl border text-left text-xs font-semibold transition-all ${
-                          isChecked ? "border-emerald-600 bg-emerald-50 text-emerald-950 font-bold" : "border-slate-200 bg-white hover:bg-slate-50 text-slate-700"
+                        onClick={() => {
+                          setIdMethod("abha");
+                          setIsAbhaVerified(false);
+                          setIdError("");
+                        }}
+                        className={`py-2 sm:py-2.5 text-xs sm:text-sm font-bold rounded-lg transition-all ${
+                          idMethod === "abha" ? "bg-white text-emerald-800 shadow-xs" : "text-slate-500 hover:text-slate-800"
                         }`}
                       >
-                        <span>{s[lang] || s.en}</span>
-                        <span className={`h-4 w-4 rounded-md border flex items-center justify-center text-[10px] ${
-                          isChecked ? "bg-emerald-700 text-white border-emerald-700" : "border-slate-300"
-                        }`}>
-                          {isChecked && "✓"}
-                        </span>
+                        {t.abhaTab}
                       </button>
-                    );
-                  })}
-                </div>
-
-                {/* Spoken / Additional Notes Input */}
-                <div className="mt-3">
-                  <label className="text-xs font-semibold text-slate-600 block mb-1">
-                    Describe your symptoms in your own words (or voice dictation):
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={customComplaintText}
-                    onChange={(e) => setCustomComplaintText(e.target.value)}
-                    placeholder="e.g. Throbbing headache since morning, worsening with bright screen light..."
-                    className="textarea textarea-bordered textarea-sm w-full bg-slate-50 text-xs rounded-xl border-slate-300 focus:bg-white focus:border-emerald-600"
-                  />
-                </div>
-              </div>
-
-              {/* Navigation Footer */}
-              <div className="mt-auto pt-6 flex items-center justify-between">
-                <button
-                  type="button"
-                  onClick={() => setCurrentStep(2)}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors"
-                >
-                  <ArrowLeft className="h-4 w-4" /> {t.backBtn}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setCurrentStep(4)}
-                  className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-emerald-800 transition-colors"
-                >
-                  <span>{t.continueBtn}</span>
-                  <ArrowRight className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* STEP 4: CLINICAL INTAKE & AYURVEDA / ALLOPATHY MODULES */}
-          {currentStep === 4 && (
-            <div className="flex-1 flex flex-col max-w-3xl mx-auto w-full">
-              <div className="text-center pb-2 border-b border-slate-100">
-                <h2 className="text-base font-black text-slate-900">{t.step4Title}</h2>
-                <p className="text-xs text-slate-500">
-                  {track === "Ayurveda" ? "Dashavidha Prakriti & Agni Assessment" : "Clinical History & Systemic Evaluation"}
-                </p>
-              </div>
-
-              <div className="mt-3 flex-1 overflow-y-auto pr-1 space-y-4 [scrollbar-width:thin]">
-                {/* Duration & Severity */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-xs font-bold text-slate-700 block mb-1">{t.durationLabel}</label>
-                    <select
-                      value={duration}
-                      onChange={(e) => setDuration(e.target.value)}
-                      className="select select-sm w-full bg-slate-50 border-slate-300 text-xs rounded-xl focus:bg-white focus:border-emerald-600"
-                    >
-                      <option value="1-3 days">1 to 3 days (Acute onset)</option>
-                      <option value="1-2 weeks">1 to 2 weeks</option>
-                      <option value="1-3 months">1 to 3 months (Sub-acute)</option>
-                      <option value="Over 3 months">Over 3 months (Chronic persistent)</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold text-slate-700 block mb-1">{t.severityLabel}</label>
-                    <select
-                      value={severity}
-                      onChange={(e) => setSeverity(e.target.value)}
-                      className="select select-sm w-full bg-slate-50 border-slate-300 text-xs rounded-xl focus:bg-white focus:border-emerald-600"
-                    >
-                      <option value="Mild">{t.severityMild}</option>
-                      <option value="Moderate">{t.severityMod}</option>
-                      <option value="Severe">{t.severitySev}</option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* AYURVEDA SPECIFIC MODULE (DASHAVIDHA PARIKSHA) */}
-                {track === "Ayurveda" && (
-                  <div className="rounded-2xl border border-amber-300 bg-amber-50/40 p-4 space-y-3">
-                    <div className="flex items-center gap-2 text-amber-900 font-black text-xs uppercase tracking-wide">
-                      <Sparkles className="h-4 w-4 text-amber-700" />
-                      <span>Ayurvedic Clinical Profile (Dashavidha Pariksha)</span>
-                    </div>
-
-                    {/* Deha Prakriti */}
-                    <div>
-                      <label className="text-xs font-bold text-amber-950 block mb-1">{t.prakritiHeader}:</label>
-                      <select
-                        value={selectedPrakriti}
-                        onChange={(e) => setSelectedPrakriti(e.target.value)}
-                        className="select select-sm w-full bg-white border-amber-300 text-xs rounded-xl focus:border-amber-700"
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIdMethod("guest");
+                          setIsAbhaVerified(false);
+                          setPatientName("");
+                          setDob("");
+                          setAge("");
+                          setPhone("");
+                          setAbhaId("Unregistered Guest");
+                          setIdError("");
+                        }}
+                        className={`py-2 sm:py-2.5 text-xs sm:text-sm font-bold rounded-lg transition-all ${
+                          idMethod === "guest" ? "bg-white text-emerald-800 shadow-xs" : "text-slate-500 hover:text-slate-800"
+                        }`}
                       >
-                        {AYURVEDA_PRAKRITI_OPTIONS.map((opt) => (
-                          <option key={opt.id} value={opt.id}>{opt[lang] || opt.en}</option>
-                        ))}
-                      </select>
+                        {t.guestTab}
+                      </button>
                     </div>
 
-                    {/* Agni State */}
-                    <div>
-                      <label className="text-xs font-bold text-amber-950 block mb-1">{t.agniHeader}:</label>
-                      <select
-                        value={selectedAgni}
-                        onChange={(e) => setSelectedAgni(e.target.value)}
-                        className="select select-sm w-full bg-white border-amber-300 text-xs rounded-xl focus:border-amber-700"
-                      >
-                        {AYURVEDA_AGNI_OPTIONS.map((opt) => (
-                          <option key={opt.id} value={opt.id}>{opt[lang] || opt.en}</option>
-                        ))}
-                      </select>
-                    </div>
+                    {/* ID Method Form Fields */}
+                    <div className="space-y-3">
+                      {idMethod === "abha" && (
+                        <div className="space-y-2">
+                          <div>
+                            <label className="text-xs sm:text-sm font-bold text-slate-800 block mb-1">
+                              Ayushman Bharat Health Account (ABHA ID):
+                            </label>
+                            <div className="flex gap-2">
+                              <input
+                                type="text"
+                                placeholder={t.abhaPlaceholder}
+                                value={abhaInput}
+                                onChange={(e) => setAbhaInput(e.target.value)}
+                                onKeyDown={(e) => e.key === "Enter" && handleAbhaVerification()}
+                                className="input h-10 sm:h-11 flex-1 bg-slate-50 border-slate-300 text-xs sm:text-sm rounded-xl px-3.5 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => handleAbhaVerification()}
+                                className="btn h-10 sm:h-11 bg-emerald-700 hover:bg-emerald-800 text-white text-xs sm:text-sm font-bold rounded-xl px-5 shadow-xs"
+                              >
+                                {t.fetchAbhaBtn}
+                              </button>
+                            </div>
+                          </div>
 
-                    {/* Koshtha State */}
-                    <div>
-                      <label className="text-xs font-bold text-amber-950 block mb-1">{t.koshthaHeader}:</label>
-                      <select
-                        value={selectedKoshtha}
-                        onChange={(e) => setSelectedKoshtha(e.target.value)}
-                        className="select select-sm w-full bg-white border-amber-300 text-xs rounded-xl focus:border-amber-700"
-                      >
-                        {AYURVEDA_KOSHTHA_OPTIONS.map((opt) => (
-                          <option key={opt.id} value={opt.id}>{opt[lang] || opt.en}</option>
-                        ))}
-                      </select>
-                    </div>
+                          {/* Fast Demo Autofill Chips */}
+                          <div className="flex items-center gap-1.5 flex-wrap pt-0.5">
+                            <span className="text-[11px] uppercase font-bold text-slate-400">Demo test:</span>
+                            {mockAbhaRecords.map((demo) => (
+                              <button
+                                key={demo.abhaId}
+                                type="button"
+                                onClick={() => applyDemoAbha(demo)}
+                                className="rounded-lg bg-slate-100 hover:bg-emerald-50 hover:text-emerald-800 px-2.5 py-1 text-xs font-semibold text-slate-700 transition-colors border border-slate-200/80"
+                              >
+                                {demo.patientName} ({demo.sex}, {demo.dob})
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
 
-                    {/* Sleep Pattern */}
-                    <div>
-                      <label className="text-xs font-bold text-amber-950 block mb-1">{t.sleepHeader}:</label>
-                      <select
-                        value={selectedSleep}
-                        onChange={(e) => setSelectedSleep(e.target.value)}
-                        className="select select-sm w-full bg-white border-amber-300 text-xs rounded-xl focus:border-amber-700"
-                      >
-                        {AYURVEDA_SLEEP_OPTIONS.map((opt) => (
-                          <option key={opt.id} value={opt.id}>{opt[lang] || opt.en}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                )}
+                      {/* Guest Walk-in Warning */}
+                      {idMethod === "guest" && (
+                        <div className="rounded-xl border border-amber-300 bg-amber-50/90 p-3 shadow-xs flex items-start gap-2.5">
+                          <div className="p-1.5 rounded-lg bg-amber-100 text-amber-800 shrink-0 mt-0.5">
+                            <AlertTriangle className="h-4 w-4" />
+                          </div>
+                          <div className="space-y-0.5">
+                            <h3 className="text-xs sm:text-sm font-black text-amber-950 uppercase tracking-wide">
+                              {t.guestWarningTitle}
+                            </h3>
+                            <p className="text-xs text-amber-900 leading-relaxed font-medium">
+                              {t.guestWarning}
+                            </p>
+                          </div>
+                        </div>
+                      )}
 
-                {/* Past History & Allergies */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-xs font-bold text-slate-700 block mb-1">{t.allergiesHeader}</label>
-                    <input
-                      type="text"
-                      value={allergies}
-                      onChange={(e) => setAllergies(e.target.value)}
-                      placeholder="e.g. Penicillin, Sulfa, Dust..."
-                      className="input input-sm w-full bg-slate-50 border-slate-300 text-xs rounded-xl focus:bg-white focus:border-emerald-600"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold text-slate-700 block mb-1">{t.medicationsHeader}</label>
-                    <input
-                      type="text"
-                      value={medications}
-                      onChange={(e) => setMedications(e.target.value)}
-                      placeholder="e.g. Amlodipine 5mg, Metformin..."
-                      className="input input-sm w-full bg-slate-50 border-slate-300 text-xs rounded-xl focus:bg-white focus:border-emerald-600"
-                    />
-                  </div>
-                </div>
+                      {/* Error Banner */}
+                      {idError && (
+                        <div className="rounded-xl border border-rose-300 bg-rose-50 p-2.5 text-xs sm:text-sm font-bold text-rose-800 flex items-center gap-2">
+                          <AlertTriangle className="h-4 w-4 shrink-0 text-rose-600" />
+                          <span>{idError}</span>
+                        </div>
+                      )}
 
-                {/* CONDITIONAL LMP OVERLAY: Female patients aged 10 to 60 */}
-                {sex === "Female" && Number(age) >= 10 && Number(age) <= 60 && (
-                  <div className="rounded-2xl border border-pink-200 bg-pink-50/50 p-3.5 space-y-2">
-                    <span className="text-xs font-black text-pink-900 uppercase tracking-wide flex items-center gap-1.5">
-                      <Info className="h-4 w-4 text-pink-700" />
-                      <span>{t.lmpHeader}</span>
-                    </span>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div>
-                        <label className="text-xs font-semibold text-pink-950 block mb-1">{t.lmpLabel}:</label>
-                        <select
-                          value={lmpStatus}
-                          onChange={(e) => setLmpStatus(e.target.value)}
-                          className="select select-sm w-full bg-white border-pink-300 text-xs rounded-xl"
-                        >
-                          <option value="Regular (28-30 days)">Regular cycles (28-30 days)</option>
-                          <option value="Irregular cycles">Irregular / Oligomenorrhea</option>
-                          <option value="Within last 2 weeks">Within last 2 weeks</option>
-                          <option value="Over 6 weeks ago">Over 6 weeks ago (Delayed)</option>
-                        </select>
-                      </div>
-                      <div>
-                        <label className="text-xs font-semibold text-pink-950 block mb-1">{t.pregnancyLabel}:</label>
-                        <select
-                          value={pregnancyCheck}
-                          onChange={(e) => setPregnancyCheck(e.target.value)}
-                          className="select select-sm w-full bg-white border-pink-300 text-xs rounded-xl"
-                        >
-                          <option value="No">No</option>
-                          <option value="Yes (Confirmed)">Yes (Confirmed pregnancy)</option>
-                          <option value="Uncertain">Uncertain</option>
-                        </select>
+                      {/* Demographic Form — Full Sized Inputs */}
+                      <div className="space-y-2.5 pt-1">
+                        <div className="flex items-center justify-between pb-1 border-b border-slate-200">
+                          <span className="text-xs font-black text-slate-700 uppercase tracking-wider">
+                            Patient Demographics
+                          </span>
+                          {isAbhaVerified && (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-bold text-emerald-700 border border-emerald-200">
+                              <CheckCircle2 className="h-3 w-3" /> ABHA Verified Record
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <div>
+                            <label className="text-xs sm:text-sm font-bold text-slate-800 block mb-1">{t.fullName} *</label>
+                            <input
+                              type="text"
+                              value={patientName}
+                              onChange={(e) => setPatientName(e.target.value)}
+                              placeholder="e.g. Ramesh Patel"
+                              className="input h-10 sm:h-11 w-full bg-slate-50 border-slate-300 text-xs sm:text-sm rounded-xl px-3.5 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                            />
+                          </div>
+                          <div>
+                            <div className="flex items-center justify-between mb-1">
+                              <label className="text-xs sm:text-sm font-bold text-slate-800">
+                                {t.dob} *
+                              </label>
+                              {age !== "" && (
+                                <span className="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded-md">
+                                  {t.calculatedAge}: {age}y
+                                </span>
+                              )}
+                            </div>
+                            <input
+                              type="date"
+                              value={dob}
+                              max={new Date().toISOString().split("T")[0]}
+                              onChange={handleDobChange}
+                              className="input h-10 sm:h-11 w-full bg-slate-50 border-slate-300 text-xs sm:text-sm rounded-xl px-3.5 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-xs sm:text-sm font-bold text-slate-800 block mb-1">
+                              {t.gender} *
+                            </label>
+                            <select
+                              value={sex}
+                              onChange={(e) => setSex(e.target.value)}
+                              className="select h-10 sm:h-11 w-full bg-slate-50 border-slate-300 text-xs sm:text-sm rounded-xl px-3.5 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                            >
+                              <option value="Male">{t.genderMale}</option>
+                              <option value="Female">{t.genderFemale}</option>
+                              <option value="Other">{t.genderOther}</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="text-xs sm:text-sm font-bold text-slate-800 block mb-1">{t.phone} *</label>
+                            <input
+                              type="text"
+                              value={phone}
+                              onChange={(e) => setPhone(e.target.value)}
+                              placeholder="+91 98765 43210"
+                              className="input h-10 sm:h-11 w-full bg-slate-50 border-slate-300 text-xs sm:text-sm rounded-xl px-3.5 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                            />
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
-              </div>
 
-              {/* Navigation Footer */}
-              <div className="mt-auto pt-6 flex items-center justify-between">
-                <button
-                  type="button"
-                  onClick={() => setCurrentStep(3)}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors"
-                >
-                  <ArrowLeft className="h-4 w-4" /> {t.backBtn}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleFinalizeRegistration}
-                  className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-6 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-emerald-800 transition-colors"
-                >
-                  <CheckCircle2 className="h-4 w-4" />
-                  <span>{t.confirmHeader}</span>
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* STEP 5: SMART OPD CONSULTATION PASS & TOKEN ISSUANCE */}
-          {currentStep === 5 && generatedVisit && (
-            <div className="flex-1 flex flex-col items-center justify-center max-w-2xl mx-auto w-full py-4">
-              {/* Success Badge */}
-              <div className="flex items-center gap-2 text-emerald-800 mb-2">
-                <CheckCircle2 className="h-6 w-6 text-emerald-600" />
-                <h2 className="text-lg font-black">{t.tokenIssued}</h2>
-              </div>
-              <p className="text-xs text-slate-500 text-center mb-4">
-                Your consultation token has been generated and dispatched to the Doctor Console in Room 104.
-              </p>
-
-              {/* Physical Pass Presentation Card */}
-              <div className="w-full rounded-2xl border-2 border-emerald-700 bg-white overflow-hidden shadow-md">
-                <div className="bg-emerald-800 text-white p-4 flex items-center justify-between">
-                  <div>
-                    <h3 className="font-extrabold text-sm sm:text-base tracking-wide uppercase">
-                      {t.hospitalName}
-                    </h3>
-                    <p className="text-[11px] text-emerald-200 mt-0.5">Central Clinical OPD Consultation Pass</p>
-                  </div>
-                  <div className="text-center rounded-xl bg-white text-emerald-900 border-2 border-emerald-950 px-3 py-1.5">
-                    <span className="text-[9px] uppercase font-bold text-slate-500 block">Token</span>
-                    <span className="text-2xl font-black">{generatedVisit.token}</span>
-                  </div>
-                </div>
-
-                {/* Priority Alert Banner if Red Flag */}
-                {generatedVisit.isRedFlag && (
-                  <div className="bg-rose-600 text-white px-4 py-2 text-xs font-bold flex items-center gap-2 animate-pulse">
-                    <ShieldAlert className="h-4 w-4 shrink-0" />
-                    <span>IMMEDIATE EMERGENCY PRIORITY — REPORT TO ROOM 104 IMMEDIATELY</span>
+                    {/* Action Button */}
+                    <div className="pt-3 border-t border-slate-100 flex justify-end">
+                      <button
+                        type="button"
+                        onClick={handleProceedFromStep1}
+                        className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-6 py-2.5 sm:py-3 text-sm sm:text-base font-bold text-white shadow-sm hover:bg-emerald-800 transition-colors"
+                      >
+                        <span>{t.continueBtn}</span>
+                        <ArrowRight className="h-4 w-4" />
+                      </button>
+                    </div>
                   </div>
                 )}
 
-                {/* Pass Details Grid */}
-                <div className="p-4 sm:p-5 space-y-3">
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
-                    <div className="rounded-xl border border-slate-200 bg-slate-50 p-2.5">
-                      <span className="text-[10px] uppercase font-bold text-slate-400 block">{t.fullName}</span>
-                      <strong className="text-slate-900 text-sm">{generatedVisit.patientName}</strong>
+                {/* STEP 2: CLINICAL TRACK SELECTION (ALLOPATHY OR AYURVEDA) */}
+                {currentStep === 2 && (
+                  <div className="w-full space-y-4">
+                    <div className="text-center pb-0.5">
+                      <h2 className="text-xl sm:text-2xl font-black text-slate-900">
+                        {t.trackSelectionHeader}
+                      </h2>
+                      <p className="text-xs sm:text-sm text-slate-500 mt-0.5 font-medium">
+                        Select your preferred medical system for today's consultation
+                      </p>
                     </div>
-                    <div className="rounded-xl border border-slate-200 bg-slate-50 p-2.5">
-                      <span className="text-[10px] uppercase font-bold text-slate-400 block">{t.age} / {t.gender}</span>
-                      <strong className="text-slate-900">{generatedVisit.age}y / {generatedVisit.sex}</strong>
+
+                    {/* Generous 2 Choice Cards */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
+                      {/* Allopathy Card */}
+                      <div
+                        onClick={() => setTrack("Allopathy")}
+                        className={`cursor-pointer rounded-2xl border-2 p-4 sm:p-5 transition-all flex items-start gap-3.5 shadow-xs ${
+                          track === "Allopathy"
+                            ? "border-emerald-600 bg-emerald-50/70 ring-2 ring-emerald-500/20"
+                            : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/60"
+                        }`}
+                      >
+                        <div
+                          className={`p-3 rounded-xl shrink-0 transition-colors ${
+                            track === "Allopathy"
+                              ? "bg-emerald-700 text-white"
+                              : "bg-slate-100 text-slate-700"
+                          }`}
+                        >
+                          <Stethoscope className="h-6 w-6" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-base font-bold text-slate-900">
+                            {t.allopathyTrack}
+                          </h3>
+                          <p className="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
+                            {t.allopathyTrackDesc}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Ayurveda Card */}
+                      <div
+                        onClick={() => setTrack("Ayurveda")}
+                        className={`cursor-pointer rounded-2xl border-2 p-4 sm:p-5 transition-all flex items-start gap-3.5 shadow-xs ${
+                          track === "Ayurveda"
+                            ? "border-amber-600 bg-amber-50/70 ring-2 ring-amber-500/20"
+                            : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/60"
+                        }`}
+                      >
+                        <div
+                          className={`p-3 rounded-xl shrink-0 transition-colors ${
+                            track === "Ayurveda"
+                              ? "bg-amber-600 text-white"
+                              : "bg-slate-100 text-slate-700"
+                          }`}
+                        >
+                          <Sparkles className="h-6 w-6" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-base font-bold text-slate-900">
+                            {t.ayurvedaTrack}
+                          </h3>
+                          <p className="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
+                            {t.ayurvedaTrackDesc}
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                    <div className="rounded-xl border border-slate-200 bg-slate-50 p-2.5">
-                      <span className="text-[10px] uppercase font-bold text-slate-400 block">{t.roomAssigned}</span>
-                      <strong className="text-emerald-700 font-bold">Room 104 • Central OPD</strong>
-                    </div>
-                    <div className="rounded-xl border border-slate-200 bg-slate-50 p-2.5">
-                      <span className="text-[10px] uppercase font-bold text-slate-400 block">Clinical Track</span>
-                      <strong className="text-slate-900">{generatedVisit.track} Track</strong>
-                    </div>
-                    <div className="rounded-xl border border-slate-200 bg-slate-50 p-2.5">
-                      <span className="text-[10px] uppercase font-bold text-slate-400 block">{t.estimatedWait}</span>
-                      <strong className="text-slate-900">{generatedVisit.isRedFlag ? "0 min (Immediate)" : "Approx. 15 mins"}</strong>
-                    </div>
-                    <div className="rounded-xl border border-slate-200 bg-slate-50 p-2.5">
-                      <span className="text-[10px] uppercase font-bold text-slate-400 block">Patient UUID</span>
-                      <strong className="font-mono text-slate-700 text-[11px]">{generatedVisit.patientUuid}</strong>
+
+                    {/* Navigation Footer */}
+                    <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+                      <button
+                        type="button"
+                        onClick={() => setCurrentStep(1)}
+                        className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-xs sm:text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors"
+                      >
+                        <ArrowLeft className="h-4 w-4" /> {t.backBtn}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setCurrentStep(3)}
+                        className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-6 py-2.5 text-xs sm:text-sm font-bold text-white shadow-xs hover:bg-emerald-800 transition-colors"
+                      >
+                        <span>{t.continueBtn}</span>
+                        <ArrowRight className="h-4 w-4" />
+                      </button>
                     </div>
                   </div>
+                )}
 
-                  {/* Complaint Summary */}
-                  <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-3 text-xs text-slate-700">
-                    <strong className="text-slate-900">Recorded Complaint:</strong> {generatedVisit.intakeSummary}
-                  </div>
+                {/* STEP 3: EMERGENCY PRIORITY PATH (RED-FLAG SAFETY GATE) */}
+                {currentStep === 3 && (
+                  <div className="w-full space-y-4">
+                    <div className="rounded-2xl border border-rose-200 bg-rose-50/40 p-4 sm:p-5 shadow-xs">
+                      <div className="flex items-start gap-3">
+                        <div className="p-2 rounded-xl bg-rose-100 text-rose-700 shrink-0">
+                          <ShieldAlert className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <h2 className="text-base sm:text-lg font-black text-rose-950 uppercase tracking-wide">
+                            {t.redFlagHeader}
+                          </h2>
+                          <p className="text-xs sm:text-sm text-rose-800 mt-0.5 font-medium">{t.redFlagSub}</p>
+                        </div>
+                      </div>
 
-                  {/* Barcode & Routing Strip */}
-                  <div className="flex items-center justify-between pt-2 border-t border-dashed border-slate-200 text-slate-500 text-xs">
-                    <div className="flex items-center gap-2">
-                      <QrCode className="h-6 w-6 text-slate-800" />
-                      <span className="font-mono text-[10px]">ABHA: {generatedVisit.abhaId}</span>
+                      {/* Red Flag Options List */}
+                      <div className="mt-3 space-y-1.5">
+                        {RED_FLAG_ITEMS.map((rf) => {
+                          const isSelected = selectedRedFlags.some((item) => item.id === rf.id);
+                          return (
+                            <div
+                              key={rf.id}
+                              onClick={() => toggleRedFlag(rf)}
+                              className={`cursor-pointer rounded-xl border p-2.5 sm:p-3 transition-all flex items-center justify-between gap-3 ${
+                                isSelected
+                                  ? "border-rose-600 bg-rose-600 text-white font-bold shadow-xs"
+                                  : "border-slate-200 bg-white hover:border-slate-300 text-slate-800"
+                              }`}
+                            >
+                              <div className="flex items-center gap-2.5">
+                                <span
+                                  className={`h-4.5 w-4.5 shrink-0 rounded-md border flex items-center justify-center text-xs ${
+                                    isSelected ? "bg-white text-rose-700 border-white font-black" : "border-slate-300"
+                                  }`}
+                                >
+                                  {isSelected && "✓"}
+                                </span>
+                                <span className="text-xs sm:text-sm font-semibold">{rf[lang] || rf.en}</span>
+                              </div>
+                              <span className={`text-[11px] uppercase font-bold shrink-0 px-2 py-0.5 rounded-md ${
+                                isSelected ? "bg-rose-700 text-white" : "bg-rose-50 text-rose-700"
+                              }`}>
+                                High Priority
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Emergency Alert Banner if any red flag selected */}
+                      {isRedFlag && (
+                        <div className="mt-2.5 rounded-xl border border-rose-500 bg-rose-600 p-2.5 text-white shadow-xs animate-pulse">
+                          <p className="text-xs sm:text-sm font-bold uppercase tracking-wider">{t.immediateEmergencyAlert}</p>
+                          <p className="text-xs mt-0.5 opacity-95">{t.emergencyActionMsg}</p>
+                        </div>
+                      )}
                     </div>
-                    <span className="text-[10px]">Auto-saved to live doctor queue</span>
+
+                    {/* Navigation Footer */}
+                    <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+                      <button
+                        type="button"
+                        onClick={() => setCurrentStep(2)}
+                        className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-xs sm:text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors"
+                      >
+                        <ArrowLeft className="h-4 w-4" /> {t.backBtn}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setCurrentStep(4)}
+                        className={`inline-flex items-center gap-2 rounded-xl px-6 py-2.5 text-xs sm:text-sm font-bold text-white shadow-xs transition-colors ${
+                          isRedFlag ? "bg-rose-600 hover:bg-rose-700" : "bg-emerald-700 hover:bg-emerald-800"
+                        }`}
+                      >
+                        <span>{isRedFlag ? "Proceed with Urgent Path Marker" : t.continueBtn}</span>
+                        <ArrowRight className="h-4 w-4" />
+                      </button>
+                    </div>
                   </div>
-                </div>
-              </div>
+                )}
 
-              {/* Action Buttons */}
-              <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
-                <button
-                  type="button"
-                  onClick={handlePrintPassCard}
-                  className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-xs font-bold text-slate-800 hover:bg-slate-50 shadow-xs transition-colors"
-                >
-                  <Printer className="h-4 w-4 text-slate-600" />
-                  <span>{t.printPassBtn}</span>
-                </button>
+                {/* STEP 4: CLINICAL INTAKE & CHIEF COMPLAINTS */}
+                {currentStep === 4 && (
+                  <div className="w-full space-y-3.5 flex flex-col min-h-0">
+                    <div className="flex items-center justify-between pb-1.5 border-b border-slate-100 shrink-0">
+                      <div>
+                        <h2 className="text-lg sm:text-xl font-black text-slate-900">{t.step4Title.replace(/^\d+\.\s*/, "")}</h2>
+                        <p className="text-xs text-slate-500">
+                          Track: <span className="font-bold text-emerald-700">{track === "Ayurveda" ? t.ayurvedaTrack : t.allopathyTrack}</span>
+                        </p>
+                      </div>
+                      {/* Voice Microphone Input Button */}
+                      <button
+                        type="button"
+                        onClick={toggleVoiceInput}
+                        className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs sm:text-sm font-bold transition-all shadow-xs ${
+                          voiceActive ? "bg-rose-600 text-white animate-pulse" : "bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200/60"
+                        }`}
+                        title={t.voicePrompt}
+                      >
+                        {voiceActive ? <MicOff className="h-3.5 w-3.5" /> : <Mic className="h-3.5 w-3.5" />}
+                        <span>{voiceActive ? "Listening..." : "Voice Input"}</span>
+                      </button>
+                    </div>
 
-                <button
-                  type="button"
-                  onClick={handleStartNewIntake}
-                  className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-emerald-800 transition-colors"
-                >
-                  <User className="h-4 w-4" />
-                  <span>{t.newPatientBtn}</span>
-                </button>
+                    <div className="overflow-y-auto pr-1 space-y-3.5 max-h-[calc(100vh-310px)] [scrollbar-width:thin]">
+                      {/* Chief Complaints Category Tabs */}
+                      <div>
+                        <div className="mb-1.5">
+                          <h3 className="text-xs sm:text-sm font-bold text-slate-800">{t.chiefComplaintHeader}</h3>
+                          <p className="text-[11px] text-slate-500">{t.chiefComplaintSub}</p>
+                        </div>
+                        <div className="flex gap-1.5 overflow-x-auto pb-1 [scrollbar-width:thin]">
+                          {CHIEF_COMPLAINTS.map((cat) => (
+                            <button
+                              key={cat.id}
+                              type="button"
+                              onClick={() => setSelectedCategory(cat.id)}
+                              className={`rounded-lg px-3 py-1.5 text-xs font-bold shrink-0 transition-colors ${
+                                selectedCategory === cat.id ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                              }`}
+                            >
+                              {cat[lang] || cat.en}
+                            </button>
+                          ))}
+                        </div>
+
+                        {/* Symptom Tap Chips */}
+                        <div className="mt-2.5 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          {CHIEF_COMPLAINTS.find((c) => c.id === selectedCategory)?.symptoms.map((s) => {
+                            const isChecked = selectedSymptoms.some((item) => item.id === s.id);
+                            return (
+                              <button
+                                key={s.id}
+                                type="button"
+                                onClick={() => toggleSymptom(s)}
+                                className={`flex items-center justify-between p-2.5 sm:p-3 rounded-xl border text-left text-xs sm:text-sm font-semibold transition-all ${
+                                  isChecked ? "border-emerald-600 bg-emerald-50 text-emerald-950 font-bold" : "border-slate-200 bg-white hover:border-slate-300 text-slate-700"
+                                }`}
+                              >
+                                <span>{s[lang] || s.en}</span>
+                                <span className={`h-4.5 w-4.5 rounded-md border flex items-center justify-center text-xs ${
+                                  isChecked ? "bg-emerald-700 text-white border-emerald-700" : "border-slate-300"
+                                }`}>
+                                  {isChecked && "✓"}
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+
+                        {/* Custom Notes */}
+                        <div className="mt-2.5">
+                          <label className="text-xs sm:text-sm font-bold text-slate-700 block mb-1">
+                            Describe your symptoms in your own words (or voice dictation):
+                          </label>
+                          <textarea
+                            rows={2}
+                            value={customComplaintText}
+                            onChange={(e) => setCustomComplaintText(e.target.value)}
+                            placeholder="e.g. Throbbing headache since morning, worsening with bright screen light..."
+                            className="textarea textarea-bordered w-full bg-slate-50 text-xs sm:text-sm rounded-xl border-slate-300 focus:bg-white focus:border-emerald-600 p-2.5"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Duration & Severity */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="text-xs sm:text-sm font-bold text-slate-800 block mb-1">{t.durationLabel}</label>
+                          <select
+                            value={duration}
+                            onChange={(e) => setDuration(e.target.value)}
+                            className="select h-10 sm:h-11 w-full bg-slate-50 border-slate-300 text-xs sm:text-sm rounded-xl px-3.5 focus:bg-white focus:border-emerald-600"
+                          >
+                            <option value="1-3 days">1 to 3 days (Acute onset)</option>
+                            <option value="1-2 weeks">1 to 2 weeks</option>
+                            <option value="1-3 months">1 to 3 months (Sub-acute)</option>
+                            <option value="Over 3 months">Over 3 months (Chronic persistent)</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="text-xs sm:text-sm font-bold text-slate-800 block mb-1">{t.severityLabel}</label>
+                          <select
+                            value={severity}
+                            onChange={(e) => setSeverity(e.target.value)}
+                            className="select h-10 sm:h-11 w-full bg-slate-50 border-slate-300 text-xs sm:text-sm rounded-xl px-3.5 focus:bg-white focus:border-emerald-600"
+                          >
+                            <option value="Mild">{t.severityMild}</option>
+                            <option value="Moderate">{t.severityMod}</option>
+                            <option value="Severe">{t.severitySev}</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      {/* AYURVEDA SPECIFIC MODULE (DASHAVIDHA PARIKSHA) */}
+                      {track === "Ayurveda" && (
+                        <div className="rounded-xl border border-amber-200 bg-amber-50/40 p-3 space-y-2.5">
+                          <div className="flex items-center gap-1.5 text-amber-900 font-black text-xs uppercase tracking-wide">
+                            <Sparkles className="h-4 w-4 text-amber-700" />
+                            <span>Ayurvedic Clinical Profile (Dashavidha Pariksha)</span>
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                            {/* Deha Prakriti */}
+                            <div>
+                              <label className="text-xs font-bold text-amber-950 block mb-1">{t.prakritiHeader}:</label>
+                              <select
+                                value={selectedPrakriti}
+                                onChange={(e) => setSelectedPrakriti(e.target.value)}
+                                className="select h-10 w-full bg-white border-amber-300 text-xs rounded-xl px-3 focus:border-amber-700"
+                              >
+                                {AYURVEDA_PRAKRITI_OPTIONS.map((opt) => (
+                                  <option key={opt.id} value={opt.id}>{opt[lang] || opt.en}</option>
+                                ))}
+                              </select>
+                            </div>
+
+                            {/* Agni State */}
+                            <div>
+                              <label className="text-xs font-bold text-amber-950 block mb-1">{t.agniHeader}:</label>
+                              <select
+                                value={selectedAgni}
+                                onChange={(e) => setSelectedAgni(e.target.value)}
+                                className="select h-10 w-full bg-white border-amber-300 text-xs rounded-xl px-3 focus:border-amber-700"
+                              >
+                                {AYURVEDA_AGNI_OPTIONS.map((opt) => (
+                                  <option key={opt.id} value={opt.id}>{opt[lang] || opt.en}</option>
+                                ))}
+                              </select>
+                            </div>
+
+                            {/* Koshtha State */}
+                            <div>
+                              <label className="text-xs font-bold text-amber-950 block mb-1">{t.koshthaHeader}:</label>
+                              <select
+                                value={selectedKoshtha}
+                                onChange={(e) => setSelectedKoshtha(e.target.value)}
+                                className="select h-10 w-full bg-white border-amber-300 text-xs rounded-xl px-3 focus:border-amber-700"
+                              >
+                                {AYURVEDA_KOSHTHA_OPTIONS.map((opt) => (
+                                  <option key={opt.id} value={opt.id}>{opt[lang] || opt.en}</option>
+                                ))}
+                              </select>
+                            </div>
+
+                            {/* Sleep Pattern */}
+                            <div>
+                              <label className="text-xs font-bold text-amber-950 block mb-1">{t.sleepHeader}:</label>
+                              <select
+                                value={selectedSleep}
+                                onChange={(e) => setSelectedSleep(e.target.value)}
+                                className="select h-10 w-full bg-white border-amber-300 text-xs rounded-xl px-3 focus:border-amber-700"
+                              >
+                                {AYURVEDA_SLEEP_OPTIONS.map((opt) => (
+                                  <option key={opt.id} value={opt.id}>{opt[lang] || opt.en}</option>
+                                ))}
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Past History & Allergies */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="text-xs sm:text-sm font-bold text-slate-800 block mb-1">{t.allergiesHeader}</label>
+                          <input
+                            type="text"
+                            value={allergies}
+                            onChange={(e) => setAllergies(e.target.value)}
+                            placeholder="e.g. Penicillin, Sulfa, Dust..."
+                            className="input h-10 sm:h-11 w-full bg-slate-50 border-slate-300 text-xs sm:text-sm rounded-xl px-3.5 focus:bg-white focus:border-emerald-600"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-xs sm:text-sm font-bold text-slate-800 block mb-1">{t.medicationsHeader}</label>
+                          <input
+                            type="text"
+                            value={medications}
+                            onChange={(e) => setMedications(e.target.value)}
+                            placeholder="e.g. Amlodipine 5mg, Metformin..."
+                            className="input h-10 sm:h-11 w-full bg-slate-50 border-slate-300 text-xs sm:text-sm rounded-xl px-3.5 focus:bg-white focus:border-emerald-600"
+                          />
+                        </div>
+                      </div>
+
+                      {/* CONDITIONAL LMP OVERLAY: Female patients aged 10 to 60 */}
+                      {sex === "Female" && Number(age) >= 10 && Number(age) <= 60 && (
+                        <div className="rounded-xl border border-pink-200 bg-pink-50/50 p-3 space-y-2">
+                          <span className="text-xs font-black text-pink-900 uppercase tracking-wide flex items-center gap-1.5">
+                            <Info className="h-3.5 w-3.5 text-pink-700" />
+                            <span>{t.lmpHeader}</span>
+                          </span>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                              <label className="text-xs font-bold text-pink-950 block mb-1">{t.lmpLabel}:</label>
+                              <select
+                                value={lmpStatus}
+                                onChange={(e) => setLmpStatus(e.target.value)}
+                                className="select h-10 w-full bg-white border-pink-300 text-xs rounded-xl px-3"
+                              >
+                                <option value="Regular (28-30 days)">Regular cycles (28-30 days)</option>
+                                <option value="Irregular cycles">Irregular / Oligomenorrhea</option>
+                                <option value="Within last 2 weeks">Within last 2 weeks</option>
+                                <option value="Over 6 weeks ago">Over 6 weeks ago (Delayed)</option>
+                              </select>
+                            </div>
+                            <div>
+                              <label className="text-xs font-bold text-pink-950 block mb-1">{t.pregnancyLabel}:</label>
+                              <select
+                                value={pregnancyCheck}
+                                onChange={(e) => setPregnancyCheck(e.target.value)}
+                                className="select h-10 w-full bg-white border-pink-300 text-xs rounded-xl px-3"
+                              >
+                                <option value="No">No</option>
+                                <option value="Yes (Confirmed)">Yes (Confirmed pregnancy)</option>
+                                <option value="Uncertain">Uncertain</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Navigation Footer */}
+                    <div className="pt-3 border-t border-slate-100 flex items-center justify-between shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => setCurrentStep(3)}
+                        className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-xs sm:text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors"
+                      >
+                        <ArrowLeft className="h-4 w-4" /> {t.backBtn}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={handleFinalizeRegistration}
+                        className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-7 py-2.5 text-xs sm:text-sm font-bold text-white shadow-xs hover:bg-emerald-800 transition-colors"
+                      >
+                        <CheckCircle2 className="h-4.5 w-4.5" />
+                        <span>{t.confirmHeader}</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* STEP 5: SMART OPD CONSULTATION PASS & TOKEN ISSUANCE */}
+                {currentStep === 5 && generatedVisit && (
+                  <div className="w-full flex flex-col items-center space-y-3">
+                    {/* Success Badge */}
+                    <div className="flex items-center gap-2 text-emerald-800">
+                      <CheckCircle2 className="h-5 w-5 text-emerald-600" />
+                      <h2 className="text-lg sm:text-xl font-black">{t.tokenIssued}</h2>
+                    </div>
+                    <p className="text-xs sm:text-sm text-slate-500 text-center font-medium">
+                      Your consultation token has been generated and dispatched to the Doctor Console.
+                    </p>
+
+                    {/* Physical Pass Presentation Card */}
+                    <div className="w-full rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-xs">
+                      <div className="bg-emerald-800 text-white p-3.5 sm:p-4 flex items-center justify-between">
+                        <div>
+                          <h3 className="font-extrabold text-sm sm:text-base tracking-wide uppercase">
+                            {t.hospitalName}
+                          </h3>
+                          <p className="text-[11px] text-emerald-200 mt-0.5">Central Clinical OPD Consultation Pass</p>
+                        </div>
+                        <div className="text-center rounded-xl bg-white text-emerald-900 border border-emerald-950/20 px-3 py-1 shadow-2xs">
+                          <span className="text-[9px] uppercase font-bold text-slate-500 block">Token</span>
+                          <span className="text-xl sm:text-2xl font-black">{generatedVisit.token}</span>
+                        </div>
+                      </div>
+
+                      {/* Priority Alert Banner if Red Flag */}
+                      {generatedVisit.isRedFlag && (
+                        <div className="bg-rose-600 text-white px-4 py-2 text-xs sm:text-sm font-bold flex items-center gap-2 animate-pulse">
+                          <ShieldAlert className="h-4 w-4 shrink-0" />
+                          <span>IMMEDIATE EMERGENCY PRIORITY — REPORT TO ROOM 104 IMMEDIATELY</span>
+                        </div>
+                      )}
+
+                      {/* Pass Details Grid */}
+                      <div className="p-3.5 sm:p-4 space-y-2.5">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+                          <div className="rounded-xl border border-slate-200/80 bg-slate-50/70 p-2.5">
+                            <span className="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">{t.fullName}</span>
+                            <strong className="text-slate-900 text-xs sm:text-sm">{generatedVisit.patientName}</strong>
+                          </div>
+                          <div className="rounded-xl border border-slate-200/80 bg-slate-50/70 p-2.5">
+                            <span className="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">{t.age} / {t.gender}</span>
+                            <strong className="text-slate-900 text-xs sm:text-sm">{generatedVisit.age}y / {generatedVisit.sex}</strong>
+                          </div>
+                          <div className="rounded-xl border border-slate-200/80 bg-slate-50/70 p-2.5">
+                            <span className="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">{t.roomAssigned}</span>
+                            <strong className="text-emerald-700 font-bold text-xs sm:text-sm">Room 104 • Central OPD</strong>
+                          </div>
+                          <div className="rounded-xl border border-slate-200/80 bg-slate-50/70 p-2.5">
+                            <span className="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">Clinical Track</span>
+                            <strong className="text-slate-900 text-xs sm:text-sm">{generatedVisit.track} Track</strong>
+                          </div>
+                          <div className="rounded-xl border border-slate-200/80 bg-slate-50/70 p-2.5">
+                            <span className="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">{t.estimatedWait}</span>
+                            <strong className="text-slate-900 text-xs sm:text-sm">{generatedVisit.isRedFlag ? "0 min (Immediate)" : "Approx. 15 mins"}</strong>
+                          </div>
+                          <div className="rounded-xl border border-slate-200/80 bg-slate-50/70 p-2.5">
+                            <span className="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">Patient UUID</span>
+                            <strong className="font-mono text-slate-700 text-[11px] truncate block">{generatedVisit.patientUuid}</strong>
+                          </div>
+                        </div>
+
+                        {/* Complaint Summary */}
+                        <div className="rounded-xl border border-slate-200/80 bg-slate-50/70 p-2.5 text-xs sm:text-sm text-slate-700">
+                          <strong className="text-slate-900">Recorded Complaint:</strong> {generatedVisit.intakeSummary}
+                        </div>
+
+                        {/* Barcode & Routing Strip */}
+                        <div className="flex items-center justify-between pt-2 border-t border-dashed border-slate-200 text-slate-500 text-xs">
+                          <div className="flex items-center gap-2">
+                            <QrCode className="h-5 w-5 text-slate-700" />
+                            <span className="font-mono text-[11px]">ABHA: {generatedVisit.abhaId}</span>
+                          </div>
+                          <span className="text-[11px]">Auto-saved to live doctor queue</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="pt-1 flex flex-wrap items-center justify-center gap-2.5">
+                      <button
+                        type="button"
+                        onClick={handlePrintPassCard}
+                        className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-xs sm:text-sm font-bold text-slate-700 hover:bg-slate-50 shadow-xs transition-colors"
+                      >
+                        <Printer className="h-4 w-4 text-slate-500" />
+                        <span>{t.printPassBtn}</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={handleStartNewIntake}
+                        className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-6 py-2.5 text-xs sm:text-sm font-bold text-white shadow-xs hover:bg-emerald-800 transition-colors"
+                      >
+                        <User className="h-4 w-4" />
+                        <span>{t.newPatientBtn}</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
-          )}
-        </div>
-        </>
-      )}
+          </div>
+        )}
       </div>
     </main>
   );

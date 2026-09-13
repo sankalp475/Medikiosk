@@ -97,26 +97,26 @@ export default function AdminDashboard() {
   return (
     <main className="min-h-screen bg-slate-200/60 font-sans text-slate-900">
       <header className="border-b border-slate-200 bg-white shadow-2xs">
-        <div className="navbar mx-auto max-w-7xl px-4 py-2 sm:px-6">
-          <div className="flex flex-1 items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800 ring-1 ring-emerald-300">
-              <HeartPulse className="h-6 w-6" aria-hidden="true" />
+        <div className="navbar mx-auto max-w-7xl px-4 py-3.5 sm:px-6 sm:py-4 min-h-[76px] sm:min-h-[84px]">
+          <div className="flex flex-1 items-center gap-3.5">
+            <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-800 ring-2 ring-emerald-300/80 shadow-xs">
+              <HeartPulse className="h-7 w-7 sm:h-8 sm:w-8" aria-hidden="true" />
             </div>
             <div className="flex flex-col">
-              <div className="flex items-center gap-2.5">
-                <p className="text-2xl sm:text-3xl font-black leading-none tracking-[-0.03em] text-slate-950">
+              <div className="flex items-center gap-3">
+                <p className="text-3xl sm:text-4xl font-black leading-none tracking-[-0.03em] text-slate-950">
                   Medi<span className="text-emerald-700">Kiosk</span>
                 </p>
-                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-bold text-emerald-700">
+                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-0.5 text-xs font-bold text-emerald-700">
                   Allopathy &amp; Ayurveda
                 </span>
               </div>
               <p className="mt-1 text-xs sm:text-sm font-semibold text-slate-500">Clinic Patient Intake &amp; Registration</p>
             </div>
           </div>
-          <div className="flex items-center gap-3.5">
+          <div className="flex items-center gap-4">
             <span className="hidden text-sm sm:text-base font-semibold text-slate-600 sm:inline">Today, 12 September 2026</span>
-            <button className="btn btn-sm border-slate-200 bg-white text-xs sm:text-sm font-bold text-slate-700 hover:border-emerald-700 hover:bg-emerald-700 hover:text-white transition-colors" type="button" onClick={signOut}>
+            <button className="btn btn-md border-slate-200 bg-white text-sm font-bold text-slate-700 hover:border-emerald-700 hover:bg-emerald-700 hover:text-white transition-colors rounded-xl px-4 shadow-xs" type="button" onClick={signOut}>
               <LogOut className="h-4 w-4" /> Sign out
             </button>
           </div>
