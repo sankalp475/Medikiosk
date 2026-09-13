@@ -5,12 +5,12 @@ export default function ProtectedRoute({ allowedRoles }) {
   const location = useLocation();
   const user = getStoredUser();
 
-  if (!user) {
-    return <Navigate to="/login" replace state={{ from: location.pathname }} />;
-  }
+  const loginPath = allowedRoles?.includes("admin")
+    ? "/dashboard/admin/login"
+    : "/dashboard/doctor/login";
 
-  if (!allowedRoles.includes(user.role)) {
-    return <Navigate to={getDashboardPath(user.role)} replace />;
+  if (!user || !allowedRoles.includes(user.role)) {
+    return <Navigate to={loginPath} replace state={{ from: location.pathname }} />;
   }
 
   return <Outlet />;

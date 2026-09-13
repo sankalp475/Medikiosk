@@ -1,13 +1,19 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { HeartPulse, Stethoscope, ShieldCheck, User, Mail, Lock, Eye, EyeOff, ArrowRight, Sparkles } from "lucide-react";
+import { HeartPulse, Stethoscope, ShieldCheck, Mail, Lock, Eye, EyeOff, ArrowRight, Sparkles } from "lucide-react";
 import { getDashboardPath, saveUserSession } from "../../auth/auth";
 import { authenticateAccount } from "../../storage/db";
 
-export default function LoginPage() {
+export default function LoginPage({ role: propRole }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const [role, setRole] = useState("patient");
+
+  // Role is chosen based on URL path or explicit prop:
+  // /dashboard/admin/login -> "admin"
+  // /dashboard/doctor/login -> "doctor"
+  const role = propRole || (location.pathname.toLowerCase().includes("admin") ? "admin" : "doctor");
+  const isAdmin = role === "admin";
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -38,8 +44,7 @@ export default function LoginPage() {
     navigate(location.state?.from || getDashboardPath(authResult.user.role || role), { replace: true });
   }
 
-  function handleDemoFill(demoRole, demoEmail, demoPass) {
-    setRole(demoRole);
+  function handleDemoFill(demoEmail, demoPass) {
     setEmail(demoEmail);
     setPassword(demoPass);
     setError("");
@@ -69,13 +74,15 @@ export default function LoginPage() {
             <div className="mt-12">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-700/50 px-3 py-1 text-xs font-semibold text-emerald-200 backdrop-blur-sm">
                 <Sparkles className="h-3.5 w-3.5 text-emerald-300" />
-                Next-Gen Hospital Intake
+                {isAdmin ? "Hospital Central Administration" : "Physician Consultation Portal"}
               </span>
               <h1 className="mt-4 text-3xl font-extrabold leading-tight text-white sm:text-4xl">
-                Smart Healthcare Dispatch &amp; Intake.
+                {isAdmin ? "Central Triage & Dispatch Control." : "Smart Doctor Consultation Intake."}
               </h1>
               <p className="mt-4 text-sm leading-relaxed text-emerald-100/90">
-                Seamless digital triage and consultations for Patients, Doctors, and Hospital Administrators under one unified platform.
+                {isAdmin
+                  ? "Manage hospital clinical capacity, staff allocations, and triage queues across all departments."
+                  : "Review assigned patients, call the next patient in queue, and manage clinical consultations effortlessly."}
               </p>
             </div>
           </div>
@@ -83,15 +90,15 @@ export default function LoginPage() {
           <div className="relative space-y-3 pt-8 border-t border-emerald-700/50">
             <div className="flex items-center gap-3 text-xs text-emerald-100">
               <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-emerald-700/60 text-emerald-300 font-bold">✓</div>
-              <span>Live digital queue ticket and patient waiting tracking</span>
+              <span>{isAdmin ? "Centralized triage queue dispatch" : "Live consultation queue management"}</span>
             </div>
             <div className="flex items-center gap-3 text-xs text-emerald-100">
               <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-emerald-700/60 text-emerald-300 font-bold">✓</div>
-              <span>Multi-department central triage &amp; clinical dispatch</span>
+              <span>{isAdmin ? "Multi-department doctor roster allocation" : "Next patient call & attendance tracking"}</span>
             </div>
             <div className="flex items-center gap-3 text-xs text-emerald-100">
               <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-emerald-700/60 text-emerald-300 font-bold">✓</div>
-              <span>Secure role-restricted access with 256-bit encryption</span>
+              <span>Role-restricted security with encrypted session tokens</span>
             </div>
           </div>
         </section>
@@ -102,70 +109,30 @@ export default function LoginPage() {
             {/* Header */}
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-emerald-700">Sign in</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-emerald-700">
+                  {isAdmin ? "Admin Security Portal" : "Clinical Staff Sign in"}
+                </p>
                 <h2 className="mt-1 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
-                  {role === "patient" ? "Patient Portal" : role === "doctor" ? "Doctor Workspace" : "Admin Control"}
+                  {isAdmin ? "Admin Control" : "Doctor Portal"}
                 </h2>
               </div>
-              <div className="lg:hidden flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800">
-                <HeartPulse className="h-5 w-5" />
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-800 shadow-sm">
+                {isAdmin ? <ShieldCheck className="h-5 w-5" /> : <Stethoscope className="h-5 w-5" />}
               </div>
             </div>
 
-            <p className="mt-1.5 text-xs text-slate-500">
-              {role === "patient"
-                ? "Enter your patient email ID and password to access your queue tickets."
-                : role === "doctor"
-                ? "Sign in with your staff credentials to manage consultation queues."
-                : "Sign in with your administrative account for central triage dispatch."}
+            <p className="mt-2 text-xs text-slate-500">
+              {isAdmin
+                ? "Sign in with your administrative credentials to manage central triage dispatch."
+                : "Sign in with your clinical staff credentials to manage consultation queues."}
             </p>
 
-            {/* Role Switcher Tabs */}
-            <div className="mt-6 grid grid-cols-3 gap-1.5 rounded-2xl bg-slate-100 p-1.5">
-              <button
-                type="button"
-                onClick={() => setRole("patient")}
-                className={`flex items-center justify-center gap-1.5 rounded-xl py-2 px-2 text-xs font-semibold transition-all ${
-                  role === "patient"
-                    ? "bg-white text-emerald-800 shadow-sm shadow-slate-200"
-                    : "text-slate-600 hover:text-slate-900"
-                }`}
-              >
-                <User className="h-3.5 w-3.5" />
-                <span>Patient</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setRole("doctor")}
-                className={`flex items-center justify-center gap-1.5 rounded-xl py-2 px-2 text-xs font-semibold transition-all ${
-                  role === "doctor"
-                    ? "bg-white text-emerald-800 shadow-sm shadow-slate-200"
-                    : "text-slate-600 hover:text-slate-900"
-                }`}
-              >
-                <Stethoscope className="h-3.5 w-3.5" />
-                <span>Doctor</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setRole("admin")}
-                className={`flex items-center justify-center gap-1.5 rounded-xl py-2 px-2 text-xs font-semibold transition-all ${
-                  role === "admin"
-                    ? "bg-white text-emerald-800 shadow-sm shadow-slate-200"
-                    : "text-slate-600 hover:text-slate-900"
-                }`}
-              >
-                <ShieldCheck className="h-3.5 w-3.5" />
-                <span>Admin</span>
-              </button>
-            </div>
-
             {/* Form */}
-            <form className="mt-5 space-y-4" onSubmit={handleSubmit}>
+            <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
               {/* Email field */}
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  {role === "patient" ? "Patient Email ID" : role === "doctor" ? "Doctor Work Email" : "Admin Email ID"}
+                  {isAdmin ? "Admin Email ID" : "Doctor Work Email"}
                 </label>
                 <div className="relative">
                   <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
@@ -175,13 +142,7 @@ export default function LoginPage() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder={
-                      role === "patient"
-                        ? "patient@example.com"
-                        : role === "doctor"
-                        ? "dr.rao@hospital.org"
-                        : "admin@hospital.org"
-                    }
+                    placeholder={isAdmin ? "admin@hospital.org" : "dr.rao@hospital.org"}
                     className="input input-bordered w-full pl-9 pr-3 text-sm bg-white border-slate-300 focus:border-emerald-600 focus:outline-emerald-600"
                     autoComplete="username"
                     required
@@ -231,39 +192,35 @@ export default function LoginPage() {
                 type="submit"
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-700 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-emerald-800 focus:ring-4 focus:ring-emerald-700/20"
               >
-                <span>Sign in as {role === "patient" ? "Patient" : role === "doctor" ? "Doctor" : "Admin"}</span>
+                <span>Sign in to {isAdmin ? "Admin Control" : "Doctor Portal"}</span>
                 <ArrowRight className="h-4 w-4" />
               </button>
             </form>
           </div>
 
-          {/* Quick Demo Fill Pills */}
-          <div className="mt-6 border-t border-slate-100 pt-4">
+          {/* Quick Demo Fill & Cross-portal Switcher */}
+          <div className="mt-8 border-t border-slate-100 pt-5">
             <p className="text-[11px] font-medium uppercase tracking-wider text-slate-400 text-center mb-2.5">
-              Quick One-Click Demo Logins
+              Quick One-Click Demo Access
             </p>
-            <div className="flex flex-wrap gap-2 justify-center">
-              <button
-                type="button"
-                onClick={() => handleDemoFill("patient", "patient@medikiosk.in", "patient123")}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-800"
-              >
-                <User className="h-3 w-3 text-emerald-600" /> Patient Demo
-              </button>
-              <button
-                type="button"
-                onClick={() => handleDemoFill("doctor", "dr.ananya@hospital.org", "doctor123")}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-800"
-              >
-                <Stethoscope className="h-3 w-3 text-emerald-600" /> Doctor Demo
-              </button>
-              <button
-                type="button"
-                onClick={() => handleDemoFill("admin", "admin@hospital.org", "admin123")}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-800"
-              >
-                <ShieldCheck className="h-3 w-3 text-emerald-600" /> Admin Demo
-              </button>
+            <div className="flex justify-center">
+              {isAdmin ? (
+                <button
+                  type="button"
+                  onClick={() => handleDemoFill("admin@hospital.org", "admin123")}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs font-medium text-slate-700 transition-colors hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-800"
+                >
+                  <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" /> Fill Admin Demo Credentials
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => handleDemoFill("dr.ananya@hospital.org", "doctor123")}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs font-medium text-slate-700 transition-colors hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-800"
+                >
+                  <Stethoscope className="h-3.5 w-3.5 text-emerald-600" /> Fill Doctor Demo Credentials
+                </button>
+              )}
             </div>
           </div>
         </section>

@@ -91,32 +91,32 @@ export default function AdminDashboard() {
 
   function signOut() {
     clearUserSession();
-    window.location.assign("/login");
+    window.location.assign("/dashboard/admin/login");
   }
 
   return (
     <main className="min-h-screen bg-slate-200/60 font-sans text-slate-900">
-      <header className="border-b border-slate-200 bg-white">
-        <div className="navbar mx-auto max-w-7xl px-4 sm:px-6">
+      <header className="border-b border-slate-200 bg-white shadow-2xs">
+        <div className="navbar mx-auto max-w-7xl px-4 py-2 sm:px-6">
           <div className="flex flex-1 items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800 ring-1 ring-emerald-300">
-              <HeartPulse className="h-5 w-5" aria-hidden="true" />
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800 ring-1 ring-emerald-300">
+              <HeartPulse className="h-6 w-6" aria-hidden="true" />
             </div>
             <div className="flex flex-col">
-              <div className="flex items-center gap-2">
-                <p className="text-xl font-black leading-none tracking-[-0.03em] text-slate-950">
+              <div className="flex items-center gap-2.5">
+                <p className="text-2xl sm:text-3xl font-black leading-none tracking-[-0.03em] text-slate-950">
                   Medi<span className="text-emerald-700">Kiosk</span>
                 </p>
-                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
+                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-bold text-emerald-700">
                   Allopathy &amp; Ayurveda
                 </span>
               </div>
-              <p className="mt-1 text-xs font-medium text-slate-500">Clinic Patient Intake &amp; Registration</p>
+              <p className="mt-1 text-xs sm:text-sm font-semibold text-slate-500">Clinic Patient Intake &amp; Registration</p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="hidden text-sm text-slate-500 sm:inline">Today, 12 September 2026</span>
-            <button className="btn btn-sm border-slate-200 bg-white text-slate-600 hover:border-emerald-700 hover:bg-emerald-700 hover:text-white" type="button" onClick={signOut}>
+          <div className="flex items-center gap-3.5">
+            <span className="hidden text-sm sm:text-base font-semibold text-slate-600 sm:inline">Today, 12 September 2026</span>
+            <button className="btn btn-sm border-slate-200 bg-white text-xs sm:text-sm font-bold text-slate-700 hover:border-emerald-700 hover:bg-emerald-700 hover:text-white transition-colors" type="button" onClick={signOut}>
               <LogOut className="h-4 w-4" /> Sign out
             </button>
           </div>
@@ -497,7 +497,7 @@ export default function AdminDashboard() {
                   placeholder="Set initial password for staff login"
                   required
                 />
-                <p className="mt-1 text-[11px] text-slate-400">Doctor will use this email &amp; password to sign in to the Doctor Workspace.</p>
+                <p className="mt-1 text-[11px] text-slate-400">Doctor will use this email &amp; password to sign in to the Doctor Portal.</p>
               </div>
               <div className="modal-action">
                 <button className="btn btn-ghost" type="button" onClick={() => setIsAddDoctorOpen(false)}>

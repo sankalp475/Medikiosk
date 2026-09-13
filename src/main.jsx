@@ -11,7 +11,8 @@ import ProtectedRoute from './auth/ProtectedRoute.jsx'
 
 const router = createBrowserRouter([
   { path: '/', element: <App /> },
-  { path: '/login', element: <LoginPage /> },
+  { path: '/dashboard/admin/login', element: <LoginPage role="admin" /> },
+  { path: '/dashboard/doctor/login', element: <LoginPage role="doctor" /> },
   {
     element: <ProtectedRoute allowedRoles={["admin"]} />,
     children: [{ path: '/dashboard/admin', element: <AdminDashboard /> }],

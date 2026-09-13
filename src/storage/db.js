@@ -172,3 +172,355 @@ export function authenticateAccount(email, password, role) {
   saveStoredAccount(newAccount);
   return { success: true, user: newAccount, isNew: true };
 }
+
+// Visits & Clinical Intake Consultation Persistence
+const VISITS_STORAGE_KEY = "medikiosk_visits";
+
+export const defaultVisits = [
+  {
+    id: "V-901",
+    token: "P-1042",
+    patientName: "Ramesh Patel",
+    age: 58,
+    sex: "Male",
+    phone: "+91 98231 44510",
+    abhaId: "91-4231-8890-1244",
+    patientUuid: "MED-IN-88921",
+    department: "General Medicine",
+    track: "Allopathy",
+    status: "Waiting", // "Waiting" | "In Consultation" | "Completed"
+    waitTime: "8 min ago",
+    arrivalTime: "09:15 AM",
+    isRedFlag: true,
+    redFlagReason: "Acute onset substernal heaviness with exertional dyspnea & SpO2 at 92%. Immediate triage priority.",
+    intakeSummary: "58-year-old male presenting with acute 2-hour onset retrosternal chest heaviness radiating to left shoulder, accompanied by diaphoresis and mild shortness of breath upon exertion. Known history of hypertension (6 years, irregular medication). Denies loss of consciousness or fever.",
+    vitals: {
+      bp: "158/94 mmHg",
+      pulse: "98 bpm",
+      spo2: "92%",
+      temp: "98.6 °F",
+      weight: "74 kg",
+    },
+    symptoms: [
+      { name: "Chest heaviness / tightness", severity: "Severe", duration: "2 hours", notes: "Aggravated by movement, constant pressure" },
+      { name: "Exertional dyspnea", severity: "Moderate", duration: "2 hours", notes: "Shortness of breath on walking" },
+      { name: "Diaphoresis (cold clammy palms)", severity: "Moderate", duration: "1.5 hours", notes: "Profuse perspiration" },
+    ],
+    allergies: ["Penicillin (mild cutaneous rash)"],
+    medications: ["Amlodipine 5mg OD (irregular compliance)", "Aspirin 75mg (self-administered 1 hour ago)"],
+    doctorNotes: "",
+    provisionalDiagnosis: "",
+    prescription: [],
+    pathyaAdvice: "",
+  },
+  {
+    id: "V-902",
+    token: "P-1037",
+    patientName: "Ananya Sharma",
+    age: 29,
+    sex: "Female",
+    phone: "+91 94120 77612",
+    abhaId: "24-1189-9022-7711",
+    patientUuid: "MED-IN-44219",
+    department: "General Medicine",
+    track: "Ayurveda",
+    status: "In Consultation",
+    waitTime: "14 min ago",
+    arrivalTime: "09:22 AM",
+    isRedFlag: false,
+    redFlagReason: "",
+    intakeSummary: "29-year-old female presenting with chronic unilateral throbbing headache (Suryavarta / Ardhavabhedaka pattern) recurring 2-3 times per week, aggravated by sun exposure and irregular sleep. Reports Mandagni (sluggish digestion), burning sensation in epigastrium (Amlapitta), and disturbed sleep cycle.",
+    vitals: {
+      bp: "118/76 mmHg",
+      pulse: "72 bpm",
+      spo2: "99%",
+      temp: "98.4 °F",
+      weight: "56 kg",
+    },
+    ayurvedicProfile: {
+      prakriti: "Pitta-Vata",
+      vikriti: "Pitta-dominant (Ushna, Tikshna)",
+      agni: "Mandagni / Vishamagni",
+      koshtha: "Madhyama with Vibandha tendency",
+      sleep: "Anidra (irregular, 5 hours)",
+    },
+    symptoms: [
+      { name: "Hemicranial throbbing headache", severity: "Moderate", duration: "3 weeks recurrent", notes: "Visual aura, photophobia, right temple" },
+      { name: "Acid reflux & heartburn (Amlapitta)", severity: "Mild", duration: "2 months", notes: "Post-prandial sour belching" },
+      { name: "Digestive sluggishness (Ajeerna)", severity: "Mild", duration: "1 month", notes: "Heaviness in abdomen post lunch" },
+    ],
+    allergies: ["None known"],
+    medications: ["Paracetamol 650mg SOS", "Antacid suspension occasionally"],
+    doctorNotes: "Pitta-shamak protocol advised. Gentle Shirodhara or Nasya indicated if symptoms persist.",
+    provisionalDiagnosis: "Ardhavabhedaka (Migrainous headache) with Amlapitta",
+    prescription: [
+      { drug: "Shirashooladi Vajra Rasa", dosage: "1 tab (250mg)", frequency: "Twice daily", duration: "15 days", instructions: "With warm milk or honey post meals" },
+      { drug: "Avipattikar Churna", dosage: "3 grams", frequency: "At bedtime", duration: "15 days", instructions: "With lukewarm water" },
+    ],
+    pathyaAdvice: "Pathya: Shadanga Paniya, warm water, Godhuma (wheat), Mudga yusha. Apathya: Ati-katu/amla (excess spicy/sour), dadhi (curd at night), late night awakening.",
+  },
+  {
+    id: "V-903",
+    token: "P-1019",
+    patientName: "Sunil Kumar",
+    age: 44,
+    sex: "Male",
+    phone: "+91 97188 33201",
+    abhaId: "12-8821-4451-9920",
+    patientUuid: "MED-IN-19208",
+    department: "General Medicine",
+    track: "Allopathy",
+    status: "Waiting",
+    waitTime: "22 min ago",
+    arrivalTime: "09:30 AM",
+    isRedFlag: false,
+    redFlagReason: "",
+    intakeSummary: "44-year-old male presenting with acute right knee pain and localized swelling following a twist during badminton yesterday evening. Weight bearing is painful but intact. No skin lacerations or mechanical locking.",
+    vitals: {
+      bp: "126/82 mmHg",
+      pulse: "78 bpm",
+      spo2: "98%",
+      temp: "98.5 °F",
+      weight: "80 kg",
+    },
+    symptoms: [
+      { name: "Right knee pain (anterolateral)", severity: "Moderate", duration: "18 hours", notes: "Pain on flexion > 90 degrees" },
+      { name: "Mild suprapatellar effusion", severity: "Mild", duration: "14 hours", notes: "Mild warmth without redness" },
+    ],
+    allergies: ["None known"],
+    medications: ["Ibuprofen 400mg single dose last night"],
+    doctorNotes: "",
+    provisionalDiagnosis: "",
+    prescription: [],
+    pathyaAdvice: "",
+  },
+  {
+    id: "V-904",
+    token: "P-1055",
+    patientName: "Pooja Nair",
+    age: 34,
+    sex: "Female",
+    phone: "+91 99450 11982",
+    abhaId: "77-3310-9281-6644",
+    patientUuid: "MED-IN-66310",
+    department: "General Medicine",
+    track: "Allopathy",
+    status: "Waiting",
+    waitTime: "28 min ago",
+    arrivalTime: "09:36 AM",
+    isRedFlag: false,
+    redFlagReason: "",
+    intakeSummary: "34-year-old female presenting with non-productive dry cough and mild nocturnal throat tickle for 5 days. No fever, hemoptysis, or history of asthma. Clear breath sounds reported on self-report questionnaire.",
+    vitals: {
+      bp: "114/72 mmHg",
+      pulse: "74 bpm",
+      spo2: "99%",
+      temp: "98.6 °F",
+      weight: "61 kg",
+    },
+    symptoms: [
+      { name: "Dry hacking cough", severity: "Mild", duration: "5 days", notes: "Worse at night and in air-conditioned room" },
+      { name: "Pharyngeal scratchiness", severity: "Mild", duration: "5 days", notes: "No dysphagia" },
+    ],
+    allergies: ["Sulfa drugs (itching)"],
+    medications: ["Warm saline gargles only"],
+    doctorNotes: "",
+    provisionalDiagnosis: "",
+    prescription: [],
+    pathyaAdvice: "",
+  },
+  {
+    id: "V-905",
+    token: "P-1061",
+    patientName: "Vikram Sengupta",
+    age: 62,
+    sex: "Male",
+    phone: "+91 98301 55420",
+    abhaId: "55-1200-8841-3329",
+    patientUuid: "MED-IN-55102",
+    department: "General Medicine",
+    track: "Allopathy",
+    status: "Completed",
+    waitTime: "Completed at 09:40 AM",
+    arrivalTime: "09:00 AM",
+    isRedFlag: false,
+    redFlagReason: "",
+    intakeSummary: "62-year-old male routine diabetic follow-up. Fasting blood sugar logs reviewed (average 128 mg/dL). No peripheral neuropathy or visual blurs reported.",
+    vitals: {
+      bp: "128/80 mmHg",
+      pulse: "70 bpm",
+      spo2: "98%",
+      temp: "98.4 °F",
+      weight: "72 kg",
+    },
+    symptoms: [
+      { name: "Routine follow-up / Medication refill", severity: "Mild", duration: "3 months", notes: "Asymptomatic, compliance good" },
+    ],
+    allergies: ["None known"],
+    medications: ["Metformin 500mg BD", "Telmisartan 40mg OD"],
+    doctorNotes: "Glycemic control stable. HbA1c scheduled for next quarter. Advised 30 min daily brisk walking.",
+    provisionalDiagnosis: "Type 2 Diabetes Mellitus - well controlled on oral hypoglycemics",
+    prescription: [
+      { drug: "Tab. Metformin 500mg", dosage: "1 tab", frequency: "Twice daily", duration: "90 days", instructions: "With meals" },
+      { drug: "Tab. Telmisartan 40mg", dosage: "1 tab", frequency: "Once daily morning", duration: "90 days", instructions: "Before breakfast" },
+    ],
+    pathyaAdvice: "Maintain low glycemic index diet, avoid refined carbohydrates, continue routine foot inspection.",
+  },
+];
+
+export function getStoredVisits() {
+  try {
+    const raw = localStorage.getItem(VISITS_STORAGE_KEY);
+    if (!raw) {
+      localStorage.setItem(VISITS_STORAGE_KEY, JSON.stringify(defaultVisits));
+      return defaultVisits;
+    }
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) && parsed.length > 0 ? parsed : defaultVisits;
+  } catch {
+    return defaultVisits;
+  }
+}
+
+export function saveStoredVisits(visits) {
+  try {
+    localStorage.setItem(VISITS_STORAGE_KEY, JSON.stringify(visits));
+  } catch (err) {
+    console.error("Failed to save visits to localStorage", err);
+  }
+}
+
+export function updateVisitStatus(visitId, newStatus) {
+  const visits = getStoredVisits();
+  const updated = visits.map((v) => (v.id === visitId ? { ...v, status: newStatus } : v));
+  saveStoredVisits(updated);
+  return updated;
+}
+
+export function saveVisitConsultation(visitId, { doctorNotes, provisionalDiagnosis, prescription, pathyaAdvice, status }) {
+  const visits = getStoredVisits();
+  const updated = visits.map((v) => {
+    if (v.id === visitId) {
+      return {
+        ...v,
+        doctorNotes: doctorNotes !== undefined ? doctorNotes : v.doctorNotes,
+        provisionalDiagnosis: provisionalDiagnosis !== undefined ? provisionalDiagnosis : v.provisionalDiagnosis,
+        prescription: prescription !== undefined ? prescription : v.prescription,
+        pathyaAdvice: pathyaAdvice !== undefined ? pathyaAdvice : v.pathyaAdvice,
+        status: status || v.status,
+      };
+    }
+    return v;
+  });
+  saveStoredVisits(updated);
+  return updated;
+}
+
+export const mockAbhaRecords = [
+  {
+    abhaId: "14-1234-5678-9012",
+    patientName: "Arjun Verma",
+    dob: "1984-05-14",
+    age: 42,
+    sex: "Male",
+    phone: "+91 98765 43210",
+    patientUuid: "MED-IN-88219",
+  },
+  {
+    abhaId: "91-8765-4321-0987",
+    patientName: "Sunita Deshmukh",
+    dob: "1988-08-22",
+    age: 38,
+    sex: "Female",
+    phone: "+91 98220 12345",
+    patientUuid: "MED-IN-77401",
+  },
+  {
+    abhaId: "23-5566-7788-9900",
+    patientName: "Mohammed Farooq",
+    dob: "1975-01-10",
+    age: 51,
+    sex: "Male",
+    phone: "+91 97112 34567",
+    patientUuid: "MED-IN-55190",
+  },
+  {
+    abhaId: "88-9911-2233-4455",
+    patientName: "Deepika Pillai",
+    dob: "1999-11-03",
+    age: 27,
+    sex: "Female",
+    phone: "+91 94471 23456",
+    patientUuid: "MED-IN-33290",
+  },
+];
+
+export function lookupAbhaRecord(abhaInput) {
+  if (!abhaInput) return null;
+  const clean = abhaInput.replace(/[^0-9]/g, "");
+  const trimmed = abhaInput.trim().toLowerCase();
+  return (
+    mockAbhaRecords.find(
+      (r) =>
+        (clean.length >= 10 && r.abhaId.replace(/[^0-9]/g, "").includes(clean)) ||
+        r.patientUuid.toLowerCase() === trimmed ||
+        r.patientName.toLowerCase().includes(trimmed)
+    ) || null
+  );
+}
+
+export function registerNewPatientVisit(newVisit) {
+  const visits = getStoredVisits();
+
+  // Compute next sequential token
+  const tokens = visits
+    .map((v) => parseInt(v.token?.replace(/[^0-9]/g, "") || "1000", 10))
+    .filter((n) => !isNaN(n));
+  const maxToken = tokens.length > 0 ? Math.max(...tokens) : 1042;
+  const nextTokenNum = maxToken + 1;
+  const nextToken = `P-${nextTokenNum}`;
+
+  const visitId = `V-${Date.now().toString().slice(-4)}`;
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+
+  const fullVisit = {
+    id: visitId,
+    token: nextToken,
+    patientName: newVisit.patientName || "Walk-In Patient",
+    age: Number(newVisit.age) || 30,
+    sex: newVisit.sex || "Other",
+    phone: newVisit.phone || "+91 99999 99999",
+    abhaId: newVisit.abhaId || "Not Registered",
+    patientUuid: newVisit.patientUuid || `MED-IN-${Math.floor(10000 + Math.random() * 90000)}`,
+    department: newVisit.track === "Ayurveda" ? "Ayurveda OPD" : "General Medicine",
+    track: newVisit.track || "Allopathy",
+    status: "Waiting",
+    waitTime: "Just arrived",
+    arrivalTime: timeStr,
+    isRedFlag: Boolean(newVisit.isRedFlag),
+    redFlagReason: newVisit.redFlagReason || "",
+    intakeSummary: newVisit.intakeSummary || "Patient registered via MediKiosk self-service portal.",
+    vitals: newVisit.vitals || {
+      bp: "120/80 mmHg",
+      pulse: "76 bpm",
+      spo2: "98%",
+      temp: "98.6 °F",
+      weight: "65 kg",
+    },
+    symptoms: newVisit.symptoms || [],
+    ayurvedicProfile: newVisit.ayurvedicProfile || null,
+    allergies: newVisit.allergies?.length > 0 ? newVisit.allergies : ["None known"],
+    medications: newVisit.medications?.length > 0 ? newVisit.medications : ["None reported"],
+    doctorNotes: "",
+    provisionalDiagnosis: "",
+    prescription: [],
+    pathyaAdvice: "",
+  };
+
+  const updated = [fullVisit, ...visits];
+  saveStoredVisits(updated);
+  return fullVisit;
+}
+
+
